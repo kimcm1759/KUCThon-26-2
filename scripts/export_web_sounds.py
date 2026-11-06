@@ -317,7 +317,11 @@ def build_book():
     def part(x, a, b, out=100):
         return fade(cut(x, a, b), 2, out)
 
-    crush_loop = seamless(mix((cut(crumple, 0, 720), 0, 0), (cut(rumble, 0, 720), -8, 0))[: ms(720)], 60)
+    # 프레스용 선명한 구김: 300 Hz 아래(탁한 저음)를 걷고 포화(4.0)로 작은 바스락까지 끌어올림.
+    # 앱은 누르는 동안 이 루프를 0.3~0.6 크기로만 틀어서 작게 들렸음 → 밀도를 올려 보상 (사용자 피드백 2026-11-07)
+    clear_crumple = peak_to(saturate(crumple - lowpass(crumple, 300, SR), 4.0), 0)
+    # crush 🔁: 원본 구김 1.5 s를 거의 통째로(앱에선 0.67 s만 재생돼 반복 안 들림), 누르는 저음은 -14 dB로 뒤에
+    crush_loop = seamless(mix((cut(clear_crumple, 0, 1560), 0, 0), (cut(rumble, 0, 1560), -14, 0))[: ms(1560)], 60)
     # 망치용 둔탁한 표지 '퍽': 판지 두드림 + 낮게(0.8배)·고음 깎은 한 겹으로 몸통을 두껍게, 살짝 포화해 더 크게
     thud = saturate(mix((box, 0, 0), (lowpass(pitch(box, 0.8), 1500, SR), -2, 0)), 2.0)
     # 망치용 둔탁한 구김: 0.9배로 낮추고 2.5 kHz 위를 깎아 바스락거림을 줄임 → 크게 넣어도 거슬리지 않게 (사용자 피드백)
@@ -341,10 +345,10 @@ def build_book():
         "book/bat/break.wav": peak_to(saturate(mix((thud, 0, 0), (part(tear, 0, 450, 200), -5, 0), (part(dull_crumple, 0, 400, 120), -4, 0)), 2.0), -1),
         # 프레스
         "book/press/contact.wav": peak_to(mix((box, 0, 0), (ptap, -6, 0)), -3),
-        # crush 🔁 0.45~1.12 s: 구김 0.72 s + 누르는 저음, 이음새 없이 0.66 s
-        "book/press/crush.wav": peak_to(crush_loop, -2),
-        # 터짐: 찢김 1.0 s + 구김 + 판지 + 누르는 저음 앞 300 ms
-        "book/press/burst.wav": peak_to(mix((part(tear, 0, 1000, 300), 0, 0), (part(crumple, 0, 500), -3, 0), (box, -3, 0), (part(rumble, 0, 300, 150), -8, 0)), -1),
+        # crush 🔁 0.45~1.12 s: 선명한 구김 1.5 s + 누르는 저음(작게)
+        "book/press/crush.wav": peak_to(crush_loop, -1),
+        # 터짐: 찢김 1.0 s + 선명한 구김이 1.5 s 동안 이어짐(터진 뒤에도 길게) + 판지 + 누르는 저음 앞 300 ms
+        "book/press/burst.wav": peak_to(mix((part(tear, 0, 1000, 300), 0, 0), (part(clear_crumple, 0, 1500, 400), -2, 0), (box, -3, 0), (part(rumble, 0, 300, 150), -10, 0)), -1),
         # 레이저
         "book/laser/burn.wav": peak_to(seamless(cut(l_burn, 40, 1240)), -4),
         # 잘림: 종이 두드림 + 찢김 앞 200 ms + 지짐 앞 250 ms
