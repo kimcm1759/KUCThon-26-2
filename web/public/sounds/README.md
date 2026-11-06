@@ -68,6 +68,7 @@ npm run dev
 | bomb | `explode` | 폭발 | 공통 |
 | debris | `small` | 작은 조각이 책상에 떨어질 때 (찰랑, 툭) | 물건별 |
 | debris | `large` | 큰 덩어리가 떨어질 때 (쿵) | 물건별 |
+| finish | `ding` | 물건이 깨진 상태(BROKEN!)가 되면 0.9초 뒤 한 번 (싱잉볼 "띵") | 공통 |
 
 ## 파일 형식
 - mp3(권장) 또는 ogg/wav/m4a

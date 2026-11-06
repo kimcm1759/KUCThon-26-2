@@ -206,6 +206,7 @@ export function PlacedModel({
   const damage = useRef({ hits: 0, breaking: false, broken: false });
   const settleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const slowTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const dingTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const timeScale = useRef(1);
   const rapierRef = useRef<Rapier | null>(null);
   const wobbleStart = useRef(0);
@@ -350,6 +351,8 @@ export function PlacedModel({
 
   const soundObject = smashProps?.soundObject;
   useEffect(() => sound.preload(soundObject), [soundObject]);
+  // Reset remounts this component: a pending ding must not ring over the fresh object.
+  useEffect(() => () => clearTimeout(dingTimer.current), []);
 
   // Free debris copies and stop continuous rendering on reset/unmount.
   useEffect(
@@ -427,6 +430,13 @@ export function PlacedModel({
     live.current.onEvent?.({ tool, event, object: live.current.soundObject, material, strength: 0, loop: "stop" });
   };
   const lastDebrisSound = useRef(0);
+
+  /** Once the object is BROKEN!: a singing bowl "ding" after the break sound (and slow motion) has passed. */
+  const DING_DELAY_MS = 900;
+  const ding = () => {
+    clearTimeout(dingTimer.current);
+    dingTimer.current = setTimeout(() => sfx("finish", "ding", 0.8), DING_DELAY_MS);
+  };
 
   /** Run physics (and continuous rendering) until things have had time to settle. */
   const wake = useMemo(
@@ -619,6 +629,7 @@ export function PlacedModel({
     addPieces(added);
     wake(upm);
     live.current.onBreak?.();
+    ding();
     if (style.kind === "press") {
       loopOff("press", "crush");
       sfx("press", "burst");
@@ -724,6 +735,7 @@ export function PlacedModel({
         addPieces(added);
         wake(upm);
         live.current.onBreak?.();
+        ding();
         sfx("laser", "cut");
       } catch (e) {
         console.warn("[laser] cut failed", e);

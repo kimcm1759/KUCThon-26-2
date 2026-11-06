@@ -5,6 +5,7 @@
     "_common/bomb/explode.wav",
     "_common/bomb/fuse.wav",
     "_common/bomb/place.wav",
+    "_common/finish/ding.wav",
     "_common/hammer/swing.wav",
     "_common/laser/beam.wav",
     "_common/laser/end.wav",
