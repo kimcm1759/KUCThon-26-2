@@ -1,7 +1,6 @@
 // Time the smash pre-fracture on a saved GLB without a browser.
 // Usage (from web/): node scripts/bench-fracture.mjs <file.glb> [fragility]
 import { readFile } from "node:fs/promises";
-import * as THREE from "three";
 import { computeFragments } from "../src/lib/fracture-core.ts";
 
 const [file, fragility = "shatters"] = process.argv.slice(2);
