@@ -221,8 +221,8 @@
       "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
     },
     {
-      "sound_id": "aluminum_bat_main_action_002",
-      "file_path": "assets/audio/provided/aluminum_bat_main_action_002.mp3",
+      "sound_id": "aluminum_bat_main_action_003",
+      "file_path": "assets/audio/provided/aluminum_bat_main_action_003.wav",
       "original_filename": "851452__hashtagsmcgee__bat_hit2.mp3",
       "source_type": "provided_audio",
       "tool_code": "aluminum_bat",
@@ -237,12 +237,12 @@
       "texture_tags": [
         "unknown"
       ],
-      "description": "배트소리",
-      "duration_seconds": 0.696,
+      "description": "배트소리 — 원본보다 길고 크게 변형",
+      "duration_seconds": 2.09,
       "sample_rate_hz": 48000,
       "channels": 2,
       "created_at": "2026-11-07",
-      "notes": "사용자 제공 음원. 합성음 aluminum_bat_main_action_001을 대체(사용자 요청). 실제 청취는 하지 않음. MP3 128kbps, 길이는 프레임 헤더로 계산. 원본은 Downloads에 보존."
+      "notes": "제공 음원(assets/audio/provided/source/851452__hashtagsmcgee__bat_hit2.mp3, 0.64초)의 파생 파일. scripts/derive_bat_main.py로 생성: 원본의 금속 공명(약 2.0~2.5kHz)을 공명 필터로 늘리고 짧은 잔향을 더해 2.09초로 연장, 타격 부분은 포화(tanh)로 체감 음량을 올림. 측정값: 타격 RMS -8.7→-6.0dB, 0.2~0.6초 구간 -43→-22dB. 청취는 하지 않음. 이전 aluminum_bat_main_action_002(원본 그대로)를 대체."
     },
     {
       "sound_id": "aluminum_bat_finish_001",

@@ -38,7 +38,7 @@
 | sound_id | 파일 | 도구 | 역할 | 재질 | 동작 | 강도 | 설명 |
 |---|---|---|---|---|---|---|---|
 | `hammer_main_action_002` | `assets/audio/provided/hammer_main_action_002.wav` (0.44초, 48kHz 스테레오) | hammer | main_action | unknown | impact | unknown | 망치소리 — 원본(`provided/source/592112__pablodavilla__hammer_1.wav`)의 세 번째 타격만 잘라냄. 합성음 `hammer_main_action_001` 대체 |
-| `aluminum_bat_main_action_002` | `assets/audio/provided/aluminum_bat_main_action_002.mp3` (0.7초, 48kHz 스테레오) | aluminum_bat | main_action | unknown | impact | unknown | 배트소리 — 합성음 `aluminum_bat_main_action_001` 대체 |
+| `aluminum_bat_main_action_003` | `assets/audio/provided/aluminum_bat_main_action_003.wav` (2.1초, 48kHz 스테레오) | aluminum_bat | main_action | unknown | impact | unknown | 배트소리 — 원본(`provided/source/851452__hashtagsmcgee__bat_hit2.mp3`)을 길고 크게 변형(`scripts/derive_bat_main.py`) |
 | `hammer_finish_002` | `assets/audio/provided/hammer_finish_002.wav` (0.3초, 48kHz 24bit 모노) | hammer | finish | unknown | other | unknown | 망치 종료음 — 합성음 `hammer_finish_001` 대체 |
 | `paper_tear_001` | `assets/audio/provided/paper_tear_001.mp3` (2.6초, 48kHz 스테레오) | 미정 | 미정 | paper | other | unknown | 종이 찢는소리 |
 | `paper_other_001` | `assets/audio/provided/paper_other_001.mp3` (2.4초, 48kHz 스테레오) | 미정 | 미정 | paper | other | light | 종이 가볍게 팔랑거리는 소리 |
