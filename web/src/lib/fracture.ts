@@ -111,6 +111,8 @@ export async function prepareFracture(
     impact?: { point: THREE.Vector3; radius: number };
     seed?: number;
     timeoutMs?: number;
+    /** Stops the worker (the model was reset or left); the promise rejects. */
+    signal?: AbortSignal;
   },
 ): Promise<PreparedFracture> {
   const { mesh, material } = extract(root);
@@ -126,10 +128,11 @@ export async function prepareFracture(
   // timeout and the safe surface split runs instead.
   let res: FractureResponse;
   try {
-    res = await runWorker(request, opts.timeoutMs ?? 10000);
+    res = await runWorker(request, opts.timeoutMs ?? 10000, opts.signal);
   } catch (e) {
+    if (opts.signal?.aborted) throw e;
     console.warn("[fracture] voronoi failed, using shell split", e);
-    res = await runWorker({ ...request, forceShell: true }, 10000);
+    res = await runWorker({ ...request, forceShell: true }, opts.timeoutMs ?? 10000, opts.signal);
   }
 
   // Shell pieces are hollow; show their back faces so they don't look see-through.
@@ -189,11 +192,17 @@ export async function slicePiece(geometry: THREE.BufferGeometry, plane: CutPlane
   return res.fragments.map(toFragment);
 }
 
-function runWorker(request: FractureRequest | SliceRequest, timeoutMs: number) {
+function runWorker(request: FractureRequest | SliceRequest, timeoutMs: number, signal?: AbortSignal) {
+  if (signal?.aborted) return Promise.reject(new DOMException("fracture cancelled", "AbortError"));
   // Copies, not transfers: the request may be sent twice.
   const worker = new Worker(new URL("./fracture.worker.ts", import.meta.url), { type: "module" });
   return new Promise<FractureResponse>((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error("fracture timed out")), timeoutMs);
+    // Old work would otherwise keep a phone's cores busy after a reset and make the new one time out.
+    signal?.addEventListener("abort", () => {
+      clearTimeout(timer);
+      reject(new DOMException("fracture cancelled", "AbortError"));
+    });
     worker.onmessage = (e: MessageEvent<{ ok: boolean; res?: FractureResponse; error?: string }>) => {
       clearTimeout(timer);
       if (e.data.ok) resolve(e.data.res!);

@@ -328,18 +328,22 @@ export function PlacedModel({
   }, [camera, size, samples, bbox, alignment, apply]);
 
   // Cut the model into fragments in a worker as soon as it is loaded, so a
-  // breaking blow never waits.
+  // breaking blow never waits. Reset/unmount cancels this and any pre-cuts.
+  const fractureJobs = useRef(new AbortController());
   useEffect(() => {
-    const job = prepareFracture(object, { material, fragmentCount: profile.pieces });
+    const jobs = new AbortController();
+    fractureJobs.current = jobs;
+    const job = prepareFracture(object, { material, fragmentCount: profile.pieces, signal: jobs.signal });
     job
       .then((r) =>
         console.info(
           `[fracture] ${r.method}: ${r.fragments.length} pieces from ${r.triangles} triangles in ${r.ms.toFixed(0)}ms`,
         ),
       )
-      .catch((e) => console.error("[fracture]", e));
+      .catch((e) => jobs.signal.aborted || console.error("[fracture]", e));
     uniformFracture.current = job;
     return () => {
+      jobs.abort();
       job.then((r) => r.fragments.forEach((f) => f.geometry.dispose())).catch(() => {});
     };
   }, [object, material, profile]);
@@ -534,9 +538,10 @@ export function PlacedModel({
     object.updateMatrixWorld(true);
     const local = object.worldToLocal(point.clone());
     const pending: { point: THREE.Vector3; result?: PreparedFracture } = { point: local };
-    prepareFracture(object, { material, fragmentCount: count, impact: { point: local, radius } })
+    const { signal } = fractureJobs.current;
+    prepareFracture(object, { material, fragmentCount: count, impact: { point: local, radius }, signal })
       .then((r) => (pending.result = r))
-      .catch((e) => console.warn("[fracture] impact pre-cut failed", e));
+      .catch((e) => signal.aborted || console.warn("[fracture] impact pre-cut failed", e));
     return pending;
   };
 
@@ -554,8 +559,22 @@ export function PlacedModel({
       try {
         fracture = await uniformFracture.current!;
       } catch {
-        d.breaking = false;
-        return;
+        // The precompute timed out (busy phone): one more, longer try rather than not breaking at all.
+        const { signal } = fractureJobs.current;
+        if (signal.aborted) return;
+        try {
+          uniformFracture.current = prepareFracture(object, {
+            material,
+            fragmentCount: profile.pieces,
+            timeoutMs: 25000,
+            signal,
+          });
+          fracture = await uniformFracture.current;
+        } catch (e) {
+          if (!signal.aborted) console.error("[fracture] retry failed", e);
+          d.breaking = false;
+          return;
+        }
       }
     }
 
