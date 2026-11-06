@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     backgrounds: [],
     models: [],
     selection: {},
+    draft: form.get("draft") === "1" || undefined,
   };
   await putJob(job);
 

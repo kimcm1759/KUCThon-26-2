@@ -13,10 +13,19 @@ import SoundSync, { useSoundSync } from "./SoundSync";
 
 const Composite = dynamic(() => import("@/components/Composite"), { ssr: false });
 
+/** Figma 부수기 무기 icons. */
+const TOOL_ICON: Record<ToolId, string> = {
+  hammer: "/figma/tool-hammer.svg",
+  bat: "/figma/tool-bat.svg",
+  press: "/figma/tool-press.svg",
+  laser: "/figma/tool-laser.svg",
+  bomb: "/figma/tool-bomb.svg",
+};
+
 /**
- * Full-screen smash view in the 빠각 style: dark frame, the photo fitted to
- * any phone shape, tools along the bottom like the tab bar. While the 3D
- * model is still being made it shows the steps instead.
+ * Smash view (Figma 부수기): the photo in a rounded frame, 내 무기 tiles
+ * below, 되돌리기 (and 저장 for a fresh camera shot) at the top. While the
+ * 3D model is still being made it shows the steps instead.
  */
 export default function PlayView({ id }: { id: string }) {
   const router = useRouter();
@@ -66,10 +75,11 @@ export default function PlayView({ id }: { id: string }) {
     );
   }
 
+  const save = <SaveButton job={job} onSaved={setJob} />;
   const v = job.verify.result;
   const background = job.backgrounds.find((c) => c.id === job.selection.background && c.url);
   const model = job.models.find((c) => c.id === job.selection.model && c.url);
-  if (!model?.url || !job.mask.bbox) return <Progress job={job} onBack={back} />;
+  if (!model?.url || !job.mask.bbox) return <Progress job={job} onBack={back} save={save} />;
 
   const alignment = job.alignment ?? defaultAlignment(job.photo.width, job.photo.height, v?.camera_elevation_deg);
   const soundObject = soundChoice === "auto" ? soundObjectFor(v) : soundChoice;
@@ -85,53 +95,45 @@ export default function PlayView({ id }: { id: string }) {
       className="fixed inset-0 flex flex-col overflow-hidden bg-bg text-white select-none"
       style={{ overscrollBehavior: "none" }}
     >
-      <header className="pad-top relative z-10 flex shrink-0 items-center gap-3 pr-[18px] pl-4">
-        <BackButton onClick={back} />
-        <h1 className="min-w-0 flex-1 truncate text-[24px] leading-9 font-semibold tracking-[1.2px]">
-          {v?.label_ko ?? "물건"}
-        </h1>
+      <Header title={v?.label_ko ?? "물건"} onBack={back}>
         <button
           onClick={() => {
             sound.unlock();
             sound.setMuted(!muted);
             setMuted(!muted);
           }}
-          className="flex size-9 items-center justify-center rounded-full bg-surface text-[16px]"
+          className="flex size-[39px] shrink-0 items-center justify-center rounded-[16px] bg-primary/20 text-[16px]"
           aria-label={muted ? "소리 켜기" : "소리 끄기"}
         >
           {muted ? "🔇" : "🔊"}
         </button>
-        <Link
-          href={`/jobs/${id}`}
-          className="flex size-9 items-center justify-center rounded-full bg-surface"
-          aria-label="위치 맞추기·설정"
-        >
-          <span
-            className="icon-mask block size-6 text-white"
-            style={{ "--icon": "url(/figma/tab-settings.svg)" } as React.CSSProperties}
-          />
-        </Link>
-      </header>
+        {save}
+        <FigmaButton onClick={reset} solid={broken}>
+          되돌리기
+        </FigmaButton>
+      </Header>
 
-      <div className="relative z-10 flex shrink-0 items-center justify-between gap-3 px-[25px] pt-3 pb-2">
-        <Durability durability={durability} broken={broken} />
-        <select
-          value={soundChoice}
-          onChange={(e) => setSoundChoice(e.target.value as SoundObject | "auto")}
-          className="rounded-[10px] bg-surface px-2 py-1 text-[12px] text-subtle outline-none"
-          aria-label="소리 세트"
-        >
-          <option value="auto">소리: 자동</option>
-          {SOUND_OBJECTS.map((o) => (
-            <option key={o.id} value={o.id}>
-              소리: {o.label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="relative flex min-h-0 flex-1 items-center justify-center px-4" style={{ containerType: "size" }}>
-        {params.has("sync") && <SoundSync log={sync.log} clear={sync.clear} object={soundObject} />}
+      <div
+        className="relative mt-4 flex min-h-0 flex-1 items-center justify-center px-4"
+        style={{ containerType: "size" }}
+      >
+        {params.has("sync") && (
+          <SoundSync log={sync.log} clear={sync.clear} object={soundObject}>
+            <select
+              value={soundChoice}
+              onChange={(e) => setSoundChoice(e.target.value as SoundObject | "auto")}
+              className="rounded bg-surface px-1 py-0.5 text-[11px] text-subtle outline-none"
+              aria-label="소리 세트"
+            >
+              <option value="auto">자동</option>
+              {SOUND_OBJECTS.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </SoundSync>
+        )}
         <Composite
           fit
           backgroundUrl={background?.url ?? job.photo.url}
@@ -163,50 +165,118 @@ export default function PlayView({ id }: { id: string }) {
         />
       </div>
 
-      <div className="relative z-10 flex shrink-0 items-center justify-between gap-3 px-[25px] pt-3">
-        <p className="min-w-0 truncate text-[12px] tracking-[0.6px] text-muted">
-          {TOOLS.find((t) => t.id === tool)?.hint}
-        </p>
-        <button
-          onClick={reset}
-          className={`h-9 shrink-0 rounded-[16px] px-4 text-[14px] font-medium ${
-            broken ? "bg-primary text-white" : "bg-surface text-primary"
-          }`}
-        >
-          {broken ? "다시 붙이기" : "원래대로"}
-        </button>
-      </div>
-
-      {/* Tools, laid out like the tab bar. */}
-      <nav className="pad-bottom relative z-10 shrink-0 pt-[10px]">
-        <ul className="grid h-[57px] grid-cols-5 items-start px-2">
+      {/* 내 무기: 80px tiles, scrolls sideways when they don't all fit. */}
+      <section className="pad-bottom relative z-10 shrink-0 pt-[22px]">
+        <div className="flex items-center justify-between gap-3 px-6">
+          <h2 className="shrink-0 text-[16px] font-semibold tracking-[0.8px]">내 무기</h2>
+          <Status durability={durability} broken={broken} hint={TOOLS.find((t) => t.id === tool)?.hint} />
+        </div>
+        <ul className="mt-[18px] flex gap-[11px] overflow-x-auto px-6 [scrollbar-width:none]">
           {TOOLS.map((t) => {
             const active = t.id === tool;
             return (
-              <li key={t.id}>
+              <li key={t.id} className="shrink-0">
                 <button
                   onClick={() => {
                     sound.unlock();
                     setTool(t.id);
                   }}
                   aria-pressed={active}
-                  className={`flex w-full flex-col items-center gap-[7px] ${active ? "text-primary" : "text-white"}`}
+                  className="flex w-20 flex-col items-center"
                 >
                   <span
-                    className={`flex size-9 items-center justify-center rounded-full text-[22px] ${
-                      active ? "bg-primary/20 ring-2 ring-primary" : ""
+                    className={`flex size-20 items-center justify-center rounded-[16px] border-2 bg-gradient-to-b from-[rgba(24,23,28,0.2)] to-[rgba(80,76,95,0.2)] ${
+                      active ? "border-primary" : "border-white/10"
                     }`}
                   >
-                    {t.icon}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={TOOL_ICON[t.id]} alt="" width={36} height={36} className="block size-9" />
                   </span>
-                  <span className="text-[12px] tracking-[0.6px] whitespace-nowrap">{t.label}</span>
+                  <span
+                    className={`mt-[15px] text-[12px] tracking-[0.6px] whitespace-nowrap ${active ? "text-primary" : "text-white"}`}
+                  >
+                    {t.label}
+                  </span>
                 </button>
               </li>
             );
           })}
         </ul>
-      </nav>
+      </section>
     </main>
+  );
+}
+
+function Header({ title, onBack, children }: { title: string; onBack: () => void; children?: React.ReactNode }) {
+  return (
+    <header className="pad-top relative z-10 flex shrink-0 items-center gap-[10px] pr-[19px] pl-[25px]">
+      <BackButton onClick={onBack} />
+      <h1 className="min-w-0 flex-1 truncate text-[24px] leading-9 font-semibold tracking-[1.2px]">{title}</h1>
+      {children}
+    </header>
+  );
+}
+
+/** Figma 저장 button (Frame 33): light blue by default, solid blue when it matters. */
+function FigmaButton({
+  solid,
+  className = "",
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { solid?: boolean }) {
+  return (
+    <button
+      {...props}
+      className={`flex h-[39px] shrink-0 items-center justify-center rounded-[16px] p-[10px] text-[16px] font-medium tracking-[0.8px] whitespace-nowrap text-white disabled:opacity-60 ${
+        solid ? "bg-primary" : "bg-primary/20"
+      } ${className}`}
+    />
+  );
+}
+
+/** Keeps a fresh camera shot in 내 모음; only shown for drafts. */
+function SaveButton({ job, onSaved }: { job: Job; onSaved: (j: Job) => void }) {
+  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  if (!job.draft && state !== "saved") return null;
+  const save = async () => {
+    setState("saving");
+    try {
+      const r = await fetch(`/api/jobs/${job.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ draft: false }),
+      });
+      if (!r.ok) throw new Error();
+      onSaved(await r.json());
+      setState("saved");
+    } catch {
+      setState("error");
+    }
+  };
+  return (
+    <FigmaButton onClick={save} disabled={state === "saving" || state === "saved"} solid={state === "saved"}>
+      {state === "saved" ? "저장됨" : state === "error" ? "다시 저장" : "저장"}
+    </FigmaButton>
+  );
+}
+
+/** Right of 내 무기: durability once it's being hit, the tool's hint before that. */
+function Status({
+  durability,
+  broken,
+  hint,
+}: {
+  durability: { remaining: number; total: number } | null;
+  broken: boolean;
+  hint?: string;
+}) {
+  if (broken) return <p className="text-[12px] font-bold tracking-[0.5px] text-lime">BROKEN!</p>;
+  if (!durability) return <p className="min-w-0 truncate text-[12px] tracking-[0.6px] text-muted">{hint}</p>;
+  return (
+    <div className="flex items-center gap-1" aria-label={`내구도 ${durability.remaining}/${durability.total}`}>
+      {Array.from({ length: durability.total }, (_, i) => (
+        <span key={i} className={`h-2 w-5 rounded-full ${i < durability.remaining ? "bg-primary" : "bg-surface"}`} />
+      ))}
+    </div>
   );
 }
 
@@ -216,24 +286,6 @@ function BackButton({ onClick }: { onClick: () => void }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/figma/back.svg" alt="" width={24} height={24} className="block" />
     </button>
-  );
-}
-
-function Durability({
-  durability,
-  broken,
-}: {
-  durability: { remaining: number; total: number } | null;
-  broken: boolean;
-}) {
-  if (broken) return <p className="text-[12px] font-bold tracking-[0.5px] text-lime">BROKEN!</p>;
-  if (!durability) return <p className="text-[12px] tracking-[0.6px] text-muted">내구도</p>;
-  return (
-    <div className="flex items-center gap-1" aria-label={`내구도 ${durability.remaining}/${durability.total}`}>
-      {Array.from({ length: durability.total }, (_, i) => (
-        <span key={i} className={`h-2 w-5 rounded-full ${i < durability.remaining ? "bg-primary" : "bg-surface"}`} />
-      ))}
-    </div>
   );
 }
 
@@ -260,15 +312,14 @@ const STEP_TEXT: Record<StepStatus, [string, string]> = {
 };
 
 /** While the pipeline runs (or after it failed): the photo and each step. */
-function Progress({ job, onBack }: { job: Job; onBack: () => void }) {
+function Progress({ job, onBack, save }: { job: Job; onBack: () => void; save: React.ReactNode }) {
   const failed = job.status === "error" || job.status === "rejected";
   const v = job.verify.result;
   return (
     <main className="fixed inset-0 flex flex-col bg-bg text-white">
-      <header className="pad-top flex shrink-0 items-center gap-3 pr-[18px] pl-4">
-        <BackButton onClick={onBack} />
-        <h1 className="truncate text-[24px] leading-9 font-semibold tracking-[1.2px]">{v?.label_ko ?? "확인 중"}</h1>
-      </header>
+      <Header title={v?.label_ko ?? "확인 중"} onBack={onBack}>
+        {!failed && save}
+      </Header>
       <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-[25px] pt-[29px] pb-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={job.photo.url} alt="" className="max-h-[50dvh] w-full rounded-[24px] object-cover" />

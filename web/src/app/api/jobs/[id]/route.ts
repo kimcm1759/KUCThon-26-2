@@ -12,7 +12,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/jobs/[id]">
   return Response.json(job);
 }
 
-/** Save what the viewer picked: chosen candidates, hand-tuned alignment, diary note. */
+/** Save what the viewer picked: chosen candidates, hand-tuned alignment, diary note, or keep a draft (저장). */
 export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/jobs/[id]">) {
   const { id } = await ctx.params;
   if (READ_ONLY || !(await getLocalJob(id))) return readOnly(id);
@@ -20,11 +20,13 @@ export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/jobs/[id]"
     selection?: Job["selection"];
     alignment?: Alignment;
     note?: string;
+    draft?: false;
   };
   const job = await updateJob(id, (j) => {
     if (body.selection) j.selection = { ...j.selection, ...body.selection };
     if (body.alignment) j.alignment = body.alignment;
     if (typeof body.note === "string") j.note = body.note;
+    if (body.draft === false) delete j.draft;
   });
   return Response.json(job);
 }

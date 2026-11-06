@@ -27,7 +27,7 @@ export default function CameraPage() {
   useEffect(() => {
     fetch("/api/jobs")
       .then((r) => r.json())
-      .then((jobs: Job[]) => setThumb(jobs.find((j) => !j.sharedBy)?.photo.url ?? null))
+      .then((jobs: Job[]) => setThumb(jobs.find((j) => !j.sharedBy && !j.draft)?.photo.url ?? null))
       .catch(() => {});
   }, []);
 
@@ -45,7 +45,7 @@ export default function CameraPage() {
     setBusy(true);
     setError(null);
     try {
-      const id = await uploadPhoto(photo);
+      const id = await uploadPhoto(photo, { draft: true });
       router.push(`/jobs/${id}/play`);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));

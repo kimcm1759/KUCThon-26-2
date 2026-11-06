@@ -8,10 +8,18 @@ import { useJobs } from "@/lib/useJobs";
 /** 내 모음: everything you've photographed, two cards per row. */
 export default function Collection() {
   const jobs = useJobs();
-  const mine = jobs?.filter((j) => !j.sharedBy);
+  const mine = jobs?.filter((j) => !j.sharedBy && !j.draft);
   return (
     <>
-      <ScreenHeader title="내 모음" />
+      <ScreenHeader
+        title="내 모음"
+        action={
+          <Link href="/collection/achievements" aria-label="업적" className="flex size-9 items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/figma/encyclopedia.svg" alt="" width={25} height={28} className="block" />
+          </Link>
+        }
+      />
       <section className="min-h-0 flex-1 overflow-y-auto px-[23px] pt-[29px] pb-6">
         {mine && mine.length === 0 ? (
           <Link href="/" className="flex h-[231px] flex-col items-center justify-center gap-1 rounded-[16px] bg-surface text-center">

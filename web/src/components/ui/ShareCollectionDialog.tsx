@@ -14,7 +14,7 @@ export default function ShareCollectionDialog({ jobs, sharedIds, onShared, onClo
   const [selected, setSelected] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
-  const mine = jobs?.filter((job) => !job.sharedBy);
+  const mine = jobs?.filter((job) => !job.sharedBy && !job.draft);
   const selectedJob = mine?.find((job) => job.id === selected);
 
   useEffect(() => {

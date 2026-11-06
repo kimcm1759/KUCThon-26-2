@@ -73,6 +73,8 @@ export interface Job {
   sample?: boolean;
   /** Someone else's object shared with everyone: shows under 네트워크, not 내 모음. */
   sharedBy?: string;
+  /** Fresh from the camera and not kept yet (저장): hidden from 내 모음. */
+  draft?: boolean;
 }
 
 /** Sharing references a saved job without changing its place in 내 모음. */

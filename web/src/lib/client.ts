@@ -92,9 +92,11 @@ export async function shrink(source: Blob | HTMLCanvasElement, max = 1536): Prom
 }
 
 /** Upload a photo and start the pipeline; resolves to the new job id. */
-export async function uploadPhoto(photo: Blob): Promise<string> {
+/** A draft (straight from the camera) stays out of 내 모음 until it's kept with 저장. */
+export async function uploadPhoto(photo: Blob, { draft = false } = {}): Promise<string> {
   const form = new FormData();
   form.append("photo", await shrink(photo), "photo.jpg");
+  if (draft) form.append("draft", "1");
   const res = await fetch("/api/jobs", { method: "POST", body: form });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(body.error ?? `업로드 실패 (${res.status})`);

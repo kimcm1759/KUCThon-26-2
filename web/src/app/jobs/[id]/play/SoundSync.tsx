@@ -40,7 +40,18 @@ export function useSoundSync(on: boolean) {
  * from the start of the take and the file it plays. Missing files beep, each
  * event at its own pitch, so the timing can be heard before any file exists.
  */
-export default function SoundSync({ log, clear, object }: { log: SyncEntry[]; clear: () => void; object?: SoundObject }) {
+export default function SoundSync({
+  log,
+  clear,
+  object,
+  children,
+}: {
+  log: SyncEntry[];
+  clear: () => void;
+  object?: SoundObject;
+  /** Extra controls in the panel's top row (the sound set picker). */
+  children?: React.ReactNode;
+}) {
   const [open, setOpen] = useState(true);
   const [beep, setBeep] = useState(true);
   const take = log[log.length - 1]?.take;
@@ -62,6 +73,7 @@ export default function SoundSync({ log, clear, object }: { log: SyncEntry[]; cl
           🎚 소리 맞추기 {take ? `· 테이크 ${take}` : ""} {open ? "▾" : "▸"}
         </button>
         <span className="flex-1" />
+        {children}
         <label className="flex items-center gap-1 text-subtle">
           <input
             type="checkbox"
