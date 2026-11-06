@@ -35,6 +35,10 @@ SRC = {
     "bomb_explode": "assets/audio/tools/bomb/main_action_001.wav",
     "cardboard_rub": "assets/audio/materials/cardboard/cardboard_box_rub_001.wav",
     "cardboard_tap": "assets/audio/materials/cardboard/cardboard_box_tap_single_001.wav",
+    "plastic_key": "assets/audio/materials/plastic/plastic_key_press_single_001.wav",
+    "glass_tap": "assets/audio/materials/glass/glass_tap_single_001.wav",
+    "glass_scrape": "assets/audio/materials/glass/glass_scrape_001.wav",
+    "glass_shatter": "assets/audio/materials/glass/glass_shatter_fall_001.wav",
     "can_tap": "assets/audio/materials/aluminum/aluminum_can_tap_single_001.wav",
     "can_crush": "assets/audio/materials/aluminum/aluminum_can_crush_001.wav",
 }
@@ -227,7 +231,68 @@ def build_can():
     }
 
 
-BUILDERS = {"can": build_can}
+def build_laptop():
+    """노트북 (Claude 판정 electronics·cracks → 마우스도 이 세트를 씀).
+
+    물건 소리는 sound 브랜치 엔진(materialPresets.js)이 노트북에 고른 조합 그대로:
+    타격 = 유리 두드림 + 키보드 키, 누름 = 유리 긁힘, 깨짐 = 유리 깨짐 + 키보드 키.
+    노트북 외장(알루미늄·플라스틱 케이스) 전용 녹음은 없음 → 대체 소리.
+    타이밍: 망치 3번째·배트 2번째(슬로모션 0.35배) 타격에 깨짐, 그 전 타격마다 작은 조각 3개.
+    프레스는 0.45 s 닿고 ~1.12 s에 터짐(burst), crunch 없음.
+    """
+    # 음원 앞쪽 정리: 키보드 키는 앞 150 ms가 잡음(-27~-34 dB), 유리 두드림은 10 ms에서 시작,
+    # 유리 긁힘은 150 ms부터 큰 소리
+    key = peak_to(fade(cut(load("plastic_key"), 145), 2, 30), 0)
+    gtap = peak_to(fade(cut(load("glass_tap"), 5), 2, 20), 0)
+    scrape = peak_to(fade(cut(load("glass_scrape"), 140), 2, 30), 0)
+    shatter = load("glass_shatter")
+    shatter_long = peak_to(fade(cut(shatter, 0, 1400), 2, 400), 0)
+    # 배트 2번째 타격은 슬로모션이라 0.35배로 늘어남 → 깨짐 꼬리를 짧게(1.0 s)
+    shatter_short = peak_to(fade(cut(shatter, 0, 1000), 2, 300), 0)
+
+    # 도구 소리 (캔과 같은 가공)
+    hammer_hit = peak_to(fade(load("hammer_hit"), 0, 30), -5)
+    bat_hit = attack_to(ring_cut(cut(load("bat_hit"), 10, 610), 50, 600, -40), 50, -8.4)
+    l_burn = load("laser_burn")
+    boom = peak_to(fade(load("bomb_explode"), 0, 300), 0)
+    rumble = peak_to(cut(load("press_press"), 300, 1880), 0)
+
+    # 프레스 crush 🔁: 0.45~1.12 s(약 0.67 s) → 유리 긁힘 0.72 s + 누르는 저음, 이음새 없이 0.66 s
+    crush_loop = seamless(mix((cut(scrape, 0, 720), 0, 0), (cut(rumble, 0, 720), -8, 0))[: ms(720)], 60)
+
+    return {
+        # 망치
+        "laptop/hammer/hit.wav": hammer_hit,
+        # 금 감(1·2번째): 유리 두드림 + 키보드 키
+        "laptop/hammer/damage.wav": peak_to(mix((gtap, 0, 0), (key, -3, 0)), -1),
+        # 깨짐(3번째): 유리 깨짐 1.4 s + 키보드 키 + 유리 두드림
+        "laptop/hammer/break.wav": peak_to(mix((shatter_long, 0, 0), (key, -4, 0), (gtap, -6, 0)), -1),
+        # 배트
+        "laptop/bat/hit.wav": bat_hit,
+        # 1번째(안 깨짐): 망치보다 세게 → 키보드 키를 더 크게
+        "laptop/bat/damage.wav": peak_to(mix((gtap, 0, 0), (key, -1, 0)), -1),
+        # 2번째(깨짐, 슬로모션): 유리 깨짐 1.0 s + 키보드 키, 살짝 포화(캔 배트 피드백과 같은 이유)
+        "laptop/bat/break.wav": peak_to(saturate(mix((shatter_short, 0, 0), (key, -3, 0), (gtap, -5, 0)), 2.0), -1),
+        # 프레스
+        "laptop/press/contact.wav": peak_to(mix((key, 0, 0), (gtap, -6, 0)), -3),
+        "laptop/press/crush.wav": peak_to(crush_loop, -2),
+        # 터짐: 유리 깨짐 1.4 s + 키보드 키 + 누르는 저음 앞 300 ms
+        "laptop/press/burst.wav": peak_to(mix((shatter_long, 0, 0), (key, -3, 0), (fade(cut(rumble, 0, 300), 2, 150), -8, 0)), -1),
+        # 레이저
+        "laptop/laser/burn.wav": peak_to(seamless(cut(l_burn, 40, 1240)), -4),
+        # 잘림: 유리 두드림 + 키보드 키 + 지짐 앞 250 ms
+        "laptop/laser/cut.wav": peak_to(mix((gtap, 0, 0), (key, -6, 0), (fade(cut(l_burn, 40, 290), 2, 80), -6, 0)), -1),
+        # 폭탄: 폭발이 주, 유리 깨짐·키보드 키가 그 안에서
+        "laptop/bomb/explode.wav": peak_to(mix((boom, 0, 0), (shatter_long, -4, 0), (key, -8, 0)), -1),
+        # 조각: 작은 유리 조각(높게)·플라스틱 조각 / 큰 덩어리(키보드 키 낮게 + 유리)
+        "laptop/debris/small.wav": peak_to(fade(pitch(cut(gtap, 0, 100), 1.3), 0, 30), -10),
+        "laptop/debris/small_2.wav": peak_to(fade(pitch(cut(key, 0, 100), 1.2), 0, 30), -11),
+        "laptop/debris/small_3.wav": peak_to(fade(pitch(cut(gtap, 0, 100), 1.6), 0, 30), -12),
+        "laptop/debris/large.wav": peak_to(mix((fade(pitch(cut(key, 0, 200), 0.85), 0, 50), 0, 0), (gtap, -6, 0)), -6),
+    }
+
+
+BUILDERS = {"can": build_can, "laptop": build_laptop}
 
 
 def main():
