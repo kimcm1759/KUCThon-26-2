@@ -321,11 +321,12 @@ def build_book():
 
     return {
         # 망치
-        "book/hammer/hit.wav": hammer_hit,
-        # 1·2번째: 판지 '퍽' + 구김 앞 350 ms
-        "book/hammer/damage.wav": peak_to(mix((box, 0, 0), (part(crumple, 0, 350), -4, 0)), -1),
-        # 3번째(깨짐): 찢김 1.2 s + 구김 0.6 s + 판지
-        "book/hammer/break.wav": peak_to(mix((part(tear, 0, 1200, 400), 0, 0), (part(crumple, 0, 600, 200), -4, 0), (box, -3, 0)), -1),
+        # 망치 타격음은 책에선 뒤로: 표지 '퍽'(판지 두드림) 위주로 (사용자 피드백 2026-11-07)
+        "book/hammer/hit.wav": peak_to(fade(load("hammer_hit"), 0, 30), -15),
+        # 1·2번째: 판지 '퍽'(표지) 위주 + 구김 앞 350 ms는 작게
+        "book/hammer/damage.wav": peak_to(mix((box, 0, 0), (part(crumple, 0, 350), -10, 0)), -1),
+        # 3번째(깨짐): 판지 '퍽' 위주 + 찢김 1.2 s + 구김 0.6 s
+        "book/hammer/break.wav": peak_to(mix((box, 0, 0), (part(tear, 0, 1200, 400), -3, 0), (part(crumple, 0, 600, 200), -6, 0)), -1),
         # 배트
         "book/bat/hit.wav": bat_hit,
         "book/bat/damage.wav": peak_to(mix((box, 0, 0), (part(crumple, 0, 450), -2, 0)), -1),
