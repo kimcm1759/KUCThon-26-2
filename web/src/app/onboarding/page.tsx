@@ -6,15 +6,21 @@ import Stage from "@/components/ui/Stage";
 import { setUser, type User } from "@/lib/client";
 import { userChanged } from "@/lib/useUser";
 
+const DEMO_ACCOUNT = {
+  email: "KUCthon@korea.ac.kr",
+  password: "12345678",
+} as const;
+
 /**
  * Onboarding (Figma 온보딩): splash with the 빠각 logo, then a login form.
- * There are no accounts yet, so every way in just remembers a name here.
+ * Email sign-in uses a fixed demo account until real accounts are connected.
  */
 export default function Onboarding() {
   const router = useRouter();
   const [step, setStep] = useState<"splash" | "login">("splash");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const enter = (user: User) => {
     setUser(user);
@@ -61,35 +67,66 @@ export default function Onboarding() {
         <span className="absolute top-[40.79px] left-[77.8px] h-[5.484px] w-[7.198px] bg-primary" />
       </button>
       <form
+        noValidate
         onSubmit={(e) => {
           e.preventDefault();
-          if (ready) enter({ name: email.trim(), via: "email" });
+          if (!ready) return;
+
+          // TODO: Replace the demo check with account authentication when available.
+          if (email.trim().toLowerCase() !== DEMO_ACCOUNT.email.toLowerCase() || password !== DEMO_ACCOUNT.password) {
+            setError("이메일 또는 비밀번호가 올바르지 않아요. 다시 확인해 주세요.");
+            return;
+          }
+
+          setError("");
+          setPassword("");
+          enter({ name: DEMO_ACCOUNT.email, via: "email" });
         }}
       >
         <input
           type="email"
+          name="email"
+          aria-label="이메일"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "login-error" : undefined}
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setError("");
+          }}
           placeholder="Email"
           autoComplete="email"
-          className="absolute top-[286px] left-[25px] h-14 w-[352px] rounded-[16px] bg-surface px-6 text-[16px] text-white outline-none placeholder:text-subtle"
+          autoCapitalize="none"
+          spellCheck={false}
+          className="absolute top-[286px] left-[25px] h-14 w-[352px] rounded-[16px] bg-surface px-6 text-[16px] text-subtle outline-none placeholder:text-subtle aria-invalid:ring-1 aria-invalid:ring-red-400"
         />
         <input
           type="password"
+          name="password"
+          aria-label="비밀번호"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "login-error" : undefined}
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setError("");
+          }}
           placeholder="Password"
           autoComplete="current-password"
-          className="absolute top-[358px] left-[25px] h-14 w-[352px] rounded-[16px] bg-surface px-6 text-[16px] text-white outline-none placeholder:text-subtle"
+          className="absolute top-[358px] left-[25px] h-14 w-[352px] rounded-[16px] bg-surface px-6 text-[16px] text-subtle outline-none placeholder:text-subtle aria-invalid:ring-1 aria-invalid:ring-red-400"
         />
         <button
           type="submit"
-          className={`absolute top-[430px] left-[25px] flex h-14 w-[352px] items-center justify-center rounded-[16px] text-[18px] font-medium tracking-[0.9px] ${
-            ready ? "bg-primary text-white" : "bg-surface text-primary"
-          }`}
+          disabled={!ready}
+          className="absolute top-[430px] left-[25px] flex h-14 w-[352px] items-center justify-center rounded-[16px] bg-primary text-[18px] font-medium tracking-[0.9px] text-white"
         >
           로그인
         </button>
+        {error && (
+          <p id="login-error" role="alert" className="absolute top-[606px] left-[25px] w-[352px] text-center text-[12px] leading-5 text-red-400">
+            {error}
+          </p>
+        )}
       </form>
       <div className="absolute top-[502px] left-[71px] flex gap-3">
         {SOCIAL.map((s) => (
