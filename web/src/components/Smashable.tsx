@@ -96,8 +96,16 @@ type BreakStyle =
 const TABLE_GROUP = interactionGroups(0, [1]);
 const DEBRIS_GROUP = interactionGroups(1, [0]);
 
-/** After this long without new debris, physics pauses and rendering stops. */
-const SETTLE_MS = 5000;
+/**
+ * Physics pauses (and rendering stops) once debris is nearly still, checked
+ * from SETTLE_MS after the last hit; touching pieces otherwise keep jittering.
+ * SETTLE_MAX_MS is the cutoff for pieces still flying or rolling.
+ */
+const SETTLE_MS = 1000;
+const SETTLE_MAX_MS = 5000;
+const SETTLE_CHECK_MS = 200;
+/** Below this speed (m/s) a piece counts as resting. */
+const REST_SPEED = 0.2;
 const WOBBLE_MS = 300;
 /** Laser cuts stop here to keep phones smooth. */
 const MAX_PIECES = 120;
@@ -381,11 +389,21 @@ export function PlacedModel({
       setPhysicsOn(true);
       setFrameloop("always");
       clearTimeout(settleTimer.current);
-      settleTimer.current = setTimeout(() => {
+      const deadline = now() + SETTLE_MAX_MS;
+      const check = () => {
+        const moving = [...bodies.current.values()].some((b) => {
+          const v = b.linvel();
+          return Math.hypot(v.x, v.y, v.z) / upmRef.current > REST_SPEED;
+        });
+        if (moving && now() < deadline) {
+          settleTimer.current = setTimeout(check, SETTLE_CHECK_MS);
+          return;
+        }
         setPhysicsOn(false);
         setFrameloop("demand");
         invalidate();
-      }, SETTLE_MS);
+      };
+      settleTimer.current = setTimeout(check, SETTLE_MS);
     },
     [setFrameloop, invalidate],
   );
