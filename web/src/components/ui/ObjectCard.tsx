@@ -26,7 +26,7 @@ export default function ObjectCard({ job, wide, owner, date }: { job: Job; wide?
     <Link
       href={cardHref(job)}
       className={`relative block overflow-hidden bg-surface ${
-        wide ? "h-[231px] rounded-[16px] border border-white/10" : "aspect-[171/231] rounded-[16px] border border-white/10"
+        wide ? "glass h-[231px] rounded-[16px]" : "glass aspect-[171/231] rounded-[16px]"
       }`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

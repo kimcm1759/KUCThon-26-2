@@ -62,7 +62,7 @@ export default function Onboarding() {
         <button
           onClick={() => setStep("login")}
           disabled={pending}
-          className="absolute top-[750px] left-1/2 flex h-14 w-[352px] -translate-x-1/2 items-center justify-center rounded-[16px] bg-primary text-[18px] font-medium tracking-[0.9px]"
+          className="glass absolute top-[750px] left-1/2 flex h-14 w-[352px] -translate-x-1/2 items-center justify-center rounded-[16px] bg-primary/40 text-[18px] font-medium tracking-[0.9px] transition-colors duration-300 hover:bg-surface/20 hover:text-primary"
         >
           로그인
         </button>
@@ -148,7 +148,7 @@ export default function Onboarding() {
         <button
           type="submit"
           disabled={!ready || pending}
-          className="absolute top-[430px] left-[25px] flex h-14 w-[352px] items-center justify-center rounded-[16px] bg-primary text-[18px] font-medium tracking-[0.9px] text-white"
+          className="absolute top-[430px] left-[25px] flex h-14 w-[352px] items-center justify-center rounded-[16px] bg-primary/20 text-[18px] font-medium tracking-[0.9px] text-white transition-colors duration-300 enabled:hover:bg-surface/20 enabled:hover:text-primary"
         >
           {pending ? "로그인 중…" : "로그인"}
         </button>

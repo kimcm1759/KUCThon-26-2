@@ -150,7 +150,7 @@ export default function CameraPage() {
         <button
           onClick={() => setFacing((f) => (f === "environment" ? "user" : "environment"))}
           aria-label="카메라 전환"
-          className="flex size-12 items-center justify-center rounded-[24px] bg-[rgba(31,31,31,0.2)]"
+          className="glass relative flex size-12 items-center justify-center rounded-[24px] bg-[rgba(31,31,31,0.2)]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/figma/cam-flip.svg" alt="" width={23.15} height={18} />

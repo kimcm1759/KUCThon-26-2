@@ -102,15 +102,13 @@ export default function PlayView({ id }: { id: string }) {
             sound.setMuted(!muted);
             setMuted(!muted);
           }}
-          className="flex size-[39px] shrink-0 items-center justify-center rounded-[16px] bg-primary/20 text-[16px]"
+          className="glass relative flex size-[39px] shrink-0 items-center justify-center rounded-[16px] bg-primary/20 text-[16px] transition-colors duration-300 hover:bg-primary"
           aria-label={muted ? "소리 켜기" : "소리 끄기"}
         >
           {muted ? "🔇" : "🔊"}
         </button>
         {save}
-        <FigmaButton onClick={reset} solid={broken}>
-          되돌리기
-        </FigmaButton>
+        <FigmaButton onClick={reset}>되돌리기</FigmaButton>
       </Header>
 
       <div
@@ -185,8 +183,8 @@ export default function PlayView({ id }: { id: string }) {
                   className="flex w-20 flex-col items-center"
                 >
                   <span
-                    className={`flex size-20 items-center justify-center rounded-[16px] border-2 bg-gradient-to-b from-[rgba(24,23,28,0.2)] to-[rgba(80,76,95,0.2)] ${
-                      active ? "border-primary" : "border-white/10"
+                    className={`glass relative flex size-20 items-center justify-center rounded-[16px] border-2 bg-gradient-to-b from-[rgba(24,23,28,0.2)] to-[rgba(80,76,95,0.2)] ${
+                      active ? "border-primary" : "border-transparent"
                     }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -217,18 +215,15 @@ function Header({ title, onBack, children }: { title: string; onBack: () => void
   );
 }
 
-/** Figma 저장 button (Frame 33): light blue by default, solid blue when it matters. */
-function FigmaButton({
-  solid,
-  className = "",
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { solid?: boolean }) {
+/**
+ * Figma 저장 button (Frame 33): glass over 20% blue; on mouse enter it turns
+ * solid blue without the glass (Variant2), fading back on leave.
+ */
+function FigmaButton({ className = "", ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className={`flex h-[39px] shrink-0 items-center justify-center rounded-[16px] p-[10px] text-[16px] font-medium tracking-[0.8px] whitespace-nowrap text-white disabled:opacity-60 ${
-        solid ? "bg-primary" : "bg-primary/20"
-      } ${className}`}
+      className={`glass relative flex h-[39px] shrink-0 items-center justify-center rounded-[16px] bg-primary/20 p-[10px] text-[16px] font-medium tracking-[0.8px] whitespace-nowrap text-white transition-colors duration-300 hover:bg-primary hover:[backdrop-filter:none] hover:after:opacity-0 disabled:opacity-60 ${className}`}
     />
   );
 }
@@ -253,7 +248,7 @@ function SaveButton({ job, onSaved }: { job: Job; onSaved: (j: Job) => void }) {
     }
   };
   return (
-    <FigmaButton onClick={save} disabled={state === "saving" || state === "saved"} solid={state === "saved"}>
+    <FigmaButton onClick={save} disabled={state === "saving" || state === "saved"}>
       {state === "saved" ? "저장됨" : state === "error" ? "다시 저장" : "저장"}
     </FigmaButton>
   );
