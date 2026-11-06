@@ -280,11 +280,12 @@ def build_laptop():
 
     return {
         # 망치
-        "laptop/hammer/hit.wav": hammer_hit,
-        # 금 감(1·2번째): 유리 두드림 + 키보드 키
-        "laptop/hammer/damage.wav": peak_to(mix((gtap, 0, 0), (key, -3, 0)), -1),
-        # 깨짐(3번째): 유리 깨짐 1.4 s + 키보드 키 + 유리 두드림
-        "laptop/hammer/break.wav": peak_to(mix((shatter_long, 0, 0), (key, -4, 0), (gtap, -6, 0)), -1),
+        # 책·캔처럼 망치는 뒤로, 노트북 소리 위주 (사용자 피드백 2026-11-07: 망치 -5 → -15 dB)
+        "laptop/hammer/hit.wav": peak_to(fade(load("hammer_hit"), 0, 30), -15),
+        # 금 감(1·2번째): 유리 두드림 + 키보드 키, 포화(2.0)로 꽉 차게
+        "laptop/hammer/damage.wav": peak_to(saturate(mix((gtap, 0, 0), (key, -2, 0)), 2.0), -1),
+        # 깨짐(3번째): 유리 깨짐 1.4 s + 키보드 키 + 유리 두드림, 포화(1.8)로 또렷하게
+        "laptop/hammer/break.wav": peak_to(saturate(mix((shatter_long, 0, 0), (key, -4, 0), (gtap, -6, 0)), 1.8), -1),
         # 배트
         "laptop/bat/hit.wav": bat_hit,
         # 1번째(안 깨짐): 망치보다 세게 → 키보드 키를 더 크게
