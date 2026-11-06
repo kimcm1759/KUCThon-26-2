@@ -238,9 +238,9 @@ def build_can():
         # 찌그러짐(1~3번째 타격): 캔 두드림 "깡" + 찌그러짐 앞 280 ms
         "can/hammer/damage.wav": peak_to(mix((tap_n, 0, 0), (fade(cut(crush_n, 0, 280), 0, 80), -4, 0)), -1),
         # 깨짐(4번째 타격): 찌그러짐을 3번 이어 붙여 ~1.1 s로 길게(0.93배 280 ms 뒤, 1.06배 560 ms 뒤),
-        # 200 Hz 아래 탁한 소리를 걷고 포화(2.5)로 또렷하고 크게 + 두드림 (사용자 피드백 2026-11-07)
+        # 200 Hz 아래 탁한 소리를 걷고 포화(6.0, "더더더 키워줘")로 또렷하고 크게 + 두드림, 피크 -0.3 dB (사용자 피드백 2026-11-07)
         "can/hammer/break.wav": peak_to(fade(mix(
-            (saturate(crunch_long - lowpass(crunch_long, 200, SR), 2.5), 0, 0), (tap_n, -4, 0)), 2, 250), -1),
+            (saturate(crunch_long - lowpass(crunch_long, 200, SR), 6.0), 0, 0), (tap_n, -6, 0)), 2, 250), -0.3),
         # 조각 떨어짐: 두드림을 짧게·높게(작은 조각) / 원래 길이·낮게(큰 조각)
         # 배트로 깰 때 조각이 덜 날아가 작게 들려서 +5 dB (사용자 피드백 2026-11-07, 모든 도구 공통)
         "can/debris/small.wav": peak_to(fade(pitch(cut(tap_n, 0, 140), 1.2), 0, 40), -5),
