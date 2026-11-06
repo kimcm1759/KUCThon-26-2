@@ -44,3 +44,42 @@
 | `paper_other_001` | `assets/audio/provided/paper_other_001.mp3` (2.4초, 48kHz 스테레오) | 미정 | 미정 | paper | other | light | 종이 가볍게 팔랑거리는 소리 |
 
 도구·역할이 미정인 제공 음원은 `needs_review`이며 준비 현황에는 반영하지 않는다.
+
+## 재질 효과음 (실제 재질·동작 라벨)
+
+`catalog.json`의 `material_sounds`. 라벨은 용도(마무리 등)가 아니라 실제로 들리는 재질·동작이다. 어떤 물건·도구·상황에 쓸지는 앱에서 나중에 고른다. 엔진(`src/audio/`)은 아직 이 목록을 읽지 않는다.
+필드: `label`(재질_대상_동작[_횟수]) · `material_code` · `action` · `secondary_actions` · `repeat_count` · `quantity` · `recorded_source`(실제 녹음 대상) · `derived_from`/`edits`(잘라내기·음량 조정 내역).
+태그는 음원 페이지 설명·사용자 설명·음량 측정 기준이며 청취 검수는 하지 않았다.
+
+| 재질 | label | 동작 | 횟수 | 수량 | 파일 | 길이 | 편집 |
+|---|---|---|---|---|---|---|---|
+| cardboard | `cardboard_box_tap_single` | tap | 1 | single_object | `assets/audio/materials/cardboard/cardboard_box_tap_single_001.wav` | 0.515s | 원본(13회 이상 연속 탭)에서 3.39초 타격 1회만 잘라냄: 3.385~3.900초, 시작 3ms·끝 25ms 페이드. 음량은 바꾸지 않음. |
+| cardboard | `cardboard_box_rub` | rub | - | - | `assets/audio/materials/cardboard/cardboard_box_rub_001.wav` | 1.833s | 없음 |
+| paper | `paper_sheet_tap_single` | tap | 1 | single_sheet | `assets/audio/materials/paper/paper_sheet_tap_single_001.wav` | 0.145s | 원본(여러 번 탭 + 인위적 공간 잔향)에서 1.12초 탭 1회만 잘라냄: 1.105~1.250초, 시작 3ms·끝 25ms 페이드. 잔향 꼬리는 잘라냈으나(끝 지점이 타격 대비 약 -29dB) 타격 직후 0.13초 안의 초기 잔향은 분리할 수 없어 남아 있음. 음량은 바꾸지 않음. |
+| paper | `paper_sheet_rub_single` | rub | 1 | single_sheet | `assets/audio/materials/paper/paper_sheet_rub_single_001.wav` | 1.0s | 음량만 +34.9dB 올림. 소리가 나는 구간의 평균 음량을 판지 문지르기·유리 긁기와 같은 -18dB로 맞춤(최대 음량 -42.6 → -7.7dBFS). 길이·내용은 그대로. 원본 잡음 바닥(약 -62dB)도 같이 커져 약 -27dB가 됨. |
+| paper | `paper_tear` | tear | - | - | `assets/audio/provided/paper_tear_001.mp3` | 2.616s | 없음 |
+| paper | `paper_crumple` | crumple | - | single_sheet | `assets/audio/materials/paper/paper_crumple_001.wav` | 2.189s | 없음 |
+| aluminum | `aluminum_can_tap_x5` | tap | 5 | single_object | `assets/audio/materials/aluminum/aluminum_can_tap_x5_001.wav` | 1.044s | 없음 |
+| aluminum | `aluminum_can_crush` | crush+squeeze | - | single_object | `assets/audio/materials/aluminum/aluminum_can_crush_001.wav` | 2.0s | 없음 |
+| plastic | `plastic_keyboard_key_press_single` | key_press | 1 | single_key | `assets/audio/materials/plastic/plastic_key_press_single_001.wav` | 0.566s | 없음 |
+| glass | `glass_tap_single` | tap | 1 | - | `assets/audio/materials/glass/glass_tap_single_001.wav` | 0.302s | 없음 |
+| ceramic | `ceramic_plate_hit_crack` | impact+crack | - | single_object | `assets/audio/materials/ceramic/ceramic_plate_hit_crack_001.wav` | 0.652s | 없음 |
+| glass | `glass_scrape` | scrape | - | - | `assets/audio/materials/glass/glass_scrape_001.wav` | 2.52s | 없음 |
+| glass | `glass_shatter_fall` | shatter+debris_fall | - | - | `assets/audio/materials/glass/glass_shatter_fall_001.wav` | 3.692s | 없음 |
+
+### 제외한 음원 (`material_sounds_excluded`)
+
+파일은 `assets/audio/materials/excluded/`에 보존하고, 카탈로그 사용 후보에서는 뺐다. 편집 전 원본은 `assets/audio/materials/{재질}/source/`에 있다.
+
+| 이전 ID | 설명 | 사유 | 보존 위치 |
+|---|---|---|---|
+| `cardboard_strong_impact_press_001` | 택배 상자를 발로 밟아 찌그러뜨리는 소리 | 판지 강한 충격·눌림 제거 지시 | `assets/audio/materials/excluded/563736__ravenrio__boxcrunch-01.wav` |
+| `cardboard_finish_001` | 책을 덮는 소리 | 판지 마무리 제거 지시 (책 덮는 소리) | `assets/audio/materials/excluded/195795__ondondvo__closing-book.wav` |
+| `aluminum_scrape_friction_001` | 캔을 나무 책상 위로 끄는 소리 | 알루미늄 긁힘·마찰 제거 지시 | `assets/audio/materials/excluded/423662__kierankeegan__can-sliding-across-wooden-desk.wav` |
+| `aluminum_finish_001` | 캔을 바닥에 던져 구르는 소리 | 알루미늄 마무리 제거 지시 (캔을 던져 구르는 소리) | `assets/audio/materials/excluded/500024__hope-sounds__a-can-is-thrown-to-the-ground.mp3` |
+| `aluminum_finish_002` | 캔 고리를 따서 여는 소리 | 알루미늄 마무리 제거 지시 (캔 고리 따는 소리) | `assets/audio/materials/excluded/617630__freddybob951__opening-tab-soda-can.m4a` |
+| `plastic_strong_impact_press_001` | 플라스틱 통이 나무 바닥에 부딪히는 소리 | 플라스틱 강한 충격·눌림 제거 지시 | `assets/audio/materials/excluded/525099__jomse__plasticimpacta9.wav` |
+| `plastic_strong_impact_press_002` | 작은 빈 플라스틱 용기를 금속 도구로 치는 소리 | 플라스틱 강한 충격·눌림 제거 지시 | `assets/audio/materials/excluded/844254__foxfire__plastic-container-tap.wav` |
+| `plastic_scrape_friction_001` | 플라스틱을 문지르는 소리 | 플라스틱 긁힘·마찰 제거 지시 | `assets/audio/materials/excluded/669471__cjspellsfish__plastic-friction-1.wav` |
+| `plastic_finish_001` | 플라스틱끼리 딸깍 꺾이는 소리 | 플라스틱 마무리 제거 지시 (평가가 좋지 않아 재사용하지 않음) | `assets/audio/materials/excluded/686167__redpanda69__plastic-snap.mp3` |
+| `unclassified_finish_001` | 노트북 덮개를 닫는 소리 | 노트북 덮개 닫는 소리 제거 지시 | `assets/audio/materials/excluded/419952__14fpanskavesecka_karolina__closing-the-lid-of-laptop.wav` |

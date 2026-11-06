@@ -123,6 +123,21 @@ TEMPLATE = """<!doctype html>
 """
 
 
+MATERIALS = [
+    ("cardboard", "판지"),
+    ("paper", "종이"),
+    ("aluminum", "알루미늄"),
+    ("plastic", "플라스틱"),
+    ("glass", "유리"),
+    ("ceramic", "도자기"),
+    ("unknown", "재질 미정"),
+]
+ACTION_NAMES = {
+    "tap": "두드림", "rub": "문지름", "scrape": "긁음", "tear": "찢음", "crumple": "구김",
+    "crush": "찌그러뜨림", "key_press": "키 누름", "impact": "충격", "shatter": "깨짐",
+}
+
+
 def disabled_roles():
     """엔진 설정(src/audio/presets/toolPresets.js)의 disabledRoles를 읽는다."""
     import re
@@ -142,7 +157,9 @@ def esc(s):
 
 def main():
     with open(os.path.join(ROOT, "sounds", "catalog.json"), encoding="utf-8") as f:
-        sounds = json.load(f)["sounds"]
+        catalog = json.load(f)
+    sounds = catalog["sounds"]
+    materials = catalog.get("material_sounds", [])
 
     def src(s):
         return "../" + s["file_path"]
@@ -172,7 +189,7 @@ def main():
             f'<div class="grid">{"".join(btns)}</div></section>'
         )
 
-    provided = [s for s in sounds if s.get("source_type") == "provided_audio"]
+    provided = [s for s in sounds if s.get("source_type") == "provided_audio" and not s.get("tool_code")]
     prov_html = ""
     if provided:
         btns = "".join(
@@ -183,7 +200,31 @@ def main():
         )
         prov_html = f'<h3>받은 음원 (도구·역할 미정)</h3><section class="tool"><div class="grid">{btns}</div></section>'
 
-    out = TEMPLATE.replace("__TOOLS__", "\n  ".join(blocks)).replace("__PROVIDED__", prov_html)
+    mat_html = ""
+    if materials:
+        mat_html = '<h3>재질 효과음 (실제 재질·동작 라벨)</h3>'
+        for code, name in MATERIALS:
+            rows = [m for m in materials if m.get("material_code", "unknown") == code]
+            if not rows:
+                continue
+            btns = []
+            for m in rows:
+                flag = " · 검토 필요" if m.get("status") != "ready" else ""
+                act = ACTION_NAMES.get(m.get("action"), m.get("action") or "?")
+                if m.get("repeat_count"):
+                    act += f" ×{m['repeat_count']}"
+                btns.append(
+                    f'<button class="snd" data-tool="mat_{code}" data-src="{esc(src(m))}" '
+                    f'data-label="{esc(name + " · " + m["description"])}" title="{esc(m["sound_id"])}">'
+                    f'<span class="role">{esc(act)}{flag}</span><span class="desc">{esc(m["description"])}<br>'
+                    f'<code>{esc(m.get("label") or m["sound_id"])}</code></span></button>'
+                )
+            mat_html += (f'<section class="tool"><div class="tool-head"><h2>{name}<code>{code}</code></h2>'
+                         f'<button class="seq" data-tool="mat_{code}">▶ 순서대로</button></div>'
+                         f'<div class="grid">{"".join(btns)}</div></section>')
+
+    out = (TEMPLATE.replace("__TOOLS__", "\n  ".join(blocks))
+           .replace("__PROVIDED__", prov_html + mat_html))
     path = os.path.join(ROOT, "sounds", "player.html")
     with open(path, "w", encoding="utf-8") as f:
         f.write(out)

@@ -8,6 +8,7 @@
 - 분류 기준은 파손 도구 5종(`hydraulic_press`, `hammer`, `aluminum_bat`, `laser`, `bomb`) × 역할 4종(`activation`, `main_action`, `impact_detail`, `finish`).
 - 사용 안 함 역할(사용자 결정 2026-11-07): 유압 프레스·망치·배트의 `impact_detail`, 레이저의 `main_action`, 폭탄의 `impact_detail`·`finish`. 엔진 `src/audio/presets/toolPresets.js`의 `disabledRoles`에 있고, 이 칸은 음원을 요청하거나 합성하지 않는다.
 - 카탈로그 데이터: `sounds/catalog.json` / 사람이 읽는 표 + 준비 현황: `sounds/README.md`
+- 재질 효과음: `assets/audio/materials/{material}/{sound_id}.ext`, 카탈로그는 `catalog.json`의 `material_sounds`(엔진은 아직 안 읽음). 라벨은 용도(마무리 등)가 아니라 실제 재질·동작(`label`, `action`, `repeat_count`, `quantity`, `recorded_source`)으로 붙인다. 제외 항목은 `material_sounds_excluded` + `materials/excluded/`, 편집 전 원본은 `materials/{material}/source/`에 보존.
 - 합성음: `assets/audio/tools/{tool_code}/` / 사용자 제공 음원: `assets/audio/provided/`
 - 재생 페이지: `sounds/player.html`. 카탈로그를 바꾼 뒤에는 `python scripts/build_player.py`로 다시 생성한다.
 - 물건·도구 맞춤 선택·믹싱 모듈: `src/audio/` (설명 `docs/sound-engine.md`). 규칙 기반이며 학습형 AI라고 표현하지 않는다. 수정 후 `npm test`, `npm run validate`.

@@ -393,5 +393,447 @@
       "created_at": "2026-11-07",
       "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
     }
+  ],
+  "material_sounds": [
+    {
+      "sound_id": "cardboard_box_tap_single_001",
+      "label": "cardboard_box_tap_single",
+      "file_path": "assets/audio/materials/cardboard/cardboard_box_tap_single_001.wav",
+      "material_code": "cardboard",
+      "action": "tap",
+      "secondary_actions": [],
+      "repeat_count": 1,
+      "quantity": "single_object",
+      "recorded_source": "빈 판지 상자(음료 12팩 포장 상자)를 손으로 침",
+      "description": "판지 상자를 손으로 한 번 두드리는 소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 0.515,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": "assets/audio/materials/cardboard/source/364932__newagesoup__hit-tap-strike-cardboard-box-13-times.wav",
+      "edits": [
+        "원본(13회 이상 연속 탭)에서 3.39초 타격 1회만 잘라냄: 3.385~3.900초, 시작 3ms·끝 25ms 페이드. 음량은 바꾸지 않음."
+      ],
+      "original_filename": "364932__newagesoup__hit-tap-strike-cardboard-box-13-times.wav",
+      "notes": "원본에서 앞뒤 타격과 간격이 가장 넓은(0.19초 전·0.9초 후) 타격을 고름. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "cardboard_box_rub_001",
+      "label": "cardboard_box_rub",
+      "file_path": "assets/audio/materials/cardboard/cardboard_box_rub_001.wav",
+      "material_code": "cardboard",
+      "action": "rub",
+      "secondary_actions": [],
+      "repeat_count": null,
+      "quantity": null,
+      "recorded_source": "빈 판지 상자를 손으로 짧게 문지름",
+      "description": "판지 상자를 짧게 문지르는 소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 1.833,
+      "sample_rate_hz": 48000,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "364737__newagesoup__rub-handle-cardboard-box.wav",
+      "notes": "이번 지시에서 판지 긁힘·마찰은 제거 대상으로 지정되지 않아 유지. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "paper_sheet_tap_single_001",
+      "label": "paper_sheet_tap_single",
+      "file_path": "assets/audio/materials/paper/paper_sheet_tap_single_001.wav",
+      "material_code": "paper",
+      "action": "tap",
+      "secondary_actions": [],
+      "repeat_count": 1,
+      "quantity": "single_sheet",
+      "recorded_source": "종이 한 장을 두드림(원본에 공간 잔향이 더해져 있음)",
+      "description": "종이 한 장을 한 번 두드리는 소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 0.145,
+      "sample_rate_hz": 48000,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": "assets/audio/materials/paper/source/819595__deqsterslab__tapping-paper-light-ambient-reverb.mp3",
+      "edits": [
+        "원본(여러 번 탭 + 인위적 공간 잔향)에서 1.12초 탭 1회만 잘라냄: 1.105~1.250초, 시작 3ms·끝 25ms 페이드. 잔향 꼬리는 잘라냈으나(끝 지점이 타격 대비 약 -29dB) 타격 직후 0.13초 안의 초기 잔향은 분리할 수 없어 남아 있음. 음량은 바꾸지 않음."
+      ],
+      "original_filename": "819595__deqsterslab__tapping-paper-light-ambient-reverb.mp3",
+      "notes": "원본 다음 탭까지 1.7초 비어 있는 구간의 탭을 고름. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "paper_sheet_rub_single_001",
+      "label": "paper_sheet_rub_single",
+      "file_path": "assets/audio/materials/paper/paper_sheet_rub_single_001.wav",
+      "material_code": "paper",
+      "action": "rub",
+      "secondary_actions": [],
+      "repeat_count": 1,
+      "quantity": "single_sheet",
+      "recorded_source": "종이 한 장을 문지름",
+      "description": "종이 한 장을 문지르는 소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 1.0,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": "assets/audio/materials/paper/source/446609__nicolas4677__sheet-rub.wav",
+      "edits": [
+        "음량만 +34.9dB 올림. 소리가 나는 구간의 평균 음량을 판지 문지르기·유리 긁기와 같은 -18dB로 맞춤(최대 음량 -42.6 → -7.7dBFS). 길이·내용은 그대로. 원본 잡음 바닥(약 -62dB)도 같이 커져 약 -27dB가 됨."
+      ],
+      "original_filename": "446609__nicolas4677__sheet-rub.wav",
+      "notes": "태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "paper_tear_001",
+      "label": "paper_tear",
+      "file_path": "assets/audio/provided/paper_tear_001.mp3",
+      "material_code": "paper",
+      "action": "tear",
+      "secondary_actions": [],
+      "repeat_count": null,
+      "quantity": null,
+      "recorded_source": "종이를 찢음(사용자 설명)",
+      "description": "종이 찢는소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 2.616,
+      "sample_rate_hz": 48000,
+      "channels": 2,
+      "format": "mp3",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "860179__frontmusic__paper-tearing-and-rustling-sounds_[cut_3sec].mp3",
+      "notes": "사용자 제공 음원(기존 sounds의 paper_tear_001과 같은 파일, 중복 저장 안 함). 원본 파일명에 'rustling'도 있으나 사용자 설명에는 없어 보조 동작으로 넣지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "paper_crumple_001",
+      "label": "paper_crumple",
+      "file_path": "assets/audio/materials/paper/paper_crumple_001.wav",
+      "material_code": "paper",
+      "action": "crumple",
+      "secondary_actions": [],
+      "repeat_count": null,
+      "quantity": "single_sheet",
+      "recorded_source": "종이 한 장을 구김",
+      "description": "종이를 구기는 소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 2.189,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "151231__owlstorm__crumpling-paper.wav",
+      "notes": "이번 지시에서 종이 구기기는 제거 대상으로 지정되지 않아 유지. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "aluminum_can_tap_x5_001",
+      "label": "aluminum_can_tap_x5",
+      "file_path": "assets/audio/materials/aluminum/aluminum_can_tap_x5_001.wav",
+      "material_code": "aluminum",
+      "action": "tap",
+      "secondary_actions": [],
+      "repeat_count": 5,
+      "quantity": "single_object",
+      "recorded_source": "맥주 캔을 두드림",
+      "description": "알루미늄 맥주 캔을 약 0.2초 간격으로 5번 두드리는 소리",
+      "texture_tags": [
+        "metallic"
+      ],
+      "duration_seconds": 1.044,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "210083__soundscape_leuphana__20131119_tapping-beer-can_zoomh6xy.wav",
+      "notes": "반복 횟수는 음량 측정 기준(0.10·0.31·0.51·0.73·0.93초). 오디오는 편집하지 않음. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "aluminum_can_crush_001",
+      "label": "aluminum_can_crush",
+      "file_path": "assets/audio/materials/aluminum/aluminum_can_crush_001.wav",
+      "material_code": "aluminum",
+      "action": "crush",
+      "secondary_actions": [
+        "squeeze"
+      ],
+      "repeat_count": null,
+      "quantity": "single_object",
+      "recorded_source": "알루미늄 캔을 쥐어 찌그러뜨림",
+      "description": "알루미늄 캔을 쥐어 찌그러뜨리는 소리",
+      "texture_tags": [
+        "metallic",
+        "crunchy"
+      ],
+      "duration_seconds": 2.0,
+      "sample_rate_hz": 96000,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "689774__mutilatorbcb__crush-can-soda-beer-pop.wav",
+      "notes": "태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "plastic_key_press_single_001",
+      "label": "plastic_keyboard_key_press_single",
+      "file_path": "assets/audio/materials/plastic/plastic_key_press_single_001.wav",
+      "material_code": "plastic",
+      "action": "key_press",
+      "secondary_actions": [],
+      "repeat_count": 1,
+      "quantity": "single_key",
+      "recorded_source": "키보드 키 하나를 누름",
+      "description": "키보드 키 하나를 한 번 누르는 소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 0.566,
+      "sample_rate_hz": 48000,
+      "channels": 6,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "119134__esperri__keyboard-key.wav",
+      "notes": "측정상 큰 소리 1번 뒤 0.18초 후 작은 소리 1번이 있음(키가 돌아오는 소리일 수 있으나 확인 못함). 6채널(5.1) WAV. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "glass_tap_single_001",
+      "label": "glass_tap_single",
+      "file_path": "assets/audio/materials/glass/glass_tap_single_001.wav",
+      "material_code": "glass",
+      "action": "tap",
+      "secondary_actions": [],
+      "repeat_count": 1,
+      "quantity": null,
+      "recorded_source": "유리를 두드림",
+      "description": "유리를 한 번 가볍게 두드리는 소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 0.302,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "668384__cjspellsfish__glass-tap.wav",
+      "notes": "반복 횟수는 음량 측정 기준. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "ceramic_plate_hit_crack_001",
+      "label": "ceramic_plate_hit_crack",
+      "file_path": "assets/audio/materials/ceramic/ceramic_plate_hit_crack_001.wav",
+      "material_code": "ceramic",
+      "action": "impact",
+      "secondary_actions": [
+        "crack"
+      ],
+      "repeat_count": null,
+      "quantity": "single_object",
+      "recorded_source": "도자기 접시를 금속 숟가락으로 친 뒤 부숨",
+      "description": "단단한 충격 뒤 금이 가는 소리(제작자는 '유리 충격' 효과음으로 만듦)",
+      "texture_tags": [
+        "crunchy"
+      ],
+      "duration_seconds": 0.652,
+      "sample_rate_hz": 96000,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "418194__deleted_user_3656686__hard-glass-impact.wav",
+      "notes": "음원 설명상 실제 녹음은 도자기 접시라 재질을 ceramic으로 기록. 제작 의도는 유리 충격 효과음. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "glass_scrape_001",
+      "label": "glass_scrape",
+      "file_path": "assets/audio/materials/glass/glass_scrape_001.wav",
+      "material_code": "glass",
+      "action": "scrape",
+      "secondary_actions": [],
+      "repeat_count": null,
+      "quantity": null,
+      "recorded_source": "유리(접시)를 긁음",
+      "description": "유리를 긁는 소리",
+      "texture_tags": [
+        "unknown"
+      ],
+      "duration_seconds": 2.52,
+      "sample_rate_hz": 48000,
+      "channels": 1,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "377826__13gpanska_cihala_vilem__skrabnuti-o-sklo.wav",
+      "notes": "태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    },
+    {
+      "sound_id": "glass_shatter_fall_001",
+      "label": "glass_shatter_fall",
+      "file_path": "assets/audio/materials/glass/glass_shatter_fall_001.wav",
+      "material_code": "glass",
+      "action": "shatter",
+      "secondary_actions": [
+        "debris_fall"
+      ],
+      "repeat_count": null,
+      "quantity": null,
+      "recorded_source": "유리가 깨지며 파편이 떨어짐",
+      "description": "유리가 깨지고 파편이 떨어지며 짤랑거리는 소리",
+      "texture_tags": [
+        "crunchy"
+      ],
+      "duration_seconds": 3.692,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "format": "wav",
+      "status": "ready",
+      "derived_from": null,
+      "edits": [],
+      "original_filename": "336425__221beimesche__glass-shattering-and-falling.wav",
+      "notes": "태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07"
+    }
+  ],
+  "material_sounds_excluded": [
+    {
+      "previous_sound_id": "cardboard_strong_impact_press_001",
+      "file_path": "assets/audio/materials/excluded/563736__ravenrio__boxcrunch-01.wav",
+      "original_filename": "563736__ravenrio__boxcrunch-01.wav",
+      "previous_material_code": "cardboard",
+      "previous_sound_type": "strong_impact_press",
+      "description": "택배 상자를 발로 밟아 찌그러뜨리는 소리",
+      "reason": "판지 강한 충격·눌림 제거 지시",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "cardboard_finish_001",
+      "file_path": "assets/audio/materials/excluded/195795__ondondvo__closing-book.wav",
+      "original_filename": "195795__ondondvo__closing-book.wav",
+      "previous_material_code": "cardboard",
+      "previous_sound_type": "finish",
+      "description": "책을 덮는 소리",
+      "reason": "판지 마무리 제거 지시 (책 덮는 소리)",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "aluminum_scrape_friction_001",
+      "file_path": "assets/audio/materials/excluded/423662__kierankeegan__can-sliding-across-wooden-desk.wav",
+      "original_filename": "423662__kierankeegan__can-sliding-across-wooden-desk.wav",
+      "previous_material_code": "aluminum",
+      "previous_sound_type": "scrape_friction",
+      "description": "캔을 나무 책상 위로 끄는 소리",
+      "reason": "알루미늄 긁힘·마찰 제거 지시",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "aluminum_finish_001",
+      "file_path": "assets/audio/materials/excluded/500024__hope-sounds__a-can-is-thrown-to-the-ground.mp3",
+      "original_filename": "500024__hope-sounds__a-can-is-thrown-to-the-ground.mp3",
+      "previous_material_code": "aluminum",
+      "previous_sound_type": "finish",
+      "description": "캔을 바닥에 던져 구르는 소리",
+      "reason": "알루미늄 마무리 제거 지시 (캔을 던져 구르는 소리)",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "aluminum_finish_002",
+      "file_path": "assets/audio/materials/excluded/617630__freddybob951__opening-tab-soda-can.m4a",
+      "original_filename": "617630__freddybob951__opening-tab-soda-can.m4a",
+      "previous_material_code": "aluminum",
+      "previous_sound_type": "finish",
+      "description": "캔 고리를 따서 여는 소리",
+      "reason": "알루미늄 마무리 제거 지시 (캔 고리 따는 소리)",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "plastic_strong_impact_press_001",
+      "file_path": "assets/audio/materials/excluded/525099__jomse__plasticimpacta9.wav",
+      "original_filename": "525099__jomse__plasticimpacta9.wav",
+      "previous_material_code": "plastic",
+      "previous_sound_type": "strong_impact_press",
+      "description": "플라스틱 통이 나무 바닥에 부딪히는 소리",
+      "reason": "플라스틱 강한 충격·눌림 제거 지시",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "plastic_strong_impact_press_002",
+      "file_path": "assets/audio/materials/excluded/844254__foxfire__plastic-container-tap.wav",
+      "original_filename": "844254__foxfire__plastic-container-tap.wav",
+      "previous_material_code": "plastic",
+      "previous_sound_type": "strong_impact_press",
+      "description": "작은 빈 플라스틱 용기를 금속 도구로 치는 소리",
+      "reason": "플라스틱 강한 충격·눌림 제거 지시",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "plastic_scrape_friction_001",
+      "file_path": "assets/audio/materials/excluded/669471__cjspellsfish__plastic-friction-1.wav",
+      "original_filename": "669471__cjspellsfish__plastic-friction-1.wav",
+      "previous_material_code": "plastic",
+      "previous_sound_type": "scrape_friction",
+      "description": "플라스틱을 문지르는 소리",
+      "reason": "플라스틱 긁힘·마찰 제거 지시",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "plastic_finish_001",
+      "file_path": "assets/audio/materials/excluded/686167__redpanda69__plastic-snap.mp3",
+      "original_filename": "686167__redpanda69__plastic-snap.mp3",
+      "previous_material_code": "plastic",
+      "previous_sound_type": "finish",
+      "description": "플라스틱끼리 딸깍 꺾이는 소리",
+      "reason": "플라스틱 마무리 제거 지시 (평가가 좋지 않아 재사용하지 않음)",
+      "excluded_at": "2026-11-07"
+    },
+    {
+      "previous_sound_id": "unclassified_finish_001",
+      "file_path": "assets/audio/materials/excluded/419952__14fpanskavesecka_karolina__closing-the-lid-of-laptop.wav",
+      "original_filename": "419952__14fpanskavesecka_karolina__closing-the-lid-of-laptop.wav",
+      "previous_material_code": "unknown",
+      "previous_sound_type": "finish",
+      "description": "노트북 덮개를 닫는 소리",
+      "reason": "노트북 덮개 닫는 소리 제거 지시",
+      "excluded_at": "2026-11-07"
+    }
   ]
 }
