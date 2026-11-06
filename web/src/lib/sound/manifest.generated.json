@@ -25,6 +25,22 @@
     "can/laser/cut.wav",
     "can/press/contact.wav",
     "can/press/crunch.wav",
-    "can/press/crush.wav"
+    "can/press/crush.wav",
+    "laptop/bat/break.wav",
+    "laptop/bat/damage.wav",
+    "laptop/bat/hit.wav",
+    "laptop/bomb/explode.wav",
+    "laptop/debris/large.wav",
+    "laptop/debris/small.wav",
+    "laptop/debris/small_2.wav",
+    "laptop/debris/small_3.wav",
+    "laptop/hammer/break.wav",
+    "laptop/hammer/damage.wav",
+    "laptop/hammer/hit.wav",
+    "laptop/laser/burn.wav",
+    "laptop/laser/cut.wav",
+    "laptop/press/burst.wav",
+    "laptop/press/contact.wav",
+    "laptop/press/crush.wav"
   ]
 }
