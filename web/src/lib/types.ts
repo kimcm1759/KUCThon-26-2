@@ -66,4 +66,6 @@ export interface Job {
   selection: { background?: string; model?: string };
   alignment?: Alignment;
   note?: string;
+  /** Bundled demo sample (read-only, assets under /samples/). */
+  sample?: boolean;
 }

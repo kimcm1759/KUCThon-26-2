@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { after, type NextRequest } from "next/server";
 import sharp from "sharp";
 import { runPipeline } from "@/lib/pipeline";
-import { listJobs, putJob, saveFile } from "@/lib/store";
+import { listJobs, putJob, READ_ONLY, saveFile } from "@/lib/store";
 import type { Job } from "@/lib/types";
 
 // 3D generation can take a couple of minutes and runs inside after().
@@ -13,6 +13,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (READ_ONLY) {
+    return Response.json({ error: "이 배포판은 시연용 샘플만 볼 수 있어요" }, { status: 403 });
+  }
   const form = await req.formData();
   const photo = form.get("photo");
   if (!(photo instanceof File)) {

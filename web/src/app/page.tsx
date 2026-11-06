@@ -32,11 +32,17 @@ export default function Home() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
+  // Deployed demo builds can't save new photos; they only show bundled samples.
+  const [readOnly, setReadOnly] = useState(false);
 
   useEffect(() => {
     fetch("/api/jobs")
       .then((r) => r.json())
       .then(setJobs)
+      .catch(() => {});
+    fetch("/api/config")
+      .then((r) => r.json())
+      .then((c: { readOnly: boolean }) => setReadOnly(c.readOnly))
       .catch(() => {});
   }, []);
 
@@ -66,45 +72,51 @@ export default function Home() {
         </p>
       </header>
 
-      <section className="flex flex-col gap-3">
-        <button
-          disabled={busy}
-          onClick={() => cameraRef.current?.click()}
-          className="rounded-2xl bg-orange-500 py-5 text-lg font-semibold text-black disabled:opacity-50"
-        >
-          {busy ? "업로드 중…" : "카메라로 찍기"}
-        </button>
-        <button
-          disabled={busy}
-          onClick={() => uploadRef.current?.click()}
-          className="rounded-2xl border border-neutral-700 py-3 text-neutral-200 disabled:opacity-50"
-        >
-          사진 업로드
-        </button>
-        <input
-          ref={cameraRef}
-          type="file"
-          accept="image/*"
-          capture="environment"
-          hidden
-          onChange={(e) => onFile(e.target.files?.[0])}
-        />
-        <input
-          ref={uploadRef}
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={(e) => onFile(e.target.files?.[0])}
-        />
-        {error && <p className="text-sm text-red-400">{error}</p>}
-        <p className="text-xs leading-relaxed text-neutral-500">
-          팁: 물건 하나가 화면의 1/3 이상 차지하게, 살짝 위에서 내려다보는 각도로 찍으면 결과가 가장
-          좋아요. 유리·거울처럼 투명하거나 반사되는 물건은 어려워요.
+      {readOnly ? (
+        <p className="rounded-2xl border border-neutral-800 p-4 text-sm leading-relaxed text-neutral-300">
+          시연용 배포판이에요. 아래 물건을 눌러 바로 부숴 보세요.
         </p>
-      </section>
+      ) : (
+        <section className="flex flex-col gap-3">
+          <button
+            disabled={busy}
+            onClick={() => cameraRef.current?.click()}
+            className="rounded-2xl bg-orange-500 py-5 text-lg font-semibold text-black disabled:opacity-50"
+          >
+            {busy ? "업로드 중…" : "카메라로 찍기"}
+          </button>
+          <button
+            disabled={busy}
+            onClick={() => uploadRef.current?.click()}
+            className="rounded-2xl border border-neutral-700 py-3 text-neutral-200 disabled:opacity-50"
+          >
+            사진 업로드
+          </button>
+          <input
+            ref={cameraRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            hidden
+            onChange={(e) => onFile(e.target.files?.[0])}
+          />
+          <input
+            ref={uploadRef}
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={(e) => onFile(e.target.files?.[0])}
+          />
+          {error && <p className="text-sm text-red-400">{error}</p>}
+          <p className="text-xs leading-relaxed text-neutral-500">
+            팁: 물건 하나가 화면의 1/3 이상 차지하게, 살짝 위에서 내려다보는 각도로 찍으면 결과가 가장
+            좋아요. 유리·거울처럼 투명하거나 반사되는 물건은 어려워요.
+          </p>
+        </section>
+      )}
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold text-neutral-300">수집 일기</h2>
+        <h2 className="mb-3 text-sm font-semibold text-neutral-300">{readOnly ? "시연용 물건" : "수집 일기"}</h2>
         {jobs.length === 0 ? (
           <p className="text-sm text-neutral-500">아직 찍은 물건이 없어요.</p>
         ) : (
