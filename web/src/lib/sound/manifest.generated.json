@@ -1,3 +1,30 @@
 {
-  "files": []
+  "files": [
+    "_common/bat/knock.wav",
+    "_common/bat/swing.wav",
+    "_common/bomb/explode.wav",
+    "_common/bomb/fuse.wav",
+    "_common/bomb/place.wav",
+    "_common/hammer/swing.wav",
+    "_common/laser/beam.wav",
+    "_common/laser/end.wav",
+    "_common/laser/start.wav",
+    "_common/press/motor.wav",
+    "_common/press/release.wav",
+    "can/bat/break.wav",
+    "can/bat/damage.wav",
+    "can/bat/hit.wav",
+    "can/bomb/explode.wav",
+    "can/debris/large.wav",
+    "can/debris/small.wav",
+    "can/debris/small_2.wav",
+    "can/hammer/break.wav",
+    "can/hammer/damage.wav",
+    "can/hammer/hit.wav",
+    "can/laser/burn.wav",
+    "can/laser/cut.wav",
+    "can/press/contact.wav",
+    "can/press/crunch.wav",
+    "can/press/crush.wav"
+  ]
 }
