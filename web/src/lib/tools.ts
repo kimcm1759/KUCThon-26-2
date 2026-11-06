@@ -11,11 +11,17 @@ export const TOOLS: { id: ToolId; label: string; icon: string; hint: string }[] 
 /** Durability a single blow takes off. */
 export const TOOL_DAMAGE: Record<"hammer" | "bat", number> = { hammer: 1, bat: 2 };
 
-/** Something the sound layer can react to. */
+/**
+ * A sound moment, e.g. { tool: "press", event: "crush", loop: "start" }.
+ * Event names match the file names in public/sounds (see its README).
+ */
 export interface SmashEvent {
-  type: "hit" | "break" | "explode" | "cut" | "crush";
-  tool: ToolId;
+  tool: string;
+  event: string;
+  object?: string;
   material?: string;
   /** 0-1, rough loudness. */
   strength: number;
+  /** Set for looping sounds. */
+  loop?: "start" | "stop";
 }

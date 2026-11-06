@@ -111,7 +111,10 @@ export default function Home() {
           <ul className="grid grid-cols-3 gap-2">
             {jobs.map((job) => (
               <li key={job.id}>
-                <Link href={`/jobs/${job.id}`} className="block">
+                <Link
+                  href={job.status === "done" && job.selection.model ? `/jobs/${job.id}/play` : `/jobs/${job.id}`}
+                  className="block"
+                >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={job.photo.url}

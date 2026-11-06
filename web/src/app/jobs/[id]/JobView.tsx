@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { defaultAlignment } from "@/lib/alignment";
+import { soundObjectFor } from "@/lib/sound/engine";
 import { TOOLS, type ToolId } from "@/lib/tools";
 import type { Alignment, Candidate, Job, StepStatus } from "@/lib/types";
 
@@ -118,7 +119,14 @@ export default function JobView({ id }: { id: string }) {
         <span className="text-xs text-neutral-500">{job.id}</span>
       </header>
 
-      <h1 className="text-xl font-bold">{v?.label_ko ?? "분석 중…"}</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-xl font-bold">{v?.label_ko ?? "분석 중…"}</h1>
+        {model && (
+          <Link href={`/jobs/${id}/play`} className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-black">
+            ▶ 부수기 화면
+          </Link>
+        )}
+      </div>
 
       <Steps job={job} />
 
@@ -166,6 +174,7 @@ export default function JobView({ id }: { id: string }) {
               realHeightCm: v?.est_size_cm.h,
               resetSignal,
               tool,
+              soundObject: soundObjectFor(v),
               onBreak: () => setBroken(true),
               onHit: (remaining, total) => setDurability({ remaining, total }),
               // Sound hooks go here (type: hit / break / explode / cut / crush).

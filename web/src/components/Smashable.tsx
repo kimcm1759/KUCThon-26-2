@@ -22,6 +22,7 @@ import {
   type PreparedFracture,
 } from "@/lib/fracture";
 import { addCrack, addDent, chipGeometry } from "@/lib/hitEffects";
+import { sound, type SoundObject } from "@/lib/sound/engine";
 import { TOOL_DAMAGE, type SmashEvent, type ToolId } from "@/lib/tools";
 import type { Alignment, Box } from "@/lib/types";
 import { Particles, type ParticlesHandle } from "./fx/Particles";
@@ -47,6 +48,8 @@ export interface SmashProps {
   onHit?: (remaining: number, total: number) => void;
   /** Moments a sound layer can react to. */
   onEvent?: (e: SmashEvent) => void;
+  /** Which demo object's sound set to use (laptop / book / can). */
+  soundObject?: SoundObject;
 }
 
 /** Effects drawn outside the 3D canvas (they also cover the photo). */
@@ -76,6 +79,8 @@ interface Piece {
   linearVelocity: [number, number, number];
   angularVelocity: [number, number, number];
   restitution: number;
+  /** Bounding radius, picks a small or large landing sound. */
+  radius: number;
 }
 
 /** How the final blow throws the pieces. */
@@ -157,6 +162,7 @@ export function PlacedModel({
   const hot = useRef<{ material: THREE.MeshStandardMaterial; start: number }[]>([]);
   const squash = useRef({ sy: 1, cx: 0, cz: 0 });
   const lastRumble = useRef(0);
+  const pressCrunched = useRef(false);
   const uniformFracture = useRef<Promise<PreparedFracture> | null>(null);
   /** Fractures concentrated where the next break will likely happen. */
   const nearCut = useRef<{ point: THREE.Vector3; result?: PreparedFracture } | null>(null);
@@ -287,9 +293,14 @@ export function PlacedModel({
     };
   }, [object, material, profile]);
 
+  const soundObject = smashProps?.soundObject;
+  useEffect(() => sound.preload(soundObject), [soundObject]);
+
   // Free debris copies and stop continuous rendering on reset/unmount.
   useEffect(
     () => () => {
+      sound.stopAll();
+      sound.setTimeScale(1);
       clearTimeout(settleTimer.current);
       clearTimeout(slowTimer.current);
       piecesRef.current.forEach((p) => p.geometry.dispose());
@@ -345,8 +356,22 @@ export function PlacedModel({
     [height, realHeightCm],
   );
 
-  const emitEvent = (type: SmashEvent["type"], strength: number) =>
-    live.current.onEvent?.({ type, tool: live.current.tool ?? "hammer", material, strength });
+  /** Play a tool sound for the current object and tell the onEvent listener. */
+  const sfx = (tool: string, event: string, volume = 1) => {
+    const object = live.current.soundObject;
+    void sound.play(event, { object, tool, volume });
+    live.current.onEvent?.({ tool, event, object, material, strength: volume });
+  };
+  const loopOn = (tool: string, event: string, volume = 1) => {
+    const object = live.current.soundObject;
+    void sound.loop(`${tool}-${event}`, event, { object, tool, volume });
+    live.current.onEvent?.({ tool, event, object, material, strength: volume, loop: "start" });
+  };
+  const loopOff = (tool: string, event: string) => {
+    sound.stop(`${tool}-${event}`);
+    live.current.onEvent?.({ tool, event, object: live.current.soundObject, material, strength: 0, loop: "stop" });
+  };
+  const lastDebrisSound = useRef(0);
 
   /** Run physics (and continuous rendering) until things have had time to settle. */
   const wake = useMemo(
@@ -380,8 +405,12 @@ export function PlacedModel({
 
   const slowMo = (scale: number, ms: number) => {
     timeScale.current = scale;
+    sound.setTimeScale(scale);
     clearTimeout(slowTimer.current);
-    slowTimer.current = setTimeout(() => (timeScale.current = 1), ms);
+    slowTimer.current = setTimeout(() => {
+      timeScale.current = 1;
+      sound.setTimeScale(1);
+    }, ms);
   };
 
   /** Place fragments (centered, in `matrix`'s space) in the world as physics pieces. */
@@ -404,6 +433,7 @@ export function PlacedModel({
       world.decompose(p, q, s);
       // Physics bodies have no scale, so bake it into a copy of the geometry.
       const geometry = f.geometry.clone().scale(s.x, s.y, s.z);
+      geometry.computeBoundingSphere();
       const spin = () => (Math.random() - 0.5) * opts.spin;
       return {
         key: `${prefix}-${i}`,
@@ -414,6 +444,7 @@ export function PlacedModel({
         linearVelocity: opts.velocity(p).toArray(),
         angularVelocity: [spin(), spin(), spin()],
         restitution: profile.restitution,
+        radius: geometry.boundingSphere!.radius,
       };
     });
   };
@@ -508,7 +539,10 @@ export function PlacedModel({
     addPieces(added);
     wake(upm);
     live.current.onBreak?.();
-    emitEvent("break", 1);
+    if (style.kind === "press") {
+      loopOff("press", "crush");
+      sfx("press", "burst");
+    } else if (style.kind === "hammer" || style.kind === "bat") sfx(style.kind, "break");
   };
 
   /** Durability hit from a hammer or bat; breaks on the last one. */
@@ -522,6 +556,7 @@ export function PlacedModel({
       return true;
     }
 
+    if (style.kind === "hammer" || style.kind === "bat") sfx(style.kind, "damage");
     const { worldHeight, upm } = measure();
     if (profile.hitEffect === "crack") addCrack(hit.mesh, hit.point, hit.normal, worldHeight * 0.45);
     if (profile.hitEffect === "dent") addDent(hit.mesh, hit.point, hit.normal, worldHeight * 0.18);
@@ -549,6 +584,7 @@ export function PlacedModel({
           linearVelocity: v.toArray(),
           angularVelocity: [spin(), spin(), spin()],
           restitution: profile.restitution,
+          radius: r,
         };
       });
       addPieces(added);
@@ -604,7 +640,7 @@ export function PlacedModel({
         addPieces(added);
         wake(upm);
         live.current.onBreak?.();
-        emitEvent("cut", 0.7);
+        sfx("laser", "cut");
       } catch (e) {
         console.warn("[laser] cut failed", e);
         d.breaking = false;
@@ -633,7 +669,7 @@ export function PlacedModel({
       });
       addPieces(added, target.key);
       wake(upmRef.current);
-      emitEvent("cut", 0.5);
+      sfx("laser", "cut", 0.8);
     } catch (e) {
       console.warn("[laser] piece cut failed", e);
     }
@@ -676,7 +712,8 @@ export function PlacedModel({
       gravity: upm * 9.8,
     });
     slowMo(0.4, 550);
-    emitEvent("explode", 1);
+    loopOff("bomb", "fuse");
+    sfx("bomb", "explode");
 
     if (!damage.current.broken) {
       const box = new THREE.Box3().setFromObject(object);
@@ -730,7 +767,7 @@ export function PlacedModel({
           drag: 2.5,
           grow: 2.2,
         });
-        emitEvent("hit", 0.7);
+        sfx("hammer", "hit");
         if (a.target.kind === "object") {
           damageObject(a.target, TOOL_DAMAGE.hammer, { kind: "hammer", normal: a.normal });
         } else {
@@ -743,16 +780,18 @@ export function PlacedModel({
       }
       case "bat": {
         screen.shake(0.8, 260);
-        emitEvent("hit", 1);
+        sfx("bat", "hit");
         if (a.target.kind === "object") {
           const broke = damageObject(a.target, TOOL_DAMAGE.bat, { kind: "bat", dir: a.dir });
           if (broke) slowMo(0.35, 650);
-          else
+          else {
+            sfx("bat", "knock", 0.8);
             knock.current = {
               from: user.current.offset.clone(),
               to: user.current.offset.clone().addScaledVector(a.dir, a.size * 0.5),
               start: now(),
             };
+          }
         } else {
           const radius = a.size * 0.8;
           pushDebris(a.point, radius, (_, dist) =>
@@ -798,11 +837,40 @@ export function PlacedModel({
   const start = (a: ToolAction) => {
     actionRef.current = a;
     setAction(a);
+    switch (a.kind) {
+      case "hammer":
+      case "bat":
+        sfx(a.kind, "swing");
+        break;
+      case "press":
+        loopOn("press", "motor");
+        break;
+      case "laser":
+      case "laserPath":
+        sfx("laser", "start");
+        loopOn("laser", "beam");
+        if (a.kind === "laser") loopOn("laser", "burn");
+        break;
+      case "bomb":
+        sfx("bomb", "place");
+        loopOn("bomb", "fuse");
+        break;
+    }
   };
   const finish = () => {
+    const a = actionRef.current;
     actionRef.current = null;
     setAction(null);
     live.current.fx.path(null);
+    if (a?.kind === "laser" || a?.kind === "laserPath") {
+      loopOff("laser", "beam");
+      loopOff("laser", "burn");
+      sfx("laser", "end");
+    }
+    if (a?.kind === "press") {
+      loopOff("press", "motor");
+      loopOff("press", "crush");
+    }
   };
 
   /** What a screen point (NDC) lands on: the intact model, a piece, or the table. */
@@ -854,6 +922,8 @@ export function PlacedModel({
       if (d.lengthSq() > (s * 0.01) ** 2) ls.tangent = d.normalize();
     }
     ls.prev = c.point.clone();
+    if (c.target) loopOn("laser", "burn");
+    else loopOff("laser", "burn");
     if (!c.target || ls.busy || !ls.tangent) return;
     const t = now();
     if (t - ls.lastAt < 150) return;
@@ -873,7 +943,6 @@ export function PlacedModel({
     // One fixed emitter up and to the right, outside the photo.
     const from = anchor.clone().addScaledVector(right.multiplyScalar(0.7).add(UP).normalize(), s * 5);
     laserCut.current = { prev: null, tangent: null, lastAt: 0, lastPoint: null, busy: false };
-    emitEvent("cut", 0.6);
     start({
       id: seq.current++,
       kind: "laserPath",
@@ -929,7 +998,7 @@ export function PlacedModel({
     squash.current.cz = center.z;
     const metal = profile.hitEffect === "dent";
     const squishy = profile.hitEffect === "squash";
-    emitEvent("crush", 0.6);
+    pressCrunched.current = false;
     start({
       id,
       kind: "press",
@@ -943,9 +1012,26 @@ export function PlacedModel({
       radius: Math.max(dims.x, dims.z) / 2,
       crushTo: metal ? 0.22 : 0.1,
       burstAt: metal ? null : squishy ? 0.3 : material === "glass" ? 0.85 : 0.6,
+      onPhase: (phase) => {
+        if (phase === "contact") {
+          sfx("press", "contact");
+          loopOn("press", "crush", 0.3);
+        } else {
+          loopOff("press", "crush");
+          sfx("press", "release");
+        }
+      },
       onProgress: (sy) => {
         squash.current.sy = Math.min(squash.current.sy, sy);
         applySquash();
+        // Louder as it gets flatter; metal ends in a crunch instead of bursting.
+        const crushTo = metal ? 0.22 : 0.1;
+        sound.loopVolume("press-crush", 0.3 + 0.7 * Math.min(1, (1 - sy) / (1 - crushTo)));
+        if (metal && sy <= crushTo + 0.005 && !pressCrunched.current) {
+          pressCrunched.current = true;
+          loopOff("press", "crush");
+          sfx("press", "crunch");
+        }
         const now = performance.now();
         if (sy < 1 && now - lastRumble.current > 180) {
           lastRumble.current = now;
@@ -1015,6 +1101,7 @@ export function PlacedModel({
       path.reduce((sum, p, i) => (i ? sum + p.distanceTo(path[i - 1]) : 0), 0);
 
     const onDown = (e: PointerEvent) => {
+      sound.unlock();
       if (actionRef.current) return;
       el.setPointerCapture(e.pointerId);
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -1078,6 +1165,8 @@ export function PlacedModel({
     };
 
     const onUp = (e: PointerEvent) => {
+      // iOS only counts touch *end* as a gesture that may start audio.
+      sound.unlock();
       const tap = pointers.size === 1 && !st.moved && performance.now() - st.down.at < 350;
       pointers.delete(e.pointerId);
       if (pointers.size < 2) st.pinch = null;
@@ -1148,6 +1237,17 @@ export function PlacedModel({
               linearDamping={0.3}
               angularDamping={0.8}
               ccd
+              onCollisionEnter={({ target }) => {
+                // Clink/thud when a piece lands; throttled so a burst doesn't turn into noise.
+                const v = target.rigidBody?.linvel();
+                if (!v) return;
+                const speed = Math.hypot(v.x, v.y, v.z) / upmRef.current;
+                const t = performance.now();
+                if (speed < 0.25 || t - lastDebrisSound.current < 35) return;
+                lastDebrisSound.current = t;
+                const large = p.radius > measure().worldHeight * 0.15;
+                sfx("debris", large ? "large" : "small", Math.min(1, speed / 2.5));
+              }}
             >
               <mesh
                 ref={(m) => {

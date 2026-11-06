@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "dev:lan": "next dev -H 0.0.0.0"
+    "dev:lan": "next dev -H 0.0.0.0",
+    "sounds": "node scripts/gen-sounds.mjs",
+    "predev": "node scripts/gen-sounds.mjs",
+    "predev:lan": "node scripts/gen-sounds.mjs",
+    "prebuild": "node scripts/gen-sounds.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",

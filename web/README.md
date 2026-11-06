@@ -18,7 +18,7 @@ npm install
 npm run dev:lan   # 같은 와이파이의 폰에서 http://<PC IP>:3000 으로 접속
 ```
 
-`?fps`를 주소 뒤에 붙이면 3D 화면에 프레임 수가 표시돼요.
+시연은 `/jobs/<id>/play` 전체화면 부수기 화면에서 해요 (수집 일기에서 완료된 항목을 누르면 바로 열려요). `?fps`를 붙이면 프레임 수, `?sound=laptop|book|can`을 붙이면 소리 세트를 고정해요.
 
 ## 구조
 
@@ -35,9 +35,9 @@ npm run dev:lan   # 같은 와이파이의 폰에서 http://<PC IP>:3000 으로 
 
 작업 데이터(사진, 마스크, GLB)는 `.data/jobs/<id>/`에 저장돼요 (git 제외).
 
-## 사운드 연결
+## 사운드
 
-`src/app/jobs/[id]/JobView.tsx`의 `onEvent`로 `{ type: "hit" | "break" | "explode" | "cut" | "crush", tool, material, strength }`가 들어와요.
+`public/sounds/<laptop|book|can|_common>/<연장>/<이벤트>.mp3`에 파일을 넣고 `npm run sounds`. 규칙과 이벤트 목록은 [public/sounds/README.md](public/sounds/README.md). 재생은 `src/lib/sound/engine.ts`.
 
 ## 개발용 스크립트
 

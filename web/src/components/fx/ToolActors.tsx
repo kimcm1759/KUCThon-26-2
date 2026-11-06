@@ -59,6 +59,8 @@ export type ToolAction =
       crushTo: number;
       burstAt: number | null;
       onProgress: (squash: number) => void;
+      /** Plate touches the object / starts rising. */
+      onPhase: (phase: "contact" | "rise") => void;
     });
 
 export interface ActorProps<A extends ToolAction = ToolAction> {
@@ -472,7 +474,7 @@ function Bomb({ action, onImpact, onDone, emit }: ActorProps<Extract<ToolAction,
 function Press({ action, onImpact, onDone }: ActorProps<Extract<ToolAction, { kind: "press" }>>) {
   const plate = useRef<THREE.Group>(null);
   const tl = useTimeline(onImpact, onDone);
-  const st = useRef({ burstAt: 0, holdFrom: 0 });
+  const st = useRef({ burstAt: 0, holdFrom: 0, contact: false, rising: false });
   const W = action.radius * 2.6;
   const T = action.size * 0.16;
   const rod = action.size * 6;
@@ -485,6 +487,10 @@ function Press({ action, onImpact, onDone }: ActorProps<Extract<ToolAction, { ki
     if (t < 450) {
       bottom = top + action.size * 1.3 * (1 - easeIn(t / 450));
     } else if (!s.burstAt && !s.holdFrom) {
+      if (!s.contact) {
+        s.contact = true;
+        action.onPhase("contact");
+      }
       // Crushing: slow and steady, like a real press.
       const k = Math.min(1, (t - 450) / 1500);
       bottom = top * (1 - (1 - crushTo) * k);
@@ -507,6 +513,10 @@ function Press({ action, onImpact, onDone }: ActorProps<Extract<ToolAction, { ki
       bottom = top * crushTo;
     }
     if (s.holdFrom && t > s.holdFrom + 450) {
+      if (!s.rising) {
+        s.rising = true;
+        action.onPhase("rise");
+      }
       const k = Math.min(1, (t - s.holdFrom - 450) / 650);
       const from = s.burstAt ? 0.002 : top * crushTo;
       bottom = from + (top + action.size * 2 - from) * easeIn(k);

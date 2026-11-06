@@ -30,10 +30,12 @@ interface Props {
   smash?: SmashProps;
   /** Show an FPS meter. */
   stats?: boolean;
+  /** Size to fit inside the nearest size container (full-screen view) instead of filling the width. */
+  fit?: boolean;
 }
 
 export default function Composite(props: Props) {
-  const { backgroundUrl, photoUrl, width, height, overlay, stats } = props;
+  const { backgroundUrl, photoUrl, width, height, overlay, stats, fit } = props;
   const frameRef = useRef<HTMLDivElement>(null);
   const flashRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPolylineElement>(null);
@@ -69,8 +71,12 @@ export default function Composite(props: Props) {
 
   return (
     <div
-      className="relative w-full overflow-hidden rounded-xl bg-black"
-      style={{ aspectRatio: `${width} / ${height}` }}
+      className={`relative overflow-hidden rounded-xl bg-black ${fit ? "" : "w-full"}`}
+      style={{
+        aspectRatio: `${width} / ${height}`,
+        // Largest box with the photo's aspect that fits the container (cq units).
+        width: fit ? `min(100cqw, calc(100cqh * ${width / height}))` : undefined,
+      }}
     >
       <div ref={frameRef} className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
