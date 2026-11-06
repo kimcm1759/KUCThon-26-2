@@ -333,10 +333,12 @@ def build_book():
         # 3번째(깨짐): 둔탁한 '퍽' 위주 + 찢김은 0.45 s로 짧게(1.2 s는 너무 길다는 피드백) + 둔탁한 구김 0.3 s (-4 dB)
         "book/hammer/break.wav": peak_to(mix((thud, 0, 0), (part(tear, 0, 450, 200), -5, 0), (part(dull_crumple, 0, 300, 120), -4, 0)), -1),
         # 배트
-        "book/bat/hit.wav": bat_hit,
-        "book/bat/damage.wav": peak_to(mix((box, 0, 0), (part(crumple, 0, 450), -2, 0)), -1),
-        # 2번째(깨짐, 슬로모션 0.35배): 찢김 0.8 s로 짧게 + 구김 + 판지, 살짝 포화
-        "book/bat/break.wav": peak_to(saturate(mix((part(tear, 0, 800, 300), 0, 0), (part(crumple, 0, 400), -4, 0), (box, -3, 0)), 2.0), -1),
+        # 배트 "깡"은 책에선 아주 약하게(타격 피크 -8.4 → -22 dB), 둔탁한 표지 '퍽' 위주 (사용자 피드백 2026-11-07)
+        "book/bat/hit.wav": attack_to(ring_cut(cut(load("bat_hit"), 10, 610), 50, 600, -40), 50, -22),
+        # 1번째: 둔탁한 '퍽' + 둔탁한 구김 450 ms
+        "book/bat/damage.wav": peak_to(mix((thud, 0, 0), (part(dull_crumple, 0, 450), -4, 0)), -1),
+        # 2번째(깨짐, 슬로모션 0.35배): 둔탁한 '퍽' 위주 + 찢김 0.45 s + 둔탁한 구김, 살짝 포화
+        "book/bat/break.wav": peak_to(saturate(mix((thud, 0, 0), (part(tear, 0, 450, 200), -5, 0), (part(dull_crumple, 0, 400, 120), -4, 0)), 2.0), -1),
         # 프레스
         "book/press/contact.wav": peak_to(mix((box, 0, 0), (ptap, -6, 0)), -3),
         # crush 🔁 0.45~1.12 s: 구김 0.72 s + 누르는 저음, 이음새 없이 0.66 s
