@@ -283,8 +283,12 @@ def build_laptop():
     return {
         # 망치
         "laptop/hammer/hit.wav": hammer_hit,
-        # 금 감(1·2번째): 유리 두드림 + 키보드 키
-        "laptop/hammer/damage.wav": peak_to(mix((gtap, 0, 0), (key, -3, 0)), -1),
+        # 금 감(1·2번째): 훨씬 무겁고 둔탁하게 (사용자 피드백 2026-11-07) — 키보드 키 0.6배·1.8 kHz 위 깎음,
+        # 유리 두드림 0.55배·2 kHz 위 깎음, 판지 두드림 0.6배·800 Hz 위 깎은 '쿵'으로 몸통, 포화(2.0)
+        "laptop/hammer/damage.wav": peak_to(saturate(mix(
+            (lowpass(pitch(key, 0.6), 1800, SR), 0, 0),
+            (lowpass(pitch(gtap, 0.55), 2000, SR), -4, 0),
+            (lowpass(pitch(peak_to(load("cardboard_tap"), 0), 0.6), 800, SR), -2, 0)), 2.0), -1),
         # 깨짐(3번째): 유리 깨짐 1.4 s + 키보드 키 + 유리 두드림
         "laptop/hammer/break.wav": peak_to(mix((shatter_long, 0, 0), (key, -4, 0), (gtap, -6, 0)), -1),
         # 배트
