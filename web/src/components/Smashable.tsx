@@ -114,12 +114,41 @@ const COOL_MS = 2200;
 
 const UP = new THREE.Vector3(0, 1, 0);
 
+/**
+ * Whether Rapier can build a convex hull for this piece. Laser cuts through
+ * thin fragments leave slivers that are flat or have NaNs; for those
+ * ColliderDesc.convexHull returns null, @react-three/rapier passes that on to
+ * createCollider, and Rapier panics ("unreachable"), after which every
+ * physics step fails. Such slivers are too small to see, so they're dropped.
+ */
+function hullable(geometry: THREE.BufferGeometry, rapier: Rapier | null) {
+  const pos = geometry.attributes.position;
+  if (!pos || pos.count < 4) return false;
+  const points = Float32Array.from(pos.array as ArrayLike<number>);
+  if (!points.every(Number.isFinite)) return false;
+  // Ask the same Rapier build the physics uses (it's loaded once pieces exist).
+  return !rapier || rapier.ColliderDesc.convexHull(points) !== null;
+}
+
+type Rapier = ReturnType<typeof useRapier>["rapier"];
+
 /** Timestamp for event-handler code (kept out of render-time lint checks). */
 const now = () => performance.now();
 
-/** Steps physics ourselves so time can be slowed for big hits. */
-function PhysicsDriver({ active, timeScale }: { active: boolean; timeScale: RefObject<number> }) {
-  const { step } = useRapier();
+/** Steps physics ourselves so time can be slowed for big hits; also hands out the loaded Rapier module. */
+function PhysicsDriver({
+  active,
+  timeScale,
+  rapierRef,
+}: {
+  active: boolean;
+  timeScale: RefObject<number>;
+  rapierRef: RefObject<Rapier | null>;
+}) {
+  const { step, rapier } = useRapier();
+  useEffect(() => {
+    rapierRef.current = rapier;
+  }, [rapier, rapierRef]);
   useFrame((_, delta) => {
     if (active) step(Math.min(delta, 1 / 30) * timeScale.current);
   });
@@ -158,6 +187,19 @@ export function PlacedModel({
   const actionRef = useRef<ToolAction | null>(null);
   const piecesRef = useRef<Piece[]>([]);
   const bodies = useRef(new Map<string, RapierRigidBody>());
+  /**
+   * Bodies still in the physics world. A cut replaces a piece and its body is
+   * removed from the world before React drops it from `bodies`; touching such
+   * a handle makes Rapier panic ("unreachable") and breaks all later steps.
+   */
+  const liveBodies = () => {
+    const live: RapierRigidBody[] = [];
+    for (const [key, b] of bodies.current) {
+      if (b.isValid()) live.push(b);
+      else bodies.current.delete(key);
+    }
+    return live;
+  };
   const meshes = useRef(new Map<string, THREE.Mesh>());
   const upmRef = useRef(1);
   const seq = useRef(0);
@@ -165,6 +207,7 @@ export function PlacedModel({
   const settleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const slowTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const timeScale = useRef(1);
+  const rapierRef = useRef<Rapier | null>(null);
   const wobbleStart = useRef(0);
   const knock = useRef<{ from: THREE.Vector3; to: THREE.Vector3; start: number } | null>(null);
   const hot = useRef<{ material: THREE.MeshStandardMaterial; start: number }[]>([]);
@@ -391,7 +434,7 @@ export function PlacedModel({
       clearTimeout(settleTimer.current);
       const deadline = now() + SETTLE_MAX_MS;
       const check = () => {
-        const moving = [...bodies.current.values()].some((b) => {
+        const moving = liveBodies().some((b) => {
           const v = b.linvel();
           return Math.hypot(v.x, v.y, v.z) / upmRef.current > REST_SPEED;
         });
@@ -443,7 +486,7 @@ export function PlacedModel({
   ): Piece[] => {
     const prefix = `p${seq.current++}`;
     const m = new THREE.Matrix4();
-    return fragments.map((f, i) => {
+    return fragments.filter((f) => hullable(f.geometry, rapierRef.current)).map((f, i) => {
       const world = matrix.clone().multiply(m.makeTranslation(f.center));
       const p = new THREE.Vector3();
       const q = new THREE.Quaternion();
@@ -474,7 +517,7 @@ export function PlacedModel({
     dv: (pos: THREE.Vector3, dist: number) => THREE.Vector3,
   ) => {
     let touched = false;
-    for (const body of bodies.current.values()) {
+    for (const body of liveBodies()) {
       const t = body.translation();
       const pos = new THREE.Vector3(t.x, t.y, t.z);
       const d = pos.distanceTo(center);
@@ -622,6 +665,9 @@ export function PlacedModel({
     return m;
   };
 
+  /** Pieces with a laser cut in flight (a sweep and a tap can hit the same one). */
+  const cutting = useRef(new Set<string>());
+
   /** Laser: cut the object or a piece along the plane through its hit point with `normal`. */
   const cut = async (target: Target, normal: THREE.Vector3, apartScale = 1) => {
     if (piecesRef.current.length >= MAX_PIECES) return;
@@ -653,6 +699,7 @@ export function PlacedModel({
           velocity: (p) => apart(p, new THREE.Vector3()),
           spin: 1.5,
         });
+        if (added.length < 2) throw new Error("cut left only slivers");
         d.broken = true;
         setIntact(false);
         addPieces(added);
@@ -666,30 +713,41 @@ export function PlacedModel({
       return;
     }
 
-    const mesh = meshes.current.get(target.key);
-    const piece = piecesRef.current.find((p) => p.key === target.key);
-    if (!mesh || !piece) return;
+    const key = target.key;
+    const mesh = meshes.current.get(key);
+    const piece = piecesRef.current.find((p) => p.key === key);
+    if (!mesh || !piece || cutting.current.has(key)) return;
+    cutting.current.add(key);
     mesh.updateMatrixWorld(true);
     const inv = mesh.matrixWorld.clone().invert();
+    const body = bodies.current.get(key);
+    const v = body?.isValid() ? body.linvel() : undefined;
+    const lv = new THREE.Vector3(v?.x ?? 0, v?.y ?? 0, v?.z ?? 0);
     try {
       const fragments = await slicePiece(mesh.geometry, {
         origin: point.clone().applyMatrix4(inv),
         normal: normal.clone().transformDirection(inv),
       });
-      if (fragments.length < 2) return;
-      const lv = bodies.current.get(target.key)?.linvel() ?? { x: 0, y: 0, z: 0 };
+      // Reset or another cut may have taken this piece away while we waited.
+      if (fragments.length < 2 || meshes.current.get(key) !== mesh || !piecesRef.current.includes(piece)) return;
       const outer = Array.isArray(piece.material) ? piece.material[0] : piece.material;
       mesh.updateMatrixWorld(true);
       const added = toPieces(fragments, mesh.matrixWorld, {
         material: [outer, hotMaterial()],
-        velocity: (p) => apart(p, new THREE.Vector3(lv.x, lv.y, lv.z)),
+        velocity: (p) => apart(p, lv),
         spin: 1.5,
       });
-      addPieces(added, target.key);
+      if (added.length < 2) {
+        added.forEach((p) => p.geometry.dispose());
+        return;
+      }
+      addPieces(added, key);
       wake(upmRef.current);
       sfx("laser", "cut", 0.8);
     } catch (e) {
       console.warn("[laser] piece cut failed", e);
+    } finally {
+      cutting.current.delete(key);
     }
   };
 
@@ -1238,7 +1296,7 @@ export function PlacedModel({
           // Stepped by PhysicsDriver so big hits can run in slow motion.
           paused
         >
-          <PhysicsDriver active={physicsOn} timeScale={timeScale} />
+          <PhysicsDriver active={physicsOn} timeScale={timeScale} rapierRef={rapierRef} />
           {/* The table: an endless floor at y=0 (top face). */}
           <RigidBody type="fixed" colliders={false} collisionGroups={TABLE_GROUP}>
             <CuboidCollider args={[50, 0.5, 50]} position={[0, -0.5, 0]} friction={0.8} restitution={0.2} />
