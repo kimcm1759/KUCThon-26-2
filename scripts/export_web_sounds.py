@@ -44,6 +44,7 @@ SRC = {
     "paper_tap": "assets/audio/materials/paper/paper_sheet_tap_single_001.wav",
     "can_tap": "assets/audio/materials/aluminum/aluminum_can_tap_single_001.wav",
     "can_crush": "assets/audio/materials/aluminum/aluminum_can_crush_001.wav",
+    "bowl": "assets/audio/provided/singing_bowl_strike_001.wav",
 }
 
 
@@ -387,7 +388,14 @@ def build_book():
     }
 
 
-BUILDERS = {"can": build_can, "laptop": build_laptop, "book": build_book}
+def build_finish():
+    # 마지막 "띵": 물건이 깨진 상태(BROKEN!)가 되면 한 번. 사용자가 미리듣기 후보 15개 중 A(Freesound #697529
+    # 싱잉볼 단일 타격, 기본음 ~518 Hz)를 고름 (2026-11-07). 원본 15 s → 6 s, 2.5 s 뒤부터 서서히 줄여 끝 1.5 s 페이드.
+    bowl = load("bowl")
+    return {"_common/finish/ding.wav": peak_to(fade(ring_cut(cut(bowl, 0, 6000), 2500, 6000, -12), 2, 1500), -4)}
+
+
+BUILDERS = {"can": build_can, "finish": build_finish, "laptop": build_laptop, "book": build_book}
 
 
 def main():
