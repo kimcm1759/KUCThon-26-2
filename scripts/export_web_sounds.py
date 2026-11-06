@@ -347,8 +347,8 @@ def build_book():
         "book/press/contact.wav": peak_to(mix((box, 0, 0), (ptap, -6, 0)), -3),
         # crush 🔁 0.45~1.12 s: 선명한 구김 1.5 s + 누르는 저음(작게)
         "book/press/crush.wav": peak_to(crush_loop, -1),
-        # 터짐: 찢김 1.0 s + 선명한 구김이 1.5 s 동안 이어짐(터진 뒤에도 길게) + 판지 + 누르는 저음 앞 300 ms
-        "book/press/burst.wav": peak_to(mix((part(tear, 0, 1000, 300), 0, 0), (part(clear_crumple, 0, 1500, 400), -2, 0), (box, -3, 0), (part(rumble, 0, 300, 150), -10, 0)), -1),
+        # 터짐: 찢김 0.8 s + 선명한 구김 1.0 s(1.5 s는 너무 길다는 피드백) + 판지 + 누르는 저음 앞 300 ms
+        "book/press/burst.wav": peak_to(mix((part(tear, 0, 800, 250), 0, 0), (part(clear_crumple, 0, 1000, 350), -2, 0), (box, -3, 0), (part(rumble, 0, 300, 150), -10, 0)), -1),
         # 레이저
         "book/laser/burn.wav": peak_to(seamless(cut(l_burn, 40, 1240)), -4),
         # 잘림: 종이 두드림 + 찢김 앞 200 ms + 지짐 앞 250 ms
