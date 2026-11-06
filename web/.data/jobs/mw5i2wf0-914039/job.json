@@ -1,0 +1,72 @@
+{
+  "id": "mw5i2wf0-914039",
+  "createdAt": "2026-11-06T21:42:24.156Z",
+  "status": "done",
+  "photo": {
+    "url": "/api/files/mw5i2wf0-914039/photo.jpg",
+    "width": 1152,
+    "height": 1536
+  },
+  "verify": {
+    "status": "done",
+    "result": {
+      "ok": true,
+      "reason": "흰색 페이퍼백 책 한 권이 화면 중앙에 선명하게 찍혀 있고 가려진 부분이 없습니다. 배경의 의자는 흐릿해 주 대상이 명확합니다.",
+      "retake_tip": "",
+      "label_en": "white paperback book",
+      "label_ko": "흰색 페이퍼백 책 (칩 워)",
+      "surface_en": "brown wood-grain table",
+      "material": "paper",
+      "fragility": "tears",
+      "est_size_cm": {
+        "w": 14,
+        "h": 3.5,
+        "d": 21
+      },
+      "bbox": {
+        "x0": 0.13,
+        "y0": 0.39,
+        "x1": 0.87,
+        "y1": 0.73
+      },
+      "camera_elevation_deg": 50,
+      "difficulty_notes": "책 뒷면과 아래면이 보이지 않으며, 흰 표지 일부에 반사광이 있습니다."
+    },
+    "ms": 4603
+  },
+  "mask": {
+    "status": "done",
+    "url": "/api/files/mw5i2wf0-914039/mask.png",
+    "cutoutUrl": "/api/files/mw5i2wf0-914039/cutout.png",
+    "bbox": {
+      "x0": 0.15104166666666666,
+      "y0": 0.2897135416666667,
+      "x1": 0.7760416666666666,
+      "y1": 0.7141927083333334
+    },
+    "source": "SAM 3",
+    "ms": 8025
+  },
+  "backgrounds": [
+    {
+      "id": "bria-eraser",
+      "label": "Bria Eraser · $0.04",
+      "status": "done",
+      "url": "/api/files/mw5i2wf0-914039/bg-bria-eraser.png",
+      "ms": 20030
+    }
+  ],
+  "models": [
+    {
+      "id": "trellis2",
+      "label": "TRELLIS.2 · $0.30",
+      "status": "done",
+      "url": "/api/files/mw5i2wf0-914039/model-trellis2.glb",
+      "ms": 28762
+    }
+  ],
+  "selection": {
+    "background": "bria-eraser",
+    "model": "trellis2"
+  }
+}

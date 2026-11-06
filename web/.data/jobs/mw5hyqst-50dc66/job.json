@@ -1,0 +1,73 @@
+{
+  "id": "mw5hyqst-50dc66",
+  "createdAt": "2026-11-06T21:39:10.262Z",
+  "status": "done",
+  "photo": {
+    "url": "/api/files/mw5hyqst-50dc66/photo.jpg",
+    "width": 1152,
+    "height": 1536
+  },
+  "verify": {
+    "status": "done",
+    "result": {
+      "ok": true,
+      "reason": "흰색 표지의 'Chip War' 페이퍼백 책 한 권이 화면 중앙에 선명하게 찍혀 있습니다. 가려진 부분 없이 전체가 프레임 안에 있어 3D 생성에 적합합니다.",
+      "retake_tip": "",
+      "label_en": "white paperback book",
+      "label_ko": "흰색 페이퍼백 책 (칩 워)",
+      "surface_en": "brown wood-grain table",
+      "material": "paper",
+      "fragility": "tears",
+      "est_size_cm": {
+        "w": 14,
+        "h": 3.5,
+        "d": 21
+      },
+      "bbox": {
+        "x0": 0.13,
+        "y0": 0.37,
+        "x1": 0.87,
+        "y1": 0.82
+      },
+      "camera_elevation_deg": 45,
+      "difficulty_notes": "흰색 표지가 단순하고 밝아 가장자리 구분이 다소 약할 수 있습니다."
+    },
+    "ms": 6412
+  },
+  "mask": {
+    "status": "done",
+    "url": "/api/files/mw5hyqst-50dc66/mask.png",
+    "cutoutUrl": "/api/files/mw5hyqst-50dc66/cutout.png",
+    "bbox": {
+      "x0": 0.15104166666666666,
+      "y0": 0.2897135416666667,
+      "x1": 0.7760416666666666,
+      "y1": 0.7141927083333334
+    },
+    "source": "SAM 3",
+    "ms": 6544
+  },
+  "backgrounds": [
+    {
+      "id": "bria-eraser",
+      "label": "Bria Eraser · $0.04",
+      "status": "done",
+      "url": "/api/files/mw5hyqst-50dc66/bg-bria-eraser.png",
+      "ms": 19605
+    }
+  ],
+  "models": [
+    {
+      "id": "trellis2",
+      "label": "TRELLIS.2 · $0.30",
+      "status": "done",
+      "url": "/api/files/mw5hyqst-50dc66/model-trellis2.glb",
+      "ms": 70950
+    }
+  ],
+  "selection": {
+    "background": "bria-eraser",
+    "model": "trellis2"
+  },
+  "draft": true
+}
