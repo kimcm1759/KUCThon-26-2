@@ -534,9 +534,9 @@ export function PlacedModel({
         case "bat":
           return style.dir
             .clone()
-            .multiplyScalar(speed * 2.6 * (0.6 + 0.8 * r()))
-            .addScaledVector(away, speed * 0.5 * falloff)
-            .add(new THREE.Vector3(0, speed * 0.6 * r(), 0));
+            .multiplyScalar(speed * 1.3 * (0.7 + 0.6 * r()))
+            .addScaledVector(away, speed * 0.4 * falloff)
+            .add(new THREE.Vector3(0, speed * 0.35 * r(), 0));
         case "bomb":
           return away
             .multiplyScalar(speed * 3.2 * (0.6 + 0.8 * r()) / (1 + dist / (worldHeight * 0.8)))
@@ -813,7 +813,7 @@ export function PlacedModel({
         } else {
           const radius = a.size * 0.8;
           pushDebris(a.point, radius, (_, dist) =>
-            a.dir.clone().multiplyScalar(a.upm * 4 * (1 - dist / radius)).add(new THREE.Vector3(0, a.upm, 0)),
+            a.dir.clone().multiplyScalar(a.upm * 2.5 * (1 - dist / radius)).add(new THREE.Vector3(0, a.upm * 0.6, 0)),
           );
         }
         break;
@@ -988,7 +988,13 @@ export function PlacedModel({
       if (!target) return;
       const common = { id, point: target.point, normal: target.normal, size: s, upm, toCamera: toCamera(target.point) };
       if (tool === "hammer") start({ ...common, kind: "hammer", target });
-      else if (tool === "bat") start({ ...common, kind: "bat", target, dir: right.clone().setY(0).normalize() });
+      else if (tool === "bat") {
+        // Swing in from the side that was tapped, sending things toward the other side.
+        const center = pivotRef.current?.getWorldPosition(new THREE.Vector3()) ?? target.point;
+        const side = Math.sign(target.point.clone().sub(center).dot(right)) || (Math.random() < 0.5 ? 1 : -1);
+        const dir = right.clone().setY(0).normalize().multiplyScalar(-side);
+        start({ ...common, kind: "bat", target, dir });
+      }
       else {
         // Beam comes in from the upper right, outside the photo.
         const from = target.point.clone().addScaledVector(right.clone().multiplyScalar(0.7).add(UP).normalize(), s * 5);
