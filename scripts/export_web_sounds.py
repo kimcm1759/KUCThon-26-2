@@ -318,15 +318,17 @@ def build_book():
         return fade(cut(x, a, b), 2, out)
 
     crush_loop = seamless(mix((cut(crumple, 0, 720), 0, 0), (cut(rumble, 0, 720), -8, 0))[: ms(720)], 60)
+    # 망치용 둔탁한 표지 '퍽': 판지 두드림 + 낮게(0.8배)·고음 깎은 한 겹으로 몸통을 두껍게, 살짝 포화해 더 크게
+    thud = saturate(mix((box, 0, 0), (lowpass(pitch(box, 0.8), 1500, SR), -2, 0)), 2.0)
 
     return {
         # 망치
-        # 망치 타격음은 책에선 뒤로: 표지 '퍽'(판지 두드림) 위주로 (사용자 피드백 2026-11-07)
-        "book/hammer/hit.wav": peak_to(fade(load("hammer_hit"), 0, 30), -15),
-        # 1·2번째: 판지 '퍽'(표지) 위주 + 구김 앞 350 ms는 작게
-        "book/hammer/damage.wav": peak_to(mix((box, 0, 0), (part(crumple, 0, 350), -10, 0)), -1),
-        # 3번째(깨짐): 판지 '퍽' 위주 + 찢김 1.2 s + 구김 0.6 s
-        "book/hammer/break.wav": peak_to(mix((box, 0, 0), (part(tear, 0, 1200, 400), -3, 0), (part(crumple, 0, 600, 200), -6, 0)), -1),
+        # 망치 타격음은 책에선 뒤로: 표지 '퍽'(판지 두드림) 위주로 (사용자 피드백 2026-11-07, -15 → -18 dB)
+        "book/hammer/hit.wav": peak_to(fade(load("hammer_hit"), 0, 30), -18),
+        # 1·2번째: 둔탁한 표지 '퍽' 위주 + 구김 앞 350 ms는 작게
+        "book/hammer/damage.wav": peak_to(mix((thud, 0, 0), (part(crumple, 0, 350), -12, 0)), -1),
+        # 3번째(깨짐): 둔탁한 '퍽' 위주 + 찢김은 0.45 s로 짧게(1.2 s는 너무 길다는 피드백) + 구김 0.3 s
+        "book/hammer/break.wav": peak_to(mix((thud, 0, 0), (part(tear, 0, 450, 200), -5, 0), (part(crumple, 0, 300, 120), -9, 0)), -1),
         # 배트
         "book/bat/hit.wav": bat_hit,
         "book/bat/damage.wav": peak_to(mix((box, 0, 0), (part(crumple, 0, 450), -2, 0)), -1),
