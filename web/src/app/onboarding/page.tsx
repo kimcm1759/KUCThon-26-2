@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Stage from "@/components/ui/Stage";
+import SplashArt from "./SplashArt";
 import { setUser, signIn, type User } from "@/lib/client";
 import { DEMO_PASSWORD, DEMO_USER, GUEST_USER, socialUser } from "@/lib/profile";
 import { userChanged } from "@/lib/useUser";
@@ -52,13 +53,7 @@ export default function Onboarding() {
   if (step === "splash") {
     return (
       <Stage className="bg-[linear-gradient(to_bottom,#18171c_57.692%,#625d72_93.269%,#878493)]">
-        <div className="absolute top-[221px] left-[76px]">
-          <p className="bg-[linear-gradient(to_bottom,#b8c5d7,#fff_67.788%)] bg-clip-text text-[128px] leading-[normal] font-black whitespace-nowrap text-transparent">
-            빠각
-          </p>
-          <div className="absolute top-[119px] left-[227px] h-4 w-[21px] bg-primary" />
-        </div>
-        <Shards />
+        <SplashArt />
         <button
           onClick={() => setStep("login")}
           disabled={pending}
@@ -187,31 +182,4 @@ function UnderlinedLink({ className, onClick, children, disabled }: { className:
       <img src="/figma/underline.svg" alt="" className="h-px w-full" />
     </button>
   );
-}
-
-/** The flying shards on the splash, placed and rotated exactly as in the frame. */
-function Shards() {
-  const shards = [
-    { src: "shard-1", box: [88.55, 361.43, 277.435, 292.394], rot: -58.77, size: [229.649, 185.2], inset: "-5.4% 2.34% 19.6% 2.34%" },
-    { src: "shard-4", box: [16.99, 465.93, 58.602, 70.953], rot: -93.34, size: [67.882, 54.744], inset: "-7.31% 0.81% 17.69% 0.81%" },
-    { src: "shard-5", box: [258.21, 550.69, 54.791, 59.632], rot: -106.98, size: [49.468, 42.181], inset: "-4.74% 2.66% 20.26% 2.66%" },
-    { src: "shard-2", box: [18.67, 439.86, 257.561, 253.948], rot: -41.71, size: [203.431, 158.856], inset: "-1.26% 5.72% 23.74% 5.72%" },
-    { src: "shard-3", box: [-53, 526.41, 213.656, 187.357], rot: -60.21, size: [111.483, 182.369], inset: "0 6.7% 25% 6.7%" },
-  ];
-  return shards.map((s) => (
-    <div
-      key={s.src}
-      className="pointer-events-none absolute flex items-center justify-center"
-      style={{ left: s.box[0], top: s.box[1], width: s.box[2], height: s.box[3] }}
-    >
-      <div className="flex-none" style={{ transform: `rotate(${s.rot}deg)` }}>
-        <div className="relative" style={{ width: s.size[0], height: s.size[1] }}>
-          <div className="absolute" style={{ inset: s.inset }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/figma/${s.src}.svg`} alt="" className="block size-full max-w-none" />
-          </div>
-        </div>
-      </div>
-    </div>
-  ));
 }

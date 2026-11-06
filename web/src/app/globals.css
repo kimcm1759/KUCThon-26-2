@@ -65,6 +65,20 @@ input[type="range"] {
   pointer-events: none;
 }
 
+/* Splash crack (SplashArt): every box and rotation springs to its 온보딩2 place. */
+.splash-art > div,
+.splash-art > div > * {
+  transition-property: left, top, width, height, transform;
+  transition-duration: var(--dur);
+  transition-timing-function: var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash-art > div,
+  .splash-art > div > * {
+    transition: none;
+  }
+}
+
 .icon-mask {
   background-color: currentColor;
   mask: var(--icon) center / contain no-repeat;
