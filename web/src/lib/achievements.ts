@@ -9,6 +9,8 @@ export const ACHIEVEMENTS = [
   { id: "laptop", slot: 1, name: "노트북", match: /laptop|macbook|노트북/i },
   { id: "can", slot: 6, name: "캔 음료", match: /\bcan\b|캔|soda|beverage/i },
   { id: "mouse", slot: 12, name: "마우스", match: /mouse|마우스/i },
+  // 책상(desk) isn't a book.
+  { id: "book", slot: 17, name: "책", match: /\bbook\b|paperback|책(?!상)/i },
 ] as const;
 
 /** Total grid slots (8 rows of 4, as in the Figma 업적 screen). */
