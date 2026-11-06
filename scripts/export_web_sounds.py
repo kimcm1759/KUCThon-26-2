@@ -39,6 +39,9 @@ SRC = {
     "glass_tap": "assets/audio/materials/glass/glass_tap_single_001.wav",
     "glass_scrape": "assets/audio/materials/glass/glass_scrape_001.wav",
     "glass_shatter": "assets/audio/materials/glass/glass_shatter_fall_001.wav",
+    "paper_tear": "assets/audio/provided/paper_tear_001.wav",
+    "paper_crumple": "assets/audio/materials/paper/paper_crumple_001.wav",
+    "paper_tap": "assets/audio/materials/paper/paper_sheet_tap_single_001.wav",
     "can_tap": "assets/audio/materials/aluminum/aluminum_can_tap_single_001.wav",
     "can_crush": "assets/audio/materials/aluminum/aluminum_can_crush_001.wav",
 }
@@ -292,7 +295,62 @@ def build_laptop():
     }
 
 
-BUILDERS = {"can": build_can, "laptop": build_laptop}
+def build_book():
+    """책 (Claude 판정 paper·tears). 타이밍은 노트북과 같음: 망치 3번째·배트 2번째(슬로모션) 깨짐,
+    그 전 타격마다 작은 조각 2개, 프레스 0.45 s 닿고 ~1.12 s 터짐.
+
+    물건 소리는 sound 브랜치 엔진이 책에 고른 조합: 타격 = 종이 구김 + 판지 두드림,
+    누름 = 종이 구김, 깨짐 = 종이 찢김 + 구김.
+    """
+    # 음원 앞쪽 정리: 찢김은 앞 260 ms가 잡음(-38~-48 dB), 구김은 80 ms에 시작
+    tear = peak_to(fade(cut(load("paper_tear"), 250), 2, 30), 0)
+    crumple = peak_to(fade(cut(load("paper_crumple"), 70), 2, 30), 0)
+    box = peak_to(load("cardboard_tap"), 0)
+    ptap = peak_to(load("paper_tap"), 0)
+
+    hammer_hit = peak_to(fade(load("hammer_hit"), 0, 30), -5)
+    bat_hit = attack_to(ring_cut(cut(load("bat_hit"), 10, 610), 50, 600, -40), 50, -8.4)
+    l_burn = load("laser_burn")
+    boom = peak_to(fade(load("bomb_explode"), 0, 300), 0)
+    rumble = peak_to(cut(load("press_press"), 300, 1880), 0)
+
+    def part(x, a, b, out=100):
+        return fade(cut(x, a, b), 2, out)
+
+    crush_loop = seamless(mix((cut(crumple, 0, 720), 0, 0), (cut(rumble, 0, 720), -8, 0))[: ms(720)], 60)
+
+    return {
+        # 망치
+        "book/hammer/hit.wav": hammer_hit,
+        # 1·2번째: 판지 '퍽' + 구김 앞 350 ms
+        "book/hammer/damage.wav": peak_to(mix((box, 0, 0), (part(crumple, 0, 350), -4, 0)), -1),
+        # 3번째(깨짐): 찢김 1.2 s + 구김 0.6 s + 판지
+        "book/hammer/break.wav": peak_to(mix((part(tear, 0, 1200, 400), 0, 0), (part(crumple, 0, 600, 200), -4, 0), (box, -3, 0)), -1),
+        # 배트
+        "book/bat/hit.wav": bat_hit,
+        "book/bat/damage.wav": peak_to(mix((box, 0, 0), (part(crumple, 0, 450), -2, 0)), -1),
+        # 2번째(깨짐, 슬로모션 0.35배): 찢김 0.8 s로 짧게 + 구김 + 판지, 살짝 포화
+        "book/bat/break.wav": peak_to(saturate(mix((part(tear, 0, 800, 300), 0, 0), (part(crumple, 0, 400), -4, 0), (box, -3, 0)), 2.0), -1),
+        # 프레스
+        "book/press/contact.wav": peak_to(mix((box, 0, 0), (ptap, -6, 0)), -3),
+        # crush 🔁 0.45~1.12 s: 구김 0.72 s + 누르는 저음, 이음새 없이 0.66 s
+        "book/press/crush.wav": peak_to(crush_loop, -2),
+        # 터짐: 찢김 1.0 s + 구김 + 판지 + 누르는 저음 앞 300 ms
+        "book/press/burst.wav": peak_to(mix((part(tear, 0, 1000, 300), 0, 0), (part(crumple, 0, 500), -3, 0), (box, -3, 0), (part(rumble, 0, 300, 150), -8, 0)), -1),
+        # 레이저
+        "book/laser/burn.wav": peak_to(seamless(cut(l_burn, 40, 1240)), -4),
+        # 잘림: 종이 두드림 + 찢김 앞 200 ms + 지짐 앞 250 ms
+        "book/laser/cut.wav": peak_to(mix((ptap, 0, 0), (part(tear, 0, 200, 80), -4, 0), (part(l_burn, 40, 290, 80), -6, 0)), -1),
+        # 폭탄: 폭발이 주, 찢김·구김이 그 안에서
+        "book/bomb/explode.wav": peak_to(mix((boom, 0, 0), (part(tear, 0, 1000, 300), -6, 0), (part(crumple, 0, 600, 200), -6, 0)), -1),
+        # 조각: 종이 조각은 가볍고 조용하게 / 큰 덩어리는 판지 '툭'
+        "book/debris/small.wav": peak_to(fade(pitch(cut(ptap, 0, 100), 1.2), 0, 30), -12),
+        "book/debris/small_2.wav": peak_to(fade(pitch(cut(crumple, 0, 100), 1.1), 0, 30), -13),
+        "book/debris/large.wav": peak_to(fade(pitch(box, 0.9), 0, 40), -6),
+    }
+
+
+BUILDERS = {"can": build_can, "laptop": build_laptop, "book": build_book}
 
 
 def main():
