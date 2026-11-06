@@ -71,7 +71,7 @@ export default function Composite(props: Props) {
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-black ${fit ? "" : "w-full"}`}
+      className={`relative overflow-hidden bg-black ${fit ? "rounded-[24px]" : "w-full rounded-xl"}`}
       style={{
         aspectRatio: `${width} / ${height}`,
         // Largest box with the photo's aspect that fits the container (cq units).

@@ -20,6 +20,20 @@ npm run dev:lan   # 같은 와이파이의 폰에서 http://<PC IP>:3000 으로 
 
 시연은 `/jobs/<id>/play` 전체화면 부수기 화면에서 해요 (수집 일기에서 완료된 항목을 누르면 바로 열려요). `?fps`를 붙이면 프레임 수, `?sound=laptop|book|can`을 붙이면 소리 세트를 고정해요.
 
+## 화면 (Figma "쿠씨톤" › page)
+
+| 경로 | 화면 |
+|---|---|
+| `/onboarding` | 스플래시 → 로그인 (실제 계정은 아직 없음: 어떤 방법이든 이름만 기억) |
+| `/` | 카메라 탭: 실시간 미리보기, 누르면 `/camera` |
+| `/camera` | 전체화면 카메라: 셔터·배율·전환·갤러리. 찍으면 업로드 후 부수기 화면으로 |
+| `/collection` | 내 모음 (내가 찍은 것) |
+| `/network` | 네트워크 (`job.json`에 `sharedBy`가 있는 것 = 다른 사람이 공유한 것) |
+| `/settings` | 설정 (디자인 전, 같은 스타일로 임시) · `/dev` 파이프라인 결과 목록 |
+| `/jobs/<id>/play` | 부수기 (만드는 중이면 단계 표시) · `/jobs/<id>` 개발용 상세 |
+
+디자인 값은 `src/app/globals.css`의 `@theme`, 아이콘·이미지는 `public/figma/`. 실시간 카메라는 https(또는 localhost)에서만 돼요 — 폰으로 PC 개발 서버를 볼 땐 `npm run dev:https` (인증서 경고는 "계속"), http면 셔터가 폰 기본 카메라를 열어요.
+
 ## 구조
 
 | 경로 | 역할 |

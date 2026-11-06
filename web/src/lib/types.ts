@@ -71,4 +71,6 @@ export interface Job {
   note?: string;
   /** Bundled demo sample (read-only, assets under /samples/). */
   sample?: boolean;
+  /** Someone else's object shared with everyone: shows under 네트워크, not 내 모음. */
+  sharedBy?: string;
 }

@@ -1,11 +1,36 @@
 @import "tailwindcss";
+@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 
-body {
-  font-family:
-    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+/* 빠각 design tokens (Figma "쿠씨톤" › page). */
+@theme {
+  --color-bg: #18171c;
+  --color-surface: #2c2c36;
+  --color-primary: #116ef1;
+  --color-muted: #808188;
+  --color-subtle: #9d9dac;
+  --color-icon: #63606f;
+  --color-lime: #d2f53c;
+  --color-zoom: #ffd300;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
     "Malgun Gothic", "Segoe UI", sans-serif;
 }
 
 input[type="range"] {
-  accent-color: #f97316;
+  accent-color: var(--color-primary);
+}
+
+/* Top/bottom spacing that matches the 402×874 frames on notched phones and
+   still leaves room in a browser where the status bar isn't overlaid. */
+.pad-top {
+  padding-top: max(calc(env(safe-area-inset-top) + 14px), 28px);
+}
+.pad-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 24px);
+}
+
+/* A one-color icon drawn from an SVG file, so it can follow text color. */
+.icon-mask {
+  background-color: currentColor;
+  mask: var(--icon) center / contain no-repeat;
+  -webkit-mask: var(--icon) center / contain no-repeat;
 }

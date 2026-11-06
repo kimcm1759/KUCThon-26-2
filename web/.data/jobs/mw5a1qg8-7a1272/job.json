@@ -1,0 +1,72 @@
+{
+  "id": "mw5a1qg8-7a1272",
+  "createdAt": "2026-11-06T17:57:32.841Z",
+  "status": "done",
+  "photo": {
+    "url": "/api/files/mw5a1qg8-7a1272/photo.jpg",
+    "width": 1152,
+    "height": 1536
+  },
+  "verify": {
+    "status": "done",
+    "result": {
+      "ok": true,
+      "reason": "검은색 무선 게이밍 마우스가 화면 중앙에 선명하게 찍혀 있어 주 피사체가 명확합니다. 배경에 다른 물건들이 있지만 마우스와 겹치지 않아 문제없습니다.",
+      "retake_tip": "",
+      "label_en": "black wireless gaming mouse",
+      "label_ko": "검은색 무선 게이밍 마우스",
+      "surface_en": "light wood desk",
+      "material": "electronics",
+      "fragility": "cracks",
+      "est_size_cm": {
+        "w": 6.4,
+        "h": 4,
+        "d": 12.5
+      },
+      "bbox": {
+        "x0": 0.215,
+        "y0": 0.425,
+        "x1": 0.705,
+        "y1": 0.69
+      },
+      "camera_elevation_deg": 50,
+      "difficulty_notes": "무광 검은색 표면이라 세부 형태와 버튼 경계가 잘 드러나지 않을 수 있고, 바닥면은 보이지 않습니다."
+    },
+    "ms": 6109
+  },
+  "mask": {
+    "status": "done",
+    "url": "/api/files/mw5a1qg8-7a1272/mask.png",
+    "cutoutUrl": "/api/files/mw5a1qg8-7a1272/cutout.png",
+    "bbox": {
+      "x0": 0.21788194444444445,
+      "y0": 0.4264322916666667,
+      "x1": 0.7022569444444444,
+      "y1": 0.6907552083333334
+    },
+    "source": "SAM 3",
+    "ms": 33971
+  },
+  "backgrounds": [
+    {
+      "id": "bria-eraser",
+      "label": "Bria Eraser · $0.04",
+      "status": "done",
+      "url": "/api/files/mw5a1qg8-7a1272/bg-bria-eraser.png",
+      "ms": 24145
+    }
+  ],
+  "models": [
+    {
+      "id": "trellis2",
+      "label": "TRELLIS.2 · $0.30",
+      "status": "done",
+      "url": "/api/files/mw5a1qg8-7a1272/model-trellis2.glb",
+      "ms": 49327
+    }
+  ],
+  "selection": {
+    "background": "bria-eraser",
+    "model": "trellis2"
+  }
+}

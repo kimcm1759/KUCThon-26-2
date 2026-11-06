@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "dev:lan": "next dev -H 0.0.0.0",
+    "dev:https": "next dev -H 0.0.0.0 --experimental-https",
     "sounds": "node scripts/gen-sounds.mjs",
     "predev": "node scripts/gen-sounds.mjs",
     "predev:lan": "node scripts/gen-sounds.mjs",
-    "prebuild": "node scripts/gen-sounds.mjs"
+    "prebuild": "node scripts/gen-sounds.mjs",
+    "predev:https": "node scripts/gen-sounds.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",
@@ -22,6 +24,7 @@
     "@react-three/rapier": "^2.2.0",
     "meshoptimizer": "^1.3.0",
     "next": "16.4.5",
+    "pretendard": "^1.3.9",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1",

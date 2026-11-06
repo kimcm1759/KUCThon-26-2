@@ -2,22 +2,22 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "부숴봐 — 파이프라인 테스트",
-  description: "사진 한 장 → 물체 분리 → 빈 배경 + 3D 모델",
+  title: "빠각",
+  description: "찍은 물건을 3D로 만들어 사진 속 그 자리에서 부숴 보기",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0b0b0c",
-  // Draw under notches / gesture bars; the full-screen view pads with safe-area insets.
+  themeColor: "#18171c",
+  // Draw under notches / gesture bars; screens pad with safe-area insets.
   viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className="h-full antialiased">
-      <body className="min-h-full bg-neutral-950 text-neutral-100">{children}</body>
+      <body className="min-h-full bg-bg font-sans text-white">{children}</body>
     </html>
   );
 }
