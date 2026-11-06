@@ -7,10 +7,12 @@
 // expectedActions: 역할별로 적합한 catalog action 값 (점수화에 사용)
 // tap: 탭 한 번에 재생할 레이어 타이밍
 // start: 누르기/쓸기 시작 시 레이어 타이밍 (sustain 모드)
+// disabledRoles: 이 도구에서 아예 재생하지 않는 역할 (음원도 합성 폴백도 쓰지 않음, 사용자 결정 2026-11-07)
 // finishOn: 'end' = 입력 종료마다 finish, 'complete' = 파손 완료(progress>=1) 때만, 'always' = 매 동작마다
 
 export const TOOL_PRESETS = {
   hydraulic_press: {
+    disabledRoles: ['impact_detail'],
     mode: 'sustain',
     finishOn: 'end',
     expectedActions: {
@@ -38,6 +40,7 @@ export const TOOL_PRESETS = {
   },
 
   hammer: {
+    disabledRoles: ['impact_detail'],
     mode: 'oneshot',
     finishOn: 'complete',
     expectedActions: {
@@ -56,6 +59,7 @@ export const TOOL_PRESETS = {
   },
 
   aluminum_bat: {
+    disabledRoles: ['impact_detail'],
     mode: 'oneshot',
     finishOn: 'complete',
     expectedActions: {
@@ -75,6 +79,7 @@ export const TOOL_PRESETS = {
   },
 
   laser: {
+    disabledRoles: ['main_action'],
     mode: 'sustain',
     finishOn: 'end',
     expectedActions: {
@@ -102,6 +107,7 @@ export const TOOL_PRESETS = {
   },
 
   bomb: {
+    disabledRoles: ['impact_detail', 'finish'],
     mode: 'oneshot',
     finishOn: 'always',
     expectedActions: {

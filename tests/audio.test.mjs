@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { validateCatalog } from '../src/audio/soundCatalog.js';
+import { validateCatalog, coverageReport } from '../src/audio/soundCatalog.js';
 import { compose } from '../src/audio/soundComposer.js';
 import { scoreSound, selectSound } from '../src/audio/soundMatcher.js';
 
@@ -13,7 +13,7 @@ const roles = (plan) => plan.selected_sounds.map((s) => s.role);
 const layer = (plan, role) => plan.selected_sounds.find((s) => s.role === role);
 
 test('카탈로그: 도구·역할 미정 제공 음원은 자동 재생 후보에서 제외', () => {
-  assert.equal(catalog.playable.length, 20);
+  assert.equal(catalog.playable.length, 14);
   const excluded = new Set(catalog.issues.map((i) => i.sound_id));
   assert.ok(excluded.has('paper_tear_001'));
   assert.ok(excluded.has('paper_other_001'));
@@ -35,28 +35,30 @@ test('다른 도구 음원을 대신 쓰지 않는다 (레이저 main_action ≠
     assert.ok(!s.sound_id.startsWith('laser'), s.sound_id);
     assert.equal(s.synth?.tool_code, 'bomb');
   }
-  const laserMain = onlyLaser.find((s) => s.sound_role === 'main_action');
+  // 레이저 main_action은 사용 안 함이라 카탈로그에 없으므로 가상 항목으로 확인
+  const laserMain = validateCatalog({ sounds: [{ sound_id: 'laser_beam_x', file_path: 'x.wav', tool_code: 'laser',
+    sound_role: 'main_action', action: 'beam' }] }).playable[0];
   assert.equal(scoreSound(laserMain, { tool_code: 'bomb', sound_role: 'main_action' }).hardMismatch, true);
   assert.equal(selectSound(onlyLaser, { tool_code: 'bomb', sound_role: 'main_action' }), null);
 });
 
-test('망치 + 캔 + 강한 탭: activation→main→detail, 점수 80 이상', () => {
+test('망치 + 캔 + 강한 탭: activation→main (detail은 사용 안 함), 점수 80 이상', () => {
   const plan = compose({ object_type: 'aluminum_can', object_materials: ['aluminum'], tool_code: 'hammer',
     interaction: 'tap', intensity: 0.82, progress: 0.2 }, catalog.playable, R);
-  assert.deepEqual(roles(plan), ['activation', 'main_action', 'impact_detail']);
-  assert.equal(layer(plan, 'main_action').sound_id, 'hammer_main_action_001');
+  assert.deepEqual(roles(plan), ['activation', 'main_action']);
+  assert.equal(layer(plan, 'main_action').sound_id, 'hammer_main_action_002');
   assert.ok(layer(plan, 'main_action').score >= 80);
   assert.equal(plan.fallback_used, false);
   assert.ok(layer(plan, 'activation').delay_ms < layer(plan, 'main_action').delay_ms);
 });
 
 test('강도: 약한 탭은 detail 생략·gain 낮음, 강한 탭은 detail 포함·gain 높음', () => {
-  const base = { object_type: 'laptop', tool_code: 'hammer', interaction: 'tap', progress: 0 };
+  const base = { object_type: 'laptop', tool_code: 'laser', interaction: 'tap', progress: 0 };
   const light = compose({ ...base, intensity: 0.1 }, catalog.playable, R);
   const strong = compose({ ...base, intensity: 0.95 }, catalog.playable, R);
   assert.ok(!roles(light).includes('impact_detail'));
   assert.ok(roles(strong).includes('impact_detail'));
-  assert.ok(layer(strong, 'main_action').gain > layer(light, 'main_action').gain);
+  assert.ok(layer(strong, 'activation').gain > layer(light, 'activation').gain);
 });
 
 test('물건에 따라 재생 파라미터가 달라진다', () => {
@@ -66,18 +68,21 @@ test('물건에 따라 재생 파라미터가 달라진다', () => {
   const laptop = compose({ ...base, object_type: 'laptop' }, catalog.playable, R);
   assert.ok(layer(book, 'main_action').highpass_hz > layer(can, 'main_action').highpass_hz); // 책: 저음 약하게 시작
   assert.equal(layer(laptop, 'main_action').highpass_hz, undefined);
-  assert.ok(layer(can, 'impact_detail').playback_rate > layer(laptop, 'impact_detail').playback_rate); // 캔: 얇은 금속
+  const laserBase = { tool_code: 'laser', interaction: 'tap', intensity: 'medium', progress: 0.4 };
+  const laserCan = compose({ ...laserBase, object_type: 'aluminum_can' }, catalog.playable, R);
+  const laserLaptop = compose({ ...laserBase, object_type: 'laptop' }, catalog.playable, R);
+  assert.ok(layer(laserCan, 'impact_detail').playback_rate > layer(laserLaptop, 'impact_detail').playback_rate); // 캔: 얇은 금속
   assert.match(book.reason, /paper\+cardboard \(object_preset_default\)/);
 });
 
-test('유압 프레스 누르기: 지속 루프 → progress 단계 detail → 완료 시 finish + 페이드아웃', () => {
+test('유압 프레스 누르기: 지속 루프 → (detail 사용 안 함) → 완료 시 finish + 페이드아웃', () => {
   const base = { object_type: 'book', tool_code: 'hydraulic_press', interaction: 'press', intensity: 0.6 };
   const start = compose({ ...base, phase: 'start', progress: 0 }, catalog.playable, R);
   assert.deepEqual(roles(start), ['activation', 'main_action']);
   assert.equal(layer(start, 'main_action').loop, true);
 
   const mid = compose({ ...base, phase: 'update', previous_progress: 0.2, progress: 0.7 }, catalog.playable, R);
-  assert.equal(mid.selected_sounds.filter((s) => s.role === 'impact_detail').length, 2); // 0.33, 0.66
+  assert.equal(mid.selected_sounds.filter((s) => s.role === 'impact_detail').length, 0); // 진행 단계를 넘어도 detail 없음
   const low = compose({ ...base, phase: 'update', previous_progress: 0.1, progress: 0.2 }, catalog.playable, R);
   assert.ok(mid.sustain_updates[0].gain > low.sustain_updates[0].gain); // 진행될수록 압축음 증폭
   assert.ok(mid.sustain_updates[0].highpass_hz < low.sustain_updates[0].highpass_hz); // 책: 저음이 점점 열림
@@ -91,17 +96,17 @@ test('유압 프레스 누르기: 지속 루프 → progress 단계 detail → �
   assert.ok(release.stop_sustain);
 });
 
-test('레이저 쓸기: 속도가 빔 재생 속도·gain에 반영', () => {
-  const base = { object_type: 'laptop', tool_code: 'laser', interaction: 'swipe', phase: 'update', progress: 0.3, previous_progress: 0.3 };
-  const slow = compose({ ...base, swipe_speed: 0.1 }, catalog.playable, R);
-  const fast = compose({ ...base, swipe_speed: 0.9 }, catalog.playable, R);
-  assert.ok(fast.sustain_updates[0].playback_rate > slow.sustain_updates[0].playback_rate);
-  assert.ok(fast.sustain_updates[0].gain > slow.sustain_updates[0].gain);
+test('레이저 쓸기: 빔(main_action)은 사용 안 함 → 루프·지속 갱신 없음', () => {
+  const base = { object_type: 'laptop', tool_code: 'laser', interaction: 'swipe' };
+  const start = compose({ ...base, phase: 'start', progress: 0 }, catalog.playable, R);
+  assert.deepEqual(roles(start), ['activation']);
+  const upd = compose({ ...base, phase: 'update', progress: 0.3, previous_progress: 0.3, swipe_speed: 0.9 }, catalog.playable, R);
+  assert.equal(upd.sustain_updates.length, 0);
 });
 
-test('폭탄 탭: 퓨즈 → 폭발 → 파편 → 잔향 순서', () => {
+test('폭탄 탭: 퓨즈 → 폭발 (파편·잔향은 사용 안 함)', () => {
   const plan = compose({ object_type: 'book', tool_code: 'bomb', interaction: 'tap', intensity: 'strong' }, catalog.playable, R);
-  assert.deepEqual(roles(plan), ['activation', 'main_action', 'impact_detail', 'finish']);
+  assert.deepEqual(roles(plan), ['activation', 'main_action']);
   const d = plan.selected_sounds.map((s) => s.delay_ms);
   assert.deepEqual([...d].sort((a, b) => a - b), d);
 });
@@ -124,14 +129,14 @@ test('레이어 gain은 1을 넘지 않고 합도 제한된다', () => {
 });
 
 test('폴백 우선순위: 물건 일치 → 재질 일치 → 일반음 → 합성 → (그 외) 후보 아님', () => {
-  const mk = (id, extra) => ({ sound_id: id, file_path: `x/${id}.wav`, tool_code: 'hammer', sound_role: 'impact_detail',
+  const mk = (id, extra) => ({ sound_id: id, file_path: `x/${id}.wav`, tool_code: 'laser', sound_role: 'impact_detail',
     action: 'crack', intensity: 'medium', material_codes: ['unknown'], target_objects: [], ...extra });
   const A = mk('can_specific', { target_objects: ['aluminum_can'] });
   const B = mk('laptop_aluminum', { target_objects: ['laptop'], material_codes: ['aluminum'] });
   const C = mk('generic', {});
   const D = mk('laptop_plastic', { target_objects: ['laptop'], material_codes: ['plastic'] });
   const E = { ...mk('bomb_can', { target_objects: ['aluminum_can'] }), tool_code: 'bomb' };
-  const q = { tool_code: 'hammer', sound_role: 'impact_detail', object_type: 'aluminum_can', materials: ['aluminum'], expectedActions: ['crack'], intensity: 'medium' };
+  const q = { tool_code: 'laser', sound_role: 'impact_detail', object_type: 'aluminum_can', materials: ['aluminum'], expectedActions: ['crack'], intensity: 'medium' };
   const cat = (...xs) => validateCatalog({ sounds: xs }).playable;
 
   assert.equal(selectSound(cat(D, C, B, A, E), q, R).entry.sound_id, 'can_specific');
@@ -140,8 +145,8 @@ test('폴백 우선순위: 물건 일치 → 재질 일치 → 일반음 → 합
   assert.equal(selectSound(cat(D, C, E), q, R).entry.sound_id, 'generic');
   assert.equal(selectSound(cat(D, E), q, R), null); // 다른 물건 전용·재질 불일치, 다른 도구 → 후보 없음
 
-  const plan = compose({ object_type: 'aluminum_can', object_materials: ['aluminum'], tool_code: 'hammer', intensity: 'strong' }, cat(D, E), R);
-  assert.equal(layer(plan, 'impact_detail').sound_id, 'synth:hammer_impact_detail');
+  const plan = compose({ object_type: 'aluminum_can', object_materials: ['aluminum'], tool_code: 'laser', intensity: 'strong' }, cat(D, E), R);
+  assert.equal(layer(plan, 'impact_detail').sound_id, 'synth:laser_impact_detail');
 });
 
 test('파일 레이어에는 sound_id·file_path·로드 실패 시 합성 정보가 남는다', () => {
@@ -151,5 +156,23 @@ test('파일 레이어에는 sound_id·file_path·로드 실패 시 합성 정�
     assert.match(s.file_path, /^assets\/audio\/tools\/laser\//);
     assert.deepEqual(s.on_load_fail, { tool_code: 'laser', role: s.role });
     assert.ok(['object_match', 'material_match', 'generic'].includes(s.match));
+  }
+});
+
+test('사용 안 함 역할은 어떤 입력에서도 재생되지 않는다 (합성 폴백 포함)', () => {
+  const off = { hydraulic_press: ['impact_detail'], hammer: ['impact_detail'], aluminum_bat: ['impact_detail'],
+    laser: ['main_action'], bomb: ['impact_detail', 'finish'] };
+  for (const [tool_code, disabled] of Object.entries(off)) {
+    for (const interaction of ['tap', 'press', 'swipe']) {
+      for (const [phase, prev, prog] of [['start', 0, 0], ['update', 0, 1], ['end', 1, 1]]) {
+        const plan = compose({ object_type: 'aluminum_can', tool_code, interaction, phase, intensity: 1,
+          previous_progress: prev, progress: prog }, catalog.playable, R);
+        for (const s of plan.selected_sounds) assert.ok(!disabled.includes(s.role), `${tool_code} ${interaction} ${phase}: ${s.role}`);
+      }
+    }
+  }
+  const { rows } = coverageReport(catalog);
+  for (const [tool_code, disabled] of Object.entries(off)) {
+    for (const role of disabled) assert.equal(rows.find((r) => r.tool_code === tool_code && r.sound_role === role).status, 'disabled');
   }
 });

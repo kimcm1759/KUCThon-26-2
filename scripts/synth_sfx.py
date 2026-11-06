@@ -9,7 +9,9 @@ sounds/catalog.json 과 sounds/README.md 를 갱신한다.
 import json
 import math
 import os
+import sys
 import wave
+import zlib
 from datetime import date
 
 import numpy as np
@@ -191,24 +193,37 @@ def hammer_activation():
 
 
 def hammer_main():
-    d = 0.7
+    """묵직한 '퍽': 빠르게 떨어지는 저음 쿵 + 저중역 노이즈 펀치, 고음 어택은 약하게."""
+    d = 0.8
     t = tvec(d)
-    trans = band(noise(0.015), 1000, 12000) * exp_env(0.015, 0.003)
-    thump = np.sin(2 * np.pi * (110 + 80 * np.exp(-t / 0.02)) * t) * exp_env(d, 0.07)
-    body = partials(d, [340, 760, 1430], [0.4, 0.25, 0.15], [0.06, 0.04, 0.03])
-    out = thump + body
-    place(out, trans * 1.5, 0)
-    return reverb(out, 0.35, 0.15)
+    f = 55 + 120 * np.exp(-t / 0.025)
+    thud = np.sin(2 * np.pi * np.cumsum(f) / SR) * exp_env(d, 0.13)
+    punch = band(noise(d), 60, 900) * exp_env(d, 0.045) * 1.4
+    knock = partials(d, [180, 410], [0.35, 0.2], [0.06, 0.04])
+    trans = band(noise(0.008), 800, 5000) * exp_env(0.008, 0.002)
+    out = thud * 1.3 + punch + knock
+    place(out, trans * 0.5, 0)
+    out = np.tanh(out * 1.6)
+    return reverb(out, 0.3, 0.12)
 
 
 def hammer_detail():
+    """맞은 물체가 찌그러지는 소리: 저중역 크런치 알갱이 + 내려가는 휘어짐 신음 + 짧은 금속 굽힘."""
     d = 0.9
+    t = tvec(d)
     out = np.zeros(n_of(d))
-    crack = band(noise(0.12), 1200, 8000) * exp_env(0.12, 0.03)
-    place(out, crack, 0.0)
-    for at in np.sort(rng.uniform(0.02, 0.6, 14)):
-        place(out, click(rng.uniform(0.006, 0.02), 2500, 10000) * rng.uniform(0.2, 0.8), at)
-    return out
+    times = np.sort(rng.exponential(0.12, 70))
+    times = times[times < 0.55]
+    for at in times:
+        dur = rng.uniform(0.005, 0.025)
+        g = band(noise(dur), 300, 3000) * exp_env(dur, dur / 3)
+        place(out, g * math.exp(-at / 0.2) * rng.uniform(0.4, 1.0), at)
+    groan = svf_bp(noise(d), 350 + 550 * np.exp(-t / 0.12), q=6) * exp_env(d, 0.15) * 0.9
+    bend_f = 520 * (1 - 0.15 * (1 - np.exp(-t / 0.1)))
+    bend = (np.sin(2 * np.pi * np.cumsum(bend_f) / SR)
+            + 0.5 * np.sin(2 * np.pi * np.cumsum(bend_f * 2.37) / SR)) * exp_env(d, 0.12) * 0.25
+    body = band(noise(d), 80, 400) * exp_env(d, 0.08) * 0.6
+    return out + groan + bend + body
 
 
 def debris(d, count, lo, hi, spread, low_tail=0.0):
@@ -223,8 +238,26 @@ def debris(d, count, lo, hi, spread, low_tail=0.0):
     return out
 
 
+def light_knock(amp=1.0):
+    """망치 머리가 물건에 가볍게 닿는 '톡': 짧은 저중음 쿵 + 약한 노이즈 + 작은 몸체 울림."""
+    d = 0.25
+    t = tvec(d)
+    f = 160 + 70 * np.exp(-t / 0.01)
+    thud = np.sin(2 * np.pi * np.cumsum(f) / SR) * exp_env(d, 0.03)
+    tick = band(noise(d), 300, 2000) * exp_env(d, 0.008) * 0.6
+    ring = partials(d, [650, 1500], [0.2, 0.08], [0.04, 0.025])
+    return (thud + tick + ring) * amp
+
+
 def hammer_finish():
-    return reverb(debris(1.6, 40, 1500, 9000, 0.35, low_tail=0.15), 0.6, 0.25)
+    """망치를 떼면서 물건과 가볍게 부딪히는 소리: 짧게 스치며 들림 → 톡 → 작은 되튐."""
+    d = 0.7
+    out = np.zeros(n_of(d))
+    lift = band(noise(0.1), 400, 2500) * ar_env(0.1, 0.01, 0.08) * 0.25
+    place(out, lift, 0.0)
+    place(out, light_knock(1.0), 0.09)
+    place(out, light_knock(0.35), 0.24)
+    return reverb(out, 0.3, 0.15)
 
 
 # ---------- 알루미늄 배트 ----------
@@ -353,12 +386,12 @@ SPECS = [
      "기계가 멈추는 쿵 + 압력 해제 쉭 + 모터가 느려지며 꺼지는 소리, 짧은 잔향."),
     ("hammer", "activation", hammer_activation, "swing", [], "light", ["airy"], ["unknown"],
      "망치를 휘두르는 짧은 공기음(휙)."),
-    ("hammer", "main_action", hammer_main, "impact", [], "strong", ["sharp", "dull"], ["unknown"],
-     "날카로운 어택 뒤 짧은 저음 쿵과 몸체 울림이 있는 강한 타격음."),
-    ("hammer", "impact_detail", hammer_detail, "crack", ["debris"], "medium", ["crunchy", "sharp"], ["unknown"],
-     "타격 직후의 균열음과 작은 조각이 튀는 틱틱 소리."),
-    ("hammer", "finish", hammer_finish, "debris", ["decay"], "light", ["rattly", "crunchy"], ["unknown"],
-     "파편이 흩어져 떨어지며 점점 잦아드는 소리와 잔향."),
+    ("hammer", "main_action", hammer_main, "impact", [], "strong", ["low", "dull"], ["unknown"],
+     "묵직한 '퍽' 타격음. 떨어지는 저음 쿵과 저중역 펀치가 중심이고 고음 어택은 약함."),
+    ("hammer", "impact_detail", hammer_detail, "press", ["crack"], "strong", ["crunchy", "low", "metallic"], ["unknown"],
+     "맞은 물체가 찌그러지는 소리. 저중역 크런치와 휘어지며 내려가는 신음, 짧은 금속 굽힘음."),
+    ("hammer", "finish", hammer_finish, "tap", ["scrape"], "light", ["dull", "dry"], ["unknown"],
+     "망치를 떼면서 물건과 가볍게 부딪히는 소리. 짧게 스치며 들리는 소리 뒤 '톡', 작은 되튐."),
     ("aluminum_bat", "activation", bat_activation, "swing", [], "medium", ["airy"], ["unknown"],
      "배트를 크게 휘둘러 공기를 가르는 휙 소리."),
     ("aluminum_bat", "main_action", bat_main, "impact", [], "strong", ["metallic", "resonant", "sharp"], ["aluminum"],
@@ -386,7 +419,28 @@ SPECS = [
 ]
 
 
+# 사용자 제공 음원으로 대체된 합성음. 전체 재생성 시에도 만들지 않는다.
+REPLACED = {
+    "hammer_main_action_001",  # → hammer_main_action_002 (제공 음원)
+    "aluminum_bat_main_action_001",  # → aluminum_bat_main_action_002 (제공 음원)
+    "hammer_finish_001",  # → hammer_finish_002 (제공 음원)
+    # 사용자가 필요 없다고 한 역할 (엔진 toolPresets.js disabledRoles와 일치)
+    "hydraulic_press_impact_detail_001",
+    "hammer_impact_detail_001",
+    "aluminum_bat_impact_detail_001",
+    "laser_main_action_001",
+    "bomb_impact_detail_001",
+    "bomb_finish_001",
+}
+
+
 def main():
+    """인자 없이 실행하면 20개 전부, sound_id를 주면 그것만 다시 만든다.
+    예: python scripts/synth_sfx.py hammer_main_action_001 hammer_impact_detail_001
+    각 소리는 sound_id 기반 시드를 써서, 하나를 고쳐도 다른 소리의 결과가 바뀌지 않는다.
+    """
+    global rng
+    only = set(sys.argv[1:])
     today = date.today().isoformat()
     cat_path = os.path.join(ROOT, "sounds", "catalog.json")
     with open(cat_path, encoding="utf-8") as f:
@@ -395,7 +449,10 @@ def main():
 
     for tool, role, fn, action, sec, inten, tex, mats, desc in SPECS:
         sid = f"{tool}_{role}_001"
+        if sid in REPLACED or (only and sid not in only):
+            continue
         rel = f"assets/audio/tools/{tool}/{role}_001.wav"
+        rng = np.random.default_rng(zlib.crc32(sid.encode()))
         x = finalize(fn())
         save(os.path.join(ROOT, rel), x)
         entry = {

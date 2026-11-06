@@ -1,5 +1,6 @@
 // 카탈로그 로드·검증. 잘못된 카탈로그여도 앱을 멈추지 않고 빈 카탈로그(→ 합성 폴백)로 동작한다.
 import { TOOL_CODES, SOUND_ROLES } from './constants.js';
+import { TOOL_PRESETS } from './presets/toolPresets.js';
 
 /**
  * 카탈로그 객체를 검증한다. 자동 재생 후보(playable)와 제외 항목(issues)을 나눈다.
@@ -73,6 +74,7 @@ export async function loadCatalog(url, { fetchImpl = globalThis.fetch, log = () 
 /**
  * 도구 × 역할 준비 현황 (연결 지침 9장).
  * status: covered(재생 후보 파일 있음) / missing(없음 → 앱은 합성 폴백) / needs_review(해당 도구·역할 항목이 있으나 검증 실패)
+ *         / disabled(도구 프리셋 disabledRoles에서 끈 역할 → 아무 소리도 재생 안 함)
  * objects: 그 도구·역할에서 물건 전용(target_objects) 음원이 있는 물건 코드
  * @param {{ sounds: object[], playable: object[] }} result  validateCatalog() 결과
  * @param {string[]} objectTypes  확인할 물건 코드
@@ -83,7 +85,8 @@ export function coverageReport(result, objectTypes = []) {
     for (const role of SOUND_ROLES) {
       const ok = result.playable.filter((s) => s.tool_code === tool && s.sound_role === role);
       const any = result.sounds.filter((s) => s?.tool_code === tool && s?.sound_role === role);
-      const status = ok.length ? 'covered' : any.length ? 'needs_review' : 'missing';
+      const disabled = TOOL_PRESETS[tool]?.disabledRoles?.includes(role);
+      const status = disabled ? 'disabled' : ok.length ? 'covered' : any.length ? 'needs_review' : 'missing';
       const objects = objectTypes.filter((o) => ok.some((s) => s.target_objects.includes(o)));
       rows.push({ tool_code: tool, sound_role: role, status, sound_ids: ok.map((s) => s.sound_id), objects });
     }

@@ -100,33 +100,6 @@
       "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
     },
     {
-      "sound_id": "hydraulic_press_impact_detail_001",
-      "file_path": "assets/audio/tools/hydraulic_press/impact_detail_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
-      "tool_code": "hydraulic_press",
-      "sound_role": "impact_detail",
-      "target_objects": [],
-      "material_codes": [
-        "unknown"
-      ],
-      "action": "crack",
-      "secondary_actions": [
-        "rattle"
-      ],
-      "intensity": "medium",
-      "texture_tags": [
-        "metallic",
-        "crunchy"
-      ],
-      "description": "눌리며 생기는 불규칙한 찌그러짐·균열 조각음, 짧은 금속 울림, 삐걱임.",
-      "duration_seconds": 1.3,
-      "sample_rate_hz": 44100,
-      "channels": 1,
-      "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
-    },
-    {
       "sound_id": "hydraulic_press_finish_001",
       "file_path": "assets/audio/tools/hydraulic_press/finish_001.wav",
       "original_filename": null,
@@ -176,10 +149,10 @@
       "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
     },
     {
-      "sound_id": "hammer_main_action_001",
-      "file_path": "assets/audio/tools/hammer/main_action_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
+      "sound_id": "hammer_main_action_002",
+      "file_path": "assets/audio/provided/hammer_main_action_002.wav",
+      "original_filename": "592112__pablodavilla__hammer_1.wav",
+      "source_type": "provided_audio",
       "tool_code": "hammer",
       "sound_role": "main_action",
       "target_objects": [],
@@ -188,71 +161,40 @@
       ],
       "action": "impact",
       "secondary_actions": [],
-      "intensity": "strong",
+      "intensity": "unknown",
       "texture_tags": [
-        "sharp",
-        "dull"
-      ],
-      "description": "날카로운 어택 뒤 짧은 저음 쿵과 몸체 울림이 있는 강한 타격음.",
-      "duration_seconds": 0.7,
-      "sample_rate_hz": 44100,
-      "channels": 1,
-      "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
-    },
-    {
-      "sound_id": "hammer_impact_detail_001",
-      "file_path": "assets/audio/tools/hammer/impact_detail_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
-      "tool_code": "hammer",
-      "sound_role": "impact_detail",
-      "target_objects": [],
-      "material_codes": [
         "unknown"
       ],
-      "action": "crack",
-      "secondary_actions": [
-        "debris"
-      ],
-      "intensity": "medium",
-      "texture_tags": [
-        "crunchy",
-        "sharp"
-      ],
-      "description": "타격 직후의 균열음과 작은 조각이 튀는 틱틱 소리.",
-      "duration_seconds": 0.9,
-      "sample_rate_hz": 44100,
-      "channels": 1,
+      "description": "망치소리",
+      "duration_seconds": 0.438,
+      "sample_rate_hz": 48000,
+      "channels": 2,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "사용자 제공 음원(592112__pablodavilla__hammer_1.wav, 8.4초·타격 반복)에서 사용자가 고른 '세 번째' 타격만 잘라낸 파생 파일. 원본 1.121~1.559초 구간(세 번째 타격 시작 5ms 전 ~ 네 번째 타격 3ms 전), 끝 30ms 페이드아웃. 끝부분은 다음 타격 때문에 잔향이 -27dB에서 잘림. 타격 위치는 음량 측정으로 찾았고 청취는 하지 않음. 원본은 assets/audio/provided/source/와 Downloads에 그대로 보존. 합성음 hammer_main_action_001을 대체."
     },
     {
-      "sound_id": "hammer_finish_001",
-      "file_path": "assets/audio/tools/hammer/finish_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
+      "sound_id": "hammer_finish_002",
+      "file_path": "assets/audio/provided/hammer_finish_002.wav",
+      "original_filename": "416889__whitelinefever__hammer-hitting-a-head.wav",
+      "source_type": "provided_audio",
       "tool_code": "hammer",
       "sound_role": "finish",
       "target_objects": [],
       "material_codes": [
         "unknown"
       ],
-      "action": "debris",
-      "secondary_actions": [
-        "decay"
-      ],
-      "intensity": "light",
+      "action": "other",
+      "secondary_actions": [],
+      "intensity": "unknown",
       "texture_tags": [
-        "rattly",
-        "crunchy"
+        "unknown"
       ],
-      "description": "파편이 흩어져 떨어지며 점점 잦아드는 소리와 잔향.",
-      "duration_seconds": 1.6,
-      "sample_rate_hz": 44100,
+      "description": "망치 종료음",
+      "duration_seconds": 0.304,
+      "sample_rate_hz": 48000,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "사용자 제공 음원. 합성음 hammer_finish_001을 대체(사용자 요청). 실제 청취는 하지 않음. 24bit 모노 WAV, 측정상 단일 타격(0.1초 안에 -55dB까지 감쇠). 원본은 Downloads에 보존."
     },
     {
       "sound_id": "aluminum_bat_activation_001",
@@ -279,55 +221,28 @@
       "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
     },
     {
-      "sound_id": "aluminum_bat_main_action_001",
-      "file_path": "assets/audio/tools/aluminum_bat/main_action_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
+      "sound_id": "aluminum_bat_main_action_002",
+      "file_path": "assets/audio/provided/aluminum_bat_main_action_002.mp3",
+      "original_filename": "851452__hashtagsmcgee__bat_hit2.mp3",
+      "source_type": "provided_audio",
       "tool_code": "aluminum_bat",
       "sound_role": "main_action",
       "target_objects": [],
       "material_codes": [
-        "aluminum"
+        "unknown"
       ],
       "action": "impact",
       "secondary_actions": [],
-      "intensity": "strong",
+      "intensity": "unknown",
       "texture_tags": [
-        "metallic",
-        "resonant",
-        "sharp"
+        "unknown"
       ],
-      "description": "속 빈 금속 배트의 깡 하는 타격음과 둔탁한 충격.",
-      "duration_seconds": 1.3,
-      "sample_rate_hz": 44100,
-      "channels": 1,
+      "description": "배트소리",
+      "duration_seconds": 0.696,
+      "sample_rate_hz": 48000,
+      "channels": 2,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
-    },
-    {
-      "sound_id": "aluminum_bat_impact_detail_001",
-      "file_path": "assets/audio/tools/aluminum_bat/impact_detail_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
-      "tool_code": "aluminum_bat",
-      "sound_role": "impact_detail",
-      "target_objects": [],
-      "material_codes": [
-        "aluminum"
-      ],
-      "action": "rattle",
-      "secondary_actions": [],
-      "intensity": "medium",
-      "texture_tags": [
-        "metallic",
-        "rattly"
-      ],
-      "description": "타격 후 금속이 떨리는 트레몰로 울림과 작은 파편 소리.",
-      "duration_seconds": 1.2,
-      "sample_rate_hz": 44100,
-      "channels": 1,
-      "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "사용자 제공 음원. 합성음 aluminum_bat_main_action_001을 대체(사용자 요청). 실제 청취는 하지 않음. MP3 128kbps, 길이는 프레임 헤더로 계산. 원본은 Downloads에 보존."
     },
     {
       "sound_id": "aluminum_bat_finish_001",
@@ -374,33 +289,6 @@
       ],
       "description": "음높이가 빠르게 올라가는 충전·조준음.",
       "duration_seconds": 1.2,
-      "sample_rate_hz": 44100,
-      "channels": 1,
-      "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
-    },
-    {
-      "sound_id": "laser_main_action_001",
-      "file_path": "assets/audio/tools/laser/main_action_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
-      "tool_code": "laser",
-      "sound_role": "main_action",
-      "target_objects": [],
-      "material_codes": [
-        "unknown"
-      ],
-      "action": "beam",
-      "secondary_actions": [
-        "fire"
-      ],
-      "intensity": "strong",
-      "texture_tags": [
-        "electronic",
-        "bright"
-      ],
-      "description": "발사 순간의 지직 소리 후 이어지는 굵은 지속 빔 웅웅 소리와 고음 윙.",
-      "duration_seconds": 1.6,
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
@@ -500,58 +388,6 @@
       ],
       "description": "날카로운 폭발 어택과 묵직한 저음 충격파, 긴 잔향.",
       "duration_seconds": 2.6,
-      "sample_rate_hz": 44100,
-      "channels": 1,
-      "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
-    },
-    {
-      "sound_id": "bomb_impact_detail_001",
-      "file_path": "assets/audio/tools/bomb/impact_detail_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
-      "tool_code": "bomb",
-      "sound_role": "impact_detail",
-      "target_objects": [],
-      "material_codes": [
-        "unknown"
-      ],
-      "action": "debris",
-      "secondary_actions": [],
-      "intensity": "medium",
-      "texture_tags": [
-        "airy",
-        "rattly"
-      ],
-      "description": "폭발 직후 공기가 휩쓸리는 소리와 흩어지는 잔해.",
-      "duration_seconds": 1.6,
-      "sample_rate_hz": 44100,
-      "channels": 1,
-      "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
-    },
-    {
-      "sound_id": "bomb_finish_001",
-      "file_path": "assets/audio/tools/bomb/finish_001.wav",
-      "original_filename": null,
-      "source_type": "generated_in_project",
-      "tool_code": "bomb",
-      "sound_role": "finish",
-      "target_objects": [],
-      "material_codes": [
-        "unknown"
-      ],
-      "action": "decay",
-      "secondary_actions": [
-        "debris"
-      ],
-      "intensity": "light",
-      "texture_tags": [
-        "low",
-        "rattly"
-      ],
-      "description": "멀어지는 저음 럼블과 잔해가 간간이 떨어지는 소리.",
-      "duration_seconds": 3.2,
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",

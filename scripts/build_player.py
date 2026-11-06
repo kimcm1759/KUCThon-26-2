@@ -123,6 +123,19 @@ TEMPLATE = """<!doctype html>
 """
 
 
+def disabled_roles():
+    """엔진 설정(src/audio/presets/toolPresets.js)의 disabledRoles를 읽는다."""
+    import re
+    try:
+        src = open(os.path.join(ROOT, "src", "audio", "presets", "toolPresets.js"), encoding="utf-8").read()
+    except OSError:
+        return {}
+    out = {}
+    for tool, body in re.findall(r"^  (\w+): \{\s*\n\s*disabledRoles: \[([^\]]*)\]", src, re.M):
+        out[tool] = set(re.findall(r"'(\w+)'", body))
+    return out
+
+
 def esc(s):
     return html.escape(str(s or ""), quote=True)
 
@@ -134,10 +147,15 @@ def main():
     def src(s):
         return "../" + s["file_path"]
 
+    off = disabled_roles()
     blocks = []
     for code, name in TOOLS:
         btns = []
         for role, rname in ROLES:
+            if role in off.get(code, ()):
+                btns.append(f'<button class="snd missing" disabled><span class="role">{rname}</span>'
+                            f'<span class="desc">사용 안 함</span></button>')
+                continue
             hit = next((s for s in sounds if s.get("tool_code") == code and s.get("sound_role") == role), None)
             if hit:
                 btns.append(

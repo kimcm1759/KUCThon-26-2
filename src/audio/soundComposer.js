@@ -101,7 +101,7 @@ export function compose(input, playable, { random = Math.random } = {}) {
   }
 
   // 누르기·쓸기 유지 중 지속 레이어 파라미터
-  if (sustained && phase === 'update') {
+  if (sustained && phase === 'update' && !isDisabled(tool, 'main_action')) {
     const g = tool.sustainGain(progress, swipe) * (obj.roleGain.main_action ?? 1);
     const rate = tool.sustainRate(swipe) * (obj.roleRate.main_action ?? 1);
     const hp = obj.mainHighpass(progress);
@@ -147,8 +147,14 @@ export function compose(input, playable, { random = Math.random } = {}) {
   return out;
 }
 
+/** 도구 프리셋에서 끈 역할인지 (음원도 합성 폴백도 쓰지 않는다) */
+export function isDisabled(tool, role) {
+  return Array.isArray(tool?.disabledRoles) && tool.disabledRoles.includes(role);
+}
+
 function addLayer(ctx, role, timing, scale) {
   if (!timing || !SOUND_ROLES.includes(role)) return;
+  if (isDisabled(ctx.tool, role)) return;
   const { input, tool, obj, materials, level, progress, random, out, playable } = ctx;
 
   const match = selectSound(playable, {

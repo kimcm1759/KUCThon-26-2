@@ -6,6 +6,7 @@
 반드시 `docs/sound-effects-guide.md`를 따른다. (`docs/sound-catalog-rules.superseded.md`는 이전 물건 기준 규칙으로, 더 이상 적용하지 않는다.)
 
 - 분류 기준은 파손 도구 5종(`hydraulic_press`, `hammer`, `aluminum_bat`, `laser`, `bomb`) × 역할 4종(`activation`, `main_action`, `impact_detail`, `finish`).
+- 사용 안 함 역할(사용자 결정 2026-11-07): 유압 프레스·망치·배트의 `impact_detail`, 레이저의 `main_action`, 폭탄의 `impact_detail`·`finish`. 엔진 `src/audio/presets/toolPresets.js`의 `disabledRoles`에 있고, 이 칸은 음원을 요청하거나 합성하지 않는다.
 - 카탈로그 데이터: `sounds/catalog.json` / 사람이 읽는 표 + 준비 현황: `sounds/README.md`
 - 합성음: `assets/audio/tools/{tool_code}/` / 사용자 제공 음원: `assets/audio/provided/`
 - 재생 페이지: `sounds/player.html`. 카탈로그를 바꾼 뒤에는 `python scripts/build_player.py`로 다시 생성한다.
