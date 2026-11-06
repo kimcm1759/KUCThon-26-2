@@ -9,13 +9,14 @@ export class AudioPlayer {
    * @param {object} opts
    * @param {AudioContext} [opts.audioContext]
    * @param {string} [opts.baseUrl='']  file_path 앞에 붙일 경로 (예: '../')
+   * @param {(filePath: string) => string} [opts.resolveUrl]  file_path → 실제 URL (번들러 asset URL 등). 기본은 baseUrl + file_path
    * @param {(level: string, msg: string) => void} [opts.log]
    * @param {number} [opts.maxVoicesPerRole=3]   역할별 동시 재생 수 제한
    * @param {number} [opts.minRetriggerMs=45]    같은 역할 재트리거 최소 간격
    */
-  constructor({ audioContext, baseUrl = '', log = () => {}, maxVoicesPerRole = 3, minRetriggerMs = 45 } = {}) {
+  constructor({ audioContext, baseUrl = '', resolveUrl, log = () => {}, maxVoicesPerRole = 3, minRetriggerMs = 45 } = {}) {
     this.ac = audioContext ?? new AudioContext();
-    this.baseUrl = baseUrl;
+    this.resolveUrl = resolveUrl ?? ((fp) => baseUrl + fp);
     this.log = log;
     this.maxVoicesPerRole = maxVoicesPerRole;
     this.minRetriggerMs = minRetriggerMs;
@@ -55,7 +56,7 @@ export class AudioPlayer {
   /** 버퍼를 미리 불러온다. 실패한 경로는 null로 캐시되어 다시 시도하지 않는다. */
   load(filePath) {
     if (!this.buffers.has(filePath)) {
-      const p = fetch(this.baseUrl + filePath)
+      const p = fetch(this.resolveUrl(filePath))
         .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.arrayBuffer(); })
         .then((ab) => this.ac.decodeAudioData(ab))
         .catch((err) => { this.log('warn', `[player] 로드 실패 ${filePath}: ${err.message} — 레이어 건너뜀`); return null; });
@@ -102,18 +103,29 @@ export class AudioPlayer {
 
     let when = t0 + (layer.delay_ms ?? 0) / 1000;
 
-    if (layer.synth) {
+    const playSynth = (spec) => {
       when = Math.max(when, this.ac.currentTime + 0.005);
       out.gain.setValueAtTime(layer.gain, when);
-      const dur = playSynthFallback(this.ac, head, layer.synth, when);
+      const dur = playSynthFallback(this.ac, head, spec, when);
+      if (!dur) { out.disconnect(); return; } // 합성 레시피도 없으면 레이어 생략
       this.#register(layer.role, { stop: (f) => fadeStop(this.ac, out, null, f) });
       setTimeout(() => out.disconnect(), (when - this.ac.currentTime + dur + 0.5) * 1000);
-      return;
-    }
+    };
+
+    if (layer.synth) { playSynth(layer.synth); return; }
 
     const buffer = await this.load(layer.file_path);
-    if (!buffer) return; // 로드 실패 레이어만 건너뛰고 나머지는 계속 재생
-    if (!this.enabled) return;
+    if (!this.enabled) { out.disconnect(); return; }
+    if (!buffer) {
+      // 로드 실패: 같은 도구·역할의 합성 폴백 → 없으면 이 레이어만 생략. 다른 레이어는 계속 재생
+      if (layer.on_load_fail && !layer.loop) {
+        this.log('warn', `[player] ${layer.sound_id} 대신 합성 폴백 synth:${layer.on_load_fail.tool_code}_${layer.role}`);
+        playSynth(layer.on_load_fail);
+      } else {
+        out.disconnect();
+      }
+      return;
+    }
 
     // 디코딩이 늦어 예약 시각을 넘겼으면 바로 재생
     when = Math.max(when, this.ac.currentTime + 0.005);

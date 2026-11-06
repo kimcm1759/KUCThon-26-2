@@ -69,3 +69,28 @@ export async function loadCatalog(url, { fetchImpl = globalThis.fetch, log = () 
     return { sounds: [], playable: [], issues: [{ sound_id: null, code: 'load_failed', message: err.message }] };
   }
 }
+
+/**
+ * 도구 × 역할 준비 현황 (연결 지침 9장).
+ * status: covered(재생 후보 파일 있음) / missing(없음 → 앱은 합성 폴백) / needs_review(해당 도구·역할 항목이 있으나 검증 실패)
+ * objects: 그 도구·역할에서 물건 전용(target_objects) 음원이 있는 물건 코드
+ * @param {{ sounds: object[], playable: object[] }} result  validateCatalog() 결과
+ * @param {string[]} objectTypes  확인할 물건 코드
+ */
+export function coverageReport(result, objectTypes = []) {
+  const rows = [];
+  for (const tool of TOOL_CODES) {
+    for (const role of SOUND_ROLES) {
+      const ok = result.playable.filter((s) => s.tool_code === tool && s.sound_role === role);
+      const any = result.sounds.filter((s) => s?.tool_code === tool && s?.sound_role === role);
+      const status = ok.length ? 'covered' : any.length ? 'needs_review' : 'missing';
+      const objects = objectTypes.filter((o) => ok.some((s) => s.target_objects.includes(o)));
+      rows.push({ tool_code: tool, sound_role: role, status, sound_ids: ok.map((s) => s.sound_id), objects });
+    }
+  }
+  // 도구·역할 미정이라 어느 칸에도 못 들어간 항목
+  const unassigned = result.sounds
+    .filter((s) => s && (!s.tool_code || !s.sound_role))
+    .map((s) => s.sound_id ?? '(id 없음)');
+  return { rows, unassigned };
+}

@@ -52,36 +52,59 @@ export function scoreSound(entry, q) {
 }
 
 /**
- * 도구·역할에 맞는 가장 적합한 음원을 고른다.
+ * 폴백 우선순위 단계 (연결 지침 6장). 도구·역할이 이미 일치한 항목에만 쓴다.
+ *   1 object_match   : 대상 물건 일치
+ *   2 material_match : 재질 일치 (다른 물건용 또는 범용)
+ *   3 generic        : target_objects가 빈 범용 음원
+ *   null             : 다른 물건 전용이고 재질도 다름 → 후보 아님
+ */
+export function matchLevel(entry, q) {
+  const targets = entry.target_objects ?? [];
+  if (q.object_type && targets.includes(q.object_type)) return 1;
+  const mats = (q.materials ?? []).filter((m) => m !== 'unknown');
+  if (mats.length && (entry.material_codes ?? []).some((m) => mats.includes(m))) return 2;
+  if (targets.length === 0) return 3;
+  return null;
+}
+
+const LEVEL_NAMES = { 1: 'object_match', 2: 'material_match', 3: 'generic' };
+
+/**
+ * 도구·역할에 맞는 음원을 고른다. 우선순위 단계가 높은 쪽을 먼저, 같은 단계 안에서는 점수가 높은 쪽.
+ * 후보가 없으면 null → 호출 측에서 도구별 합성 폴백, 그것도 없으면 레이어 생략.
  * @param {object[]} playable  validateCatalog().playable
  * @param {object} q  scoreSound와 같은 조건
- * @param {{ random?: () => number }} [opts]  동점 변형 선택용 난수 (테스트 시 고정)
- * @returns {{ entry: object, score: number, tier: 'preferred'|'candidate', breakdown: object } | null}
+ * @param {{ random?: () => number, exclude?: Set<string> }} [opts]
+ *   random: 동점 변형 선택용 난수 (테스트 시 고정) / exclude: 로드 실패 등으로 뺄 sound_id
+ * @returns {{ entry: object, score: number, tier: 'preferred'|'candidate', match: string, breakdown: object } | null}
  */
-export function selectSound(playable, q, { random = Math.random } = {}) {
+export function selectSound(playable, q, { random = Math.random, exclude } = {}) {
   let best = [];
-  let bestScore = -1;
-  let bestResult = null;
+  let bestKey = [Infinity, -1]; // [level(낮을수록 우선), score]
   for (const entry of playable) {
     // 레이저 main_action을 폭탄 main_action 대신 쓰는 일이 없도록 먼저 거른다
     if (entry.tool_code !== q.tool_code || entry.sound_role !== q.sound_role) continue;
+    if (exclude?.has(entry.sound_id)) continue;
+    const level = matchLevel(entry, q);
+    if (level == null) continue;
     const r = scoreSound(entry, q);
     if (r.hardMismatch || r.score < SCORE_THRESHOLDS.candidate) continue;
-    if (r.score > bestScore) {
-      bestScore = r.score;
-      best = [{ entry, r }];
-    } else if (r.score === bestScore) {
-      best.push({ entry, r });
+    const better = level < bestKey[0] || (level === bestKey[0] && r.score > bestKey[1]);
+    if (better) {
+      bestKey = [level, r.score];
+      best = [{ entry, r, level }];
+    } else if (level === bestKey[0] && r.score === bestKey[1]) {
+      best.push({ entry, r, level });
     }
   }
   if (best.length === 0) return null;
-  // 같은 점수의 변형이 여러 개면 무작위로 골라 반복 피로를 줄인다
+  // 같은 단계·점수의 변형이 여러 개면 무작위로 골라 반복 피로를 줄인다
   const pick = best[Math.floor(random() * best.length) % best.length];
-  bestResult = {
+  return {
     entry: pick.entry,
     score: pick.r.score,
     tier: pick.r.score >= SCORE_THRESHOLDS.preferred ? 'preferred' : 'candidate',
+    match: LEVEL_NAMES[pick.level],
     breakdown: pick.r.breakdown,
   };
-  return bestResult;
 }

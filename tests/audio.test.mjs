@@ -122,3 +122,34 @@ test('레이어 gain은 1을 넘지 않고 합도 제한된다', () => {
     }
   }
 });
+
+test('폴백 우선순위: 물건 일치 → 재질 일치 → 일반음 → 합성 → (그 외) 후보 아님', () => {
+  const mk = (id, extra) => ({ sound_id: id, file_path: `x/${id}.wav`, tool_code: 'hammer', sound_role: 'impact_detail',
+    action: 'crack', intensity: 'medium', material_codes: ['unknown'], target_objects: [], ...extra });
+  const A = mk('can_specific', { target_objects: ['aluminum_can'] });
+  const B = mk('laptop_aluminum', { target_objects: ['laptop'], material_codes: ['aluminum'] });
+  const C = mk('generic', {});
+  const D = mk('laptop_plastic', { target_objects: ['laptop'], material_codes: ['plastic'] });
+  const E = { ...mk('bomb_can', { target_objects: ['aluminum_can'] }), tool_code: 'bomb' };
+  const q = { tool_code: 'hammer', sound_role: 'impact_detail', object_type: 'aluminum_can', materials: ['aluminum'], expectedActions: ['crack'], intensity: 'medium' };
+  const cat = (...xs) => validateCatalog({ sounds: xs }).playable;
+
+  assert.equal(selectSound(cat(D, C, B, A, E), q, R).entry.sound_id, 'can_specific');
+  assert.equal(selectSound(cat(D, C, B, E), q, R).entry.sound_id, 'laptop_aluminum');
+  assert.equal(selectSound(cat(D, C, B, E), q, R).match, 'material_match');
+  assert.equal(selectSound(cat(D, C, E), q, R).entry.sound_id, 'generic');
+  assert.equal(selectSound(cat(D, E), q, R), null); // 다른 물건 전용·재질 불일치, 다른 도구 → 후보 없음
+
+  const plan = compose({ object_type: 'aluminum_can', object_materials: ['aluminum'], tool_code: 'hammer', intensity: 'strong' }, cat(D, E), R);
+  assert.equal(layer(plan, 'impact_detail').sound_id, 'synth:hammer_impact_detail');
+});
+
+test('파일 레이어에는 sound_id·file_path·로드 실패 시 합성 정보가 남는다', () => {
+  const plan = compose({ object_type: 'book', tool_code: 'laser', intensity: 'medium' }, catalog.playable, R);
+  for (const s of plan.selected_sounds) {
+    assert.ok(s.sound_id.startsWith('laser_'));
+    assert.match(s.file_path, /^assets\/audio\/tools\/laser\//);
+    assert.deepEqual(s.on_load_fail, { tool_code: 'laser', role: s.role });
+    assert.ok(['object_match', 'material_match', 'generic'].includes(s.match));
+  }
+});

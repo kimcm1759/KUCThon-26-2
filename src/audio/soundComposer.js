@@ -141,7 +141,7 @@ export function compose(input, playable, { random = Math.random } = {}) {
   out.reason = [
     `tool=${input.tool_code} object=${input.object_type ?? 'unknown'} interaction=${interaction} phase=${phase} intensity=${level}`,
     `materials=${materials.join('+')} (${materialSource})`,
-    ...out.selected_sounds.map((s) => `${s.role}: ${s.sound_id} ${s.synth ? '(synth fallback)' : `(score ${s.score}, ${s.tier})`}`),
+    ...out.selected_sounds.map((s) => `${s.role}: ${s.sound_id} ${s.synth ? '(synth fallback)' : `(${s.match}, score ${s.score}, ${s.tier})`}`),
     ...notes,
   ].join('; ');
   return out;
@@ -178,6 +178,9 @@ function addLayer(ctx, role, timing, scale) {
     layer.file_path = match.entry.file_path;
     layer.score = match.score;
     layer.tier = match.tier;
+    layer.match = match.match; // object_match | material_match | generic
+    // 파일 로드에 실패하면 플레이어가 이 합성으로 대신한다 (같은 도구·역할)
+    layer.on_load_fail = { tool_code: input.tool_code, role };
   } else {
     // 같은 도구·역할 음원이 없음 → 다른 도구 소리를 쓰지 않고 도구별 단순 합성
     layer.sound_id = `synth:${input.tool_code}_${role}`;

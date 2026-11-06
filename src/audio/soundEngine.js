@@ -10,16 +10,17 @@ export class SoundEngine {
    * @param {string} [opts.catalogUrl]   catalog.json 경로
    * @param {object} [opts.catalogData]  이미 읽은 카탈로그 객체 (catalogUrl 대신)
    * @param {string} [opts.baseUrl='']   file_path 기준 경로
+   * @param {(filePath: string) => string} [opts.resolveUrl] file_path를 플랫폼 asset URL로 바꾸는 함수 (선택)
    * @param {AudioContext} [opts.audioContext]
    * @param {boolean} [opts.debug=false] 개발 로그(선택 음원·이유) 출력
    * @param {(entry: object) => void} [opts.onDecision] 결정마다 호출 (디버그 패널용)
    */
-  static async create({ catalogUrl, catalogData, baseUrl = '', audioContext, debug = false, onDecision } = {}) {
+  static async create({ catalogUrl, catalogData, baseUrl = '', resolveUrl, audioContext, debug = false, onDecision } = {}) {
     const log = debug
       ? (level, msg) => (console[level] ?? console.log)(msg)
       : (level, msg) => { if (level === 'error') console.error(msg); };
     const catalog = catalogData ? validateCatalog(catalogData) : await loadCatalog(catalogUrl, { log });
-    const player = new AudioPlayer({ audioContext, baseUrl, log });
+    const player = new AudioPlayer({ audioContext, baseUrl, resolveUrl, log });
     return new SoundEngine(catalog, player, { log, onDecision });
   }
 

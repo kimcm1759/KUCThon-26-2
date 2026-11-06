@@ -3,7 +3,8 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { validateCatalog } from '../src/audio/soundCatalog.js';
+import { validateCatalog, coverageReport } from '../src/audio/soundCatalog.js';
+import { OBJECT_TYPES } from '../src/audio/constants.js';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 let data;
@@ -28,4 +29,13 @@ for (const i of issues) {
   console.log(`${severe ? '✗' : '!'} ${i.sound_id ?? '-'}: ${i.message}`);
 }
 console.log(`전체 ${sounds.length}개 / 자동 재생 후보 ${playable.length}개 / 제외 ${sounds.length - playable.length}개`);
+
+// ---- 준비 현황 ----
+const { rows, unassigned } = coverageReport({ sounds, playable }, OBJECT_TYPES);
+console.log('\n도구 × 역할 준비 현황 (물건 전용 음원: 있으면 물건 코드, 없으면 범용만)');
+for (const r of rows) {
+  const obj = r.objects.length ? r.objects.join(',') : '범용만';
+  console.log(`  ${r.tool_code.padEnd(16)} ${r.sound_role.padEnd(14)} ${r.status.padEnd(12)} ${r.sound_ids.join(', ') || '-'}  [${obj}]`);
+}
+if (unassigned.length) console.log(`도구·역할 미정(needs_review, 자동 재생 제외): ${unassigned.join(', ')}`);
 process.exit(fatal ? 1 : 0);
