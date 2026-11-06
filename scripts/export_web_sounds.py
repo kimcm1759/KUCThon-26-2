@@ -131,6 +131,17 @@ def attack_to(x, win_ms, db):
     return x * (10 ** (db / 20) / p) if p else x
 
 
+SLOWMO = 0.35  # Smashable.tsx: 배트로 깨지면 slowMo(0.35, 650) → 그때 시작하는 소리는 0.35배로 재생됨
+
+
+def for_slowmo(x, rate=SLOWMO):
+    """슬로모션에서만 재생되는 소리를 미리 1/rate배 빠르게 → 앱에서 원래 길이·음높이로 들림.
+    (재생 시 48 kHz × 0.35 = 8.4 kHz 위는 어차피 못 내므로 먼저 그 아래로 걸러 접힘 방지.)
+    배트 2번째 타격 깨짐을 분리 파일처럼 들리게 (사용자 결정 2026-11-07)."""
+    y = pitch(lowpass(x, 0.45 * SR * rate, SR, taps=201), 1 / rate)
+    return y * (np.abs(x).max() / np.abs(y).max())  # 거르면서 바뀐 피크를 원래대로 (0 dB 넘지 않게)
+
+
 def peak_to(x, db):
     p = np.abs(x).max()
     return x * (10 ** (db / 20) / p) if p else x
@@ -217,7 +228,7 @@ def build_can():
         "can/bat/damage.wav": peak_to(mix((tap_n, 0, 0), (fade(cut(crush_n, 0, 350), 0, 100), -2, 0)), -1),
         # 2번째 타격(깨짐): 찌그러짐 전체 + 한 겹 더(0.92배, 40 ms 뒤) + 두드림, 살짝 포화시켜 꽉 차게
         # (슬로모션에서 낮아져도 배트 울림보다 크게 들리도록, 사용자 피드백 2026-11-07)
-        "can/bat/break.wav": peak_to(saturate(mix((crush_n, 0, 0), (pitch(crush_n, 0.92), -5, 40), (tap_n, -3, 0)), 2.5), -1),
+        "can/bat/break.wav": for_slowmo(peak_to(saturate(mix((crush_n, 0, 0), (pitch(crush_n, 0.92), -5, 40), (tap_n, -3, 0)), 2.5), -1)),
 
         # 공통 휘두름: 원본 0~140 ms(가장 큰 부분이 끝쪽) → 타격 순간(140 ms)에 끝나게 30 ms 페이드
         "_common/hammer/swing.wav": peak_to(fade(cut(swing, 0, 140), 3, 30), -8),
@@ -275,7 +286,7 @@ def build_laptop():
         # 1번째(안 깨짐): 망치보다 세게 → 키보드 키를 더 크게
         "laptop/bat/damage.wav": peak_to(mix((gtap, 0, 0), (key, -1, 0)), -1),
         # 2번째(깨짐, 슬로모션): 유리 깨짐 1.0 s + 키보드 키, 살짝 포화(캔 배트 피드백과 같은 이유)
-        "laptop/bat/break.wav": peak_to(saturate(mix((shatter_short, 0, 0), (key, -3, 0), (gtap, -5, 0)), 2.0), -1),
+        "laptop/bat/break.wav": for_slowmo(peak_to(saturate(mix((shatter_short, 0, 0), (key, -3, 0), (gtap, -5, 0)), 2.0), -1)),
         # 프레스
         "laptop/press/contact.wav": peak_to(mix((key, 0, 0), (gtap, -6, 0)), -3),
         "laptop/press/crush.wav": peak_to(crush_loop, -2),
@@ -342,7 +353,7 @@ def build_book():
         # 1번째: 둔탁한 '퍽' + 둔탁한 구김 450 ms
         "book/bat/damage.wav": peak_to(mix((thud, 0, 0), (part(dull_crumple, 0, 450), -4, 0)), -1),
         # 2번째(깨짐, 슬로모션 0.35배): 둔탁한 '퍽' 위주 + 찢김 0.45 s + 둔탁한 구김, 살짝 포화
-        "book/bat/break.wav": peak_to(saturate(mix((thud, 0, 0), (part(tear, 0, 450, 200), -5, 0), (part(dull_crumple, 0, 400, 120), -4, 0)), 2.0), -1),
+        "book/bat/break.wav": for_slowmo(peak_to(saturate(mix((thud, 0, 0), (part(tear, 0, 450, 200), -5, 0), (part(dull_crumple, 0, 400, 120), -4, 0)), 2.0), -1)),
         # 프레스
         "book/press/contact.wav": peak_to(mix((box, 0, 0), (ptap, -6, 0)), -3),
         # crush 🔁 0.45~1.12 s: 선명한 구김 1.5 s + 누르는 저음(작게)
