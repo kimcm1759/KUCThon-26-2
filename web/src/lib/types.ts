@@ -23,10 +23,10 @@ export interface Verification {
   difficulty_notes: string;
 }
 
-/** One model's attempt at a step (a background or a 3D model). */
 /** High-quality 3D candidates (see candidates.ts), made on demand from the job page. */
 export const HQ_MODEL_IDS = ["trellis2-hq", "rodin2-hq", "tripo-hq", "hunyuan3d"];
 
+/** One model's attempt at a step (a background or a 3D model). */
 export interface Candidate {
   id: string;
   label: string;
