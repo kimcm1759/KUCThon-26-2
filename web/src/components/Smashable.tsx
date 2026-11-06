@@ -856,11 +856,13 @@ export function PlacedModel({
       }
       case "bat": {
         screen.shake(0.8, 260);
-        sfx("bat", "hit");
         if (a.target.kind === "object") {
           const broke = damageObject(a.target, TOOL_DAMAGE.bat, { kind: "bat", dir: a.dir });
+          // The breaking hit skips the bat clang: slow motion stretched its ring
+          // into a long low hum over the break sound.
           if (broke) slowMo(0.35, 650);
           else {
+            sfx("bat", "hit");
             sfx("bat", "knock", 0.8);
             knock.current = {
               from: user.current.offset.clone(),
@@ -869,6 +871,7 @@ export function PlacedModel({
             };
           }
         } else {
+          sfx("bat", "hit");
           const radius = a.size * 0.8;
           pushDebris(a.point, radius, (_, dist) =>
             a.dir.clone().multiplyScalar(a.upm * 2.5 * (1 - dist / radius)).add(new THREE.Vector3(0, a.upm * 0.6, 0)),
