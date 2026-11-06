@@ -847,6 +847,8 @@ export function PlacedModel({
         if (a.target.kind === "object") {
           damageObject(a.target, TOOL_DAMAGE.hammer, { kind: "hammer", normal: a.normal });
         } else {
+          // Hitting the broken pieces sounds like hitting the object before it broke.
+          sfx("hammer", "damage");
           const radius = a.size * 0.5;
           pushDebris(a.point, radius, (pos, dist) =>
             pos.clone().sub(a.point).setY(0).normalize().multiplyScalar(a.upm * 2 * (1 - dist / radius)),
@@ -871,7 +873,10 @@ export function PlacedModel({
             };
           }
         } else {
+          // Same set as a hit that doesn't break the object.
           sfx("bat", "hit");
+          sfx("bat", "damage");
+          sfx("bat", "knock", 0.8);
           const radius = a.size * 0.8;
           pushDebris(a.point, radius, (_, dist) =>
             a.dir.clone().multiplyScalar(a.upm * 2.5 * (1 - dist / radius)).add(new THREE.Vector3(0, a.upm * 0.6, 0)),
