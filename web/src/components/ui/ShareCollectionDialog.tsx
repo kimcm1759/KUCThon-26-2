@@ -53,7 +53,12 @@ export default function ShareCollectionDialog({ jobs, sharedIds, onShared, onClo
     >
       <div className="flex shrink-0 items-center justify-between gap-3">
         <h2 id="share-title" className="text-[20px] font-semibold">내 모음에서 올리기</h2>
-        <button type="button" onClick={onClose} disabled={pending} aria-label="닫기" className="size-10 rounded-full bg-surface text-[24px] disabled:opacity-40">×</button>
+        <button type="button" onClick={onClose} disabled={pending} aria-label="닫기" className="-mr-2 flex size-10 items-center justify-center text-icon disabled:opacity-40">
+          {/* Same 24px, #63606F and 2px weight as the back arrow (bx:arrow-back). */}
+          <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M5 5l14 14M19 5L5 19" />
+          </svg>
+        </button>
       </div>
       <p id="share-description" className="mt-2 shrink-0 text-[14px] text-subtle">네트워크에 올릴 사진 하나를 선택해 주세요.</p>
       <div className="mt-5 min-h-0 flex-1 overflow-y-auto">
