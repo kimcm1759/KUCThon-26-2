@@ -1,5 +1,224 @@
 [
   {
+    "id": "mw5i2wf0-914039",
+    "createdAt": "2026-11-06T21:42:24.156Z",
+    "status": "done",
+    "photo": {
+      "url": "/samples/mw5i2wf0-914039/photo.jpg",
+      "width": 1152,
+      "height": 1536
+    },
+    "verify": {
+      "status": "done",
+      "result": {
+        "ok": true,
+        "reason": "흰색 페이퍼백 책 한 권이 화면 중앙에 선명하게 찍혀 있고 가려진 부분이 없습니다. 배경의 의자는 흐릿해 주 대상이 명확합니다.",
+        "retake_tip": "",
+        "label_en": "white paperback book",
+        "label_ko": "흰색 페이퍼백 책 (칩 워)",
+        "surface_en": "brown wood-grain table",
+        "material": "paper",
+        "fragility": "tears",
+        "est_size_cm": {
+          "w": 14,
+          "h": 3.5,
+          "d": 21
+        },
+        "bbox": {
+          "x0": 0.13,
+          "y0": 0.39,
+          "x1": 0.87,
+          "y1": 0.73
+        },
+        "camera_elevation_deg": 50,
+        "difficulty_notes": "책 뒷면과 아래면이 보이지 않으며, 흰 표지 일부에 반사광이 있습니다."
+      },
+      "ms": 4603
+    },
+    "mask": {
+      "status": "done",
+      "url": "/samples/mw5i2wf0-914039/mask.png",
+      "cutoutUrl": "/samples/mw5i2wf0-914039/cutout.webp",
+      "bbox": {
+        "x0": 0.15104166666666666,
+        "y0": 0.2897135416666667,
+        "x1": 0.7760416666666666,
+        "y1": 0.7141927083333334
+      },
+      "source": "SAM 3",
+      "ms": 8025
+    },
+    "backgrounds": [
+      {
+        "id": "bria-eraser",
+        "label": "Bria Eraser · $0.04",
+        "status": "done",
+        "url": "/samples/mw5i2wf0-914039/bg.webp",
+        "ms": 20030
+      }
+    ],
+    "models": [
+      {
+        "id": "trellis2",
+        "label": "TRELLIS.2 · $0.30",
+        "status": "done",
+        "url": "/samples/mw5i2wf0-914039/model.glb",
+        "ms": 28762
+      }
+    ],
+    "selection": {
+      "background": "bria-eraser",
+      "model": "trellis2"
+    },
+    "sample": true
+  },
+  {
+    "id": "mw5a1qg8-7a1272",
+    "createdAt": "2026-11-06T17:57:32.841Z",
+    "status": "done",
+    "photo": {
+      "url": "/samples/mw5a1qg8-7a1272/photo.jpg",
+      "width": 1152,
+      "height": 1536
+    },
+    "verify": {
+      "status": "done",
+      "result": {
+        "ok": true,
+        "reason": "검은색 무선 게이밍 마우스가 화면 중앙에 선명하게 찍혀 있어 주 피사체가 명확합니다. 배경에 다른 물건들이 있지만 마우스와 겹치지 않아 문제없습니다.",
+        "retake_tip": "",
+        "label_en": "black wireless gaming mouse",
+        "label_ko": "검은색 무선 게이밍 마우스",
+        "surface_en": "light wood desk",
+        "material": "electronics",
+        "fragility": "cracks",
+        "est_size_cm": {
+          "w": 6.4,
+          "h": 4,
+          "d": 12.5
+        },
+        "bbox": {
+          "x0": 0.215,
+          "y0": 0.425,
+          "x1": 0.705,
+          "y1": 0.69
+        },
+        "camera_elevation_deg": 50,
+        "difficulty_notes": "무광 검은색 표면이라 세부 형태와 버튼 경계가 잘 드러나지 않을 수 있고, 바닥면은 보이지 않습니다."
+      },
+      "ms": 6109
+    },
+    "mask": {
+      "status": "done",
+      "url": "/samples/mw5a1qg8-7a1272/mask.png",
+      "cutoutUrl": "/samples/mw5a1qg8-7a1272/cutout.webp",
+      "bbox": {
+        "x0": 0.21788194444444445,
+        "y0": 0.4264322916666667,
+        "x1": 0.7022569444444444,
+        "y1": 0.6907552083333334
+      },
+      "source": "SAM 3",
+      "ms": 33971
+    },
+    "backgrounds": [
+      {
+        "id": "bria-eraser",
+        "label": "Bria Eraser · $0.04",
+        "status": "done",
+        "url": "/samples/mw5a1qg8-7a1272/bg.webp",
+        "ms": 24145
+      }
+    ],
+    "models": [
+      {
+        "id": "trellis2",
+        "label": "TRELLIS.2 · $0.30",
+        "status": "done",
+        "url": "/samples/mw5a1qg8-7a1272/model.glb",
+        "ms": 49327
+      }
+    ],
+    "selection": {
+      "background": "bria-eraser",
+      "model": "trellis2"
+    },
+    "sample": true
+  },
+  {
+    "id": "mw59a08y-dcd6bc",
+    "createdAt": "2026-11-06T17:35:59.171Z",
+    "status": "done",
+    "photo": {
+      "url": "/samples/mw59a08y-dcd6bc/photo.jpg",
+      "width": 1152,
+      "height": 1536
+    },
+    "verify": {
+      "status": "done",
+      "result": {
+        "ok": true,
+        "reason": "흰색 몬스터 에너지 울트라 캔이 화면 중앙에 선명하게 찍혀 있어 주 피사체가 명확합니다. 배경에 사람과 다른 물건이 있지만 흐릿하고 주 물체를 가리지 않습니다.",
+        "retake_tip": "",
+        "label_en": "white Monster Energy Ultra can",
+        "label_ko": "몬스터 에너지 울트라 캔",
+        "surface_en": "light wood table",
+        "material": "metal",
+        "fragility": "dents",
+        "est_size_cm": {
+          "w": 6.6,
+          "h": 15.7,
+          "d": 6.6
+        },
+        "bbox": {
+          "x0": 0.375,
+          "y0": 0.135,
+          "x1": 0.605,
+          "y1": 0.59
+        },
+        "camera_elevation_deg": 30,
+        "difficulty_notes": "알루미늄 캔 표면의 금속 반사와 물방울 맺힘이 있으며, 열린 탭이 얇은 부분입니다."
+      },
+      "ms": 3982
+    },
+    "mask": {
+      "status": "done",
+      "url": "/samples/mw59a08y-dcd6bc/mask.png",
+      "cutoutUrl": "/samples/mw59a08y-dcd6bc/cutout.webp",
+      "bbox": {
+        "x0": 0.3732638888888889,
+        "y0": 0.13606770833333334,
+        "x1": 0.6197916666666666,
+        "y1": 0.587890625
+      },
+      "source": "SAM 3",
+      "ms": 9687
+    },
+    "backgrounds": [
+      {
+        "id": "bria-eraser",
+        "label": "Bria Eraser · $0.04",
+        "status": "done",
+        "url": "/samples/mw59a08y-dcd6bc/bg.webp",
+        "ms": 20555
+      }
+    ],
+    "models": [
+      {
+        "id": "trellis2",
+        "label": "TRELLIS.2 · $0.30",
+        "status": "done",
+        "url": "/samples/mw59a08y-dcd6bc/model.glb",
+        "ms": 32758
+      }
+    ],
+    "selection": {
+      "background": "bria-eraser",
+      "model": "trellis2"
+    },
+    "sample": true
+  },
+  {
     "id": "mw51k9ky-49374c",
     "createdAt": "2026-11-06T14:00:00.898Z",
     "status": "done",
