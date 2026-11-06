@@ -45,5 +45,8 @@ next-env.d.ts
 /.data/jobs/*/model-*-hq.glb
 /.data/jobs/*/model-hunyuan3d.glb
 
+# Local network posts reference saved photos and persist between visits.
+/.data/network-posts.json
+
 # local tool configs
 /.claude/

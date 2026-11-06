@@ -1,6 +1,8 @@
 "use client";
 
 import type { ToolId } from "./tools";
+import { restoreUser, type User } from "./profile";
+export type { User } from "./profile";
 
 /**
  * Browser-only helpers: the signed-in name (no real accounts yet, the
@@ -29,15 +31,10 @@ function write(key: string, value: string | null) {
   }
 }
 
-export interface User {
-  name: string;
-  via: "guest" | "email" | "google" | "apple" | "kakao" | "naver";
-}
-
 export function getUser(): User | null {
   const raw = read(USER_KEY);
   try {
-    return raw ? (JSON.parse(raw) as User) : null;
+    return raw ? restoreUser(JSON.parse(raw)) : null;
   } catch {
     return null;
   }
@@ -45,6 +42,22 @@ export function getUser(): User | null {
 
 export function setUser(user: User | null) {
   write(USER_KEY, user ? JSON.stringify(user) : null);
+}
+
+export async function signIn(user: User, password?: string): Promise<User> {
+  const response = await fetch("/api/session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ via: user.via, email: user.email, password }),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error ?? "로그인하지 못했어요. 다시 시도해 주세요.");
+  return result.user as User;
+}
+
+export async function signOut() {
+  const response = await fetch("/api/session", { method: "DELETE" });
+  if (!response.ok) throw new Error("로그아웃하지 못했어요. 다시 시도해 주세요.");
 }
 
 /** "TOOL · ACTION" tags under collection cards, after how it was last smashed. */

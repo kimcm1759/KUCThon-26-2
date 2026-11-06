@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Stage from "@/components/ui/Stage";
-import { setUser, type User } from "@/lib/client";
+import { setUser, signIn, type User } from "@/lib/client";
+import { DEMO_PASSWORD, DEMO_USER, GUEST_USER, socialUser } from "@/lib/profile";
 import { userChanged } from "@/lib/useUser";
 
 const DEMO_ACCOUNT = {
-  email: "KUCthon@korea.ac.kr",
-  password: "12345678",
+  ...DEMO_USER,
+  password: DEMO_PASSWORD,
 } as const;
 
 /**
@@ -21,14 +22,32 @@ export default function Onboarding() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
 
-  const enter = (user: User) => {
-    setUser(user);
-    userChanged();
-    router.replace("/");
+  const enter = async (user: User, enteredPassword?: string) => {
+    if (pending) return;
+    setPending(true);
+    setError("");
+    try {
+      const profile = await signIn(user, enteredPassword);
+      setUser(profile);
+      userChanged();
+      setPassword("");
+      router.replace("/");
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "로그인하지 못했어요. 다시 시도해 주세요.");
+    } finally {
+      setPending(false);
+    }
   };
-  const guest = () => enter({ name: "게스트", via: "guest" });
+  const guest = () => enter(GUEST_USER);
   const ready = email.trim() !== "" && password !== "";
+  const backToSelection = () => {
+    setStep("splash");
+    setEmail("");
+    setPassword("");
+    setError("");
+  };
 
   if (step === "splash") {
     return (
@@ -42,13 +61,15 @@ export default function Onboarding() {
         <Shards />
         <button
           onClick={() => setStep("login")}
+          disabled={pending}
           className="absolute top-[750px] left-1/2 flex h-14 w-[352px] -translate-x-1/2 items-center justify-center rounded-[16px] bg-primary text-[18px] font-medium tracking-[0.9px]"
         >
           로그인
         </button>
-        <UnderlinedLink className="top-[818px]" onClick={guest}>
+        <UnderlinedLink className="top-[818px]" onClick={guest} disabled={pending}>
           게스트로 로그인 할래요.
         </UnderlinedLink>
+        {error && <p role="alert" className="absolute top-[842px] left-[25px] w-[352px] text-center text-[12px] text-red-400">{error}</p>}
       </Stage>
     );
   }
@@ -62,7 +83,17 @@ export default function Onboarding() {
 
   return (
     <Stage className="bg-bg">
-      <button onClick={() => setStep("splash")} className="absolute top-[202px] left-[159px]" aria-label="처음으로">
+      <button
+        type="button"
+        onClick={backToSelection}
+        disabled={pending}
+        aria-label="로그인 방식 선택으로 돌아가기"
+        className="absolute top-[15px] left-[15px] flex size-11 items-center justify-center rounded-full outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/figma/back.svg" alt="" width={24} height={24} className="block" />
+      </button>
+      <button onClick={backToSelection} disabled={pending} className="absolute top-[202px] left-[159px]" aria-label="처음으로">
         <span className="text-[43.871px] leading-[normal] font-black whitespace-nowrap">빠각</span>
         <span className="absolute top-[40.79px] left-[77.8px] h-[5.484px] w-[7.198px] bg-primary" />
       </button>
@@ -79,8 +110,7 @@ export default function Onboarding() {
           }
 
           setError("");
-          setPassword("");
-          enter({ name: DEMO_ACCOUNT.email, via: "email" });
+          void enter(DEMO_USER, password);
         }}
       >
         <input
@@ -117,10 +147,10 @@ export default function Onboarding() {
         />
         <button
           type="submit"
-          disabled={!ready}
+          disabled={!ready || pending}
           className="absolute top-[430px] left-[25px] flex h-14 w-[352px] items-center justify-center rounded-[16px] bg-primary text-[18px] font-medium tracking-[0.9px] text-white"
         >
-          로그인
+          {pending ? "로그인 중…" : "로그인"}
         </button>
         {error && (
           <p id="login-error" role="alert" className="absolute top-[606px] left-[25px] w-[352px] text-center text-[12px] leading-5 text-red-400">
@@ -132,7 +162,8 @@ export default function Onboarding() {
         {SOCIAL.map((s) => (
           <button
             key={s.via}
-            onClick={() => enter({ name: `${s.label} 사용자`, via: s.via })}
+            onClick={() => { const profile = socialUser(s.via); if (profile) void enter(profile); }}
+            disabled={pending}
             aria-label={`${s.label}로 로그인`}
             className={`flex size-14 items-center justify-center rounded-[28px] ${s.bg}`}
           >
@@ -148,9 +179,9 @@ export default function Onboarding() {
   );
 }
 
-function UnderlinedLink({ className, onClick, children }: { className: string; onClick: () => void; children: string }) {
+function UnderlinedLink({ className, onClick, children, disabled }: { className: string; onClick: () => void; children: string; disabled?: boolean }) {
   return (
-    <button onClick={onClick} className={`absolute left-1/2 flex -translate-x-1/2 flex-col ${className}`}>
+    <button onClick={onClick} disabled={disabled} className={`absolute left-1/2 flex -translate-x-1/2 flex-col ${className}`}>
       <span className="text-[12px] leading-[normal] tracking-[0.6px] whitespace-nowrap text-muted">{children}</span>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/figma/underline.svg" alt="" className="h-px w-full" />

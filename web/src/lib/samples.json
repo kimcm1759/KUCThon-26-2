@@ -71,5 +71,79 @@
       "model": "trellis2"
     },
     "sample": true
+  },
+  {
+    "id": "mw513e3w-cfdee7",
+    "createdAt": "2026-11-06T13:46:53.612Z",
+    "status": "done",
+    "photo": {
+      "url": "/samples/mw513e3w-cfdee7/photo.jpg",
+      "width": 1024,
+      "height": 1365
+    },
+    "verify": {
+      "status": "done",
+      "result": {
+        "ok": true,
+        "reason": "주황색 머그컵 하나가 화면 안에 선명하게 담겨 있어 주인공이 분명합니다. 가림이나 잘림 없이 3D 변환에 적합합니다.",
+        "retake_tip": "",
+        "label_en": "orange ceramic mug",
+        "label_ko": "주황색 머그컵",
+        "surface_en": "light wooden table",
+        "material": "ceramic",
+        "fragility": "shatters",
+        "est_size_cm": {
+          "w": 12,
+          "h": 10,
+          "d": 8.5
+        },
+        "bbox": {
+          "x0": 0.4,
+          "y0": 0.428,
+          "x1": 0.765,
+          "y1": 0.737
+        },
+        "camera_elevation_deg": 25,
+        "difficulty_notes": "일러스트 형태라 질감과 입체 단서가 적고, 컵 내부가 보이지 않아 깊이 추정이 어려울 수 있습니다."
+      },
+      "ms": 5358
+    },
+    "mask": {
+      "status": "done",
+      "url": "/samples/mw513e3w-cfdee7/mask.png",
+      "cutoutUrl": "/samples/mw513e3w-cfdee7/cutout.png",
+      "bbox": {
+        "x0": 0.400390625,
+        "y0": 0.42857142857142855,
+        "x1": 0.7626953125,
+        "y1": 0.7355311355311356
+      },
+      "source": "SAM 3",
+      "ms": 6290
+    },
+    "backgrounds": [
+      {
+        "id": "bria-eraser",
+        "label": "Bria Eraser · $0.04",
+        "status": "done",
+        "url": "/samples/mw513e3w-cfdee7/bg.png",
+        "ms": 14300
+      }
+    ],
+    "models": [
+      {
+        "id": "trellis2",
+        "label": "TRELLIS.2 · $0.30",
+        "status": "done",
+        "url": "/samples/mw513e3w-cfdee7/model.glb",
+        "ms": 125998
+      }
+    ],
+    "selection": {
+      "background": "bria-eraser",
+      "model": "trellis2"
+    },
+    "sharedBy": "빠각 팀",
+    "sample": true
   }
 ]

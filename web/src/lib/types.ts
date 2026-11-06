@@ -74,3 +74,17 @@ export interface Job {
   /** Someone else's object shared with everyone: shows under 네트워크, not 내 모음. */
   sharedBy?: string;
 }
+
+/** Sharing references a saved job without changing its place in 내 모음. */
+export interface NetworkShare {
+  id: string;
+  jobId: string;
+  sharedBy: string;
+  ownerId?: string;
+  createdAt: string;
+}
+
+export interface NetworkPost extends NetworkShare {
+  job: Job;
+  isDefault?: boolean;
+}

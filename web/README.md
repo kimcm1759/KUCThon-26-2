@@ -24,11 +24,11 @@ npm run dev:lan   # 같은 와이파이의 폰에서 http://<PC IP>:3000 으로 
 
 | 경로 | 화면 |
 |---|---|
-| `/onboarding` | 스플래시 → 로그인 (실제 계정은 아직 없음: 어떤 방법이든 이름만 기억) |
+| `/onboarding` | 게스트 또는 시연용 이메일 로그인. 이메일과 닉네임(조민재)은 분리 저장 |
 | `/` | 카메라 탭: 실시간 미리보기, 누르면 `/camera` |
 | `/camera` | 전체화면 카메라: 셔터·배율·전환·갤러리. 찍으면 업로드 후 부수기 화면으로 |
 | `/collection` | 내 모음 (내가 찍은 것) |
-| `/network` | 네트워크 (`job.json`에 `sharedBy`가 있는 것 = 다른 사람이 공유한 것) |
+| `/network` | 네트워크: 기본 노트북·주황색 머그컵과 내 모음에서 올린 사진. `+`로 사진 선택 |
 | `/settings` | 설정 (디자인 전, 같은 스타일로 임시) · `/dev` 파이프라인 결과 목록 |
 | `/jobs/<id>/play` | 부수기 (만드는 중이면 단계 표시) · `/jobs/<id>` 개발용 상세 |
 
@@ -68,6 +68,10 @@ npm run dev:lan   # 같은 와이파이의 폰에서 http://<PC IP>:3000 으로 
 - `alignment`: 사진 속 위치 맞춤 값, `note`: 메모
 
 API: `GET /api/jobs` (전체 목록, 최신순), `GET /api/jobs/<id>`, 파일은 `/api/files/<id>/<파일명>`. 직접 파일을 읽을 땐 `src/lib/store.ts`의 함수를 쓰세요 (`listJobs`, `getJob`, `updateJob` — 동시에 쓰는 걸 막아 줘요).
+
+네트워크는 `GET /api/network`, `POST /api/network` (`{ jobId }`), `DELETE /api/network/<게시물 ID>`로 연결돼요. 작성자와 삭제 권한은 서버 세션의 계정 ID로 확인하고, 게스트 게시물은 게스트 세션끼리 관리해요. 삭제는 공유 기록만 지우므로 원본은 내 모음에 남아요. 로컬 공유 기록은 `.data/network-posts.json`에 저장되며 git에서는 제외돼요. 읽기 전용 배포에서는 기본 게시물만 표시하고 공유·삭제 요청은 403으로 응답해요.
+
+시연용 로그인은 `POST /api/session`, 로그아웃은 `DELETE /api/session`이며 DB 없이 서버 메모리 세션과 HttpOnly 쿠키를 사용해요. 서버를 재시작하면 다시 로그인해야 해요. 일반 로그인은 `KUCthon@korea.ac.kr / 12345678`, 닉네임은 `조민재`예요.
 
 ## 고품질 3D
 
