@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사운드 재구성 데모</title>
+<style>
+  :root { --bg:#f6f5f2; --card:#fff; --text:#1d1d1f; --muted:#6b6b70; --line:#e3e1dc; --accent:#d9480f; --pad:#efece6; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#151517; --card:#1f1f22; --text:#f2f2f3; --muted:#9a9aa1; --line:#2e2e33; --accent:#ff6b2c; --pad:#26262a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p.note { color:var(--muted); margin:0 0 20px; font-size:13px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+  label { display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--muted); }
+  select, input[type=range] { width:100%; }
+  select { padding:6px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--text); font:inherit; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-top:16px; }
+  #pad { margin-top:16px; height:220px; border-radius:16px; background:var(--pad); border:2px dashed var(--line);
+         display:flex; align-items:center; justify-content:center; text-align:center; user-select:none; touch-action:none;
+         font-size:16px; color:var(--muted); cursor:pointer; }
+  #pad.active { border-color:var(--accent); color:var(--text); }
+  .bar { height:8px; background:var(--line); border-radius:4px; overflow:hidden; margin-top:6px; }
+  .bar > div { height:100%; width:0; background:var(--accent); transition:width .1s; }
+  .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:12px; }
+  button { font:inherit; padding:6px 14px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--text); cursor:pointer; }
+  #log { font:12px/1.5 ui-monospace, Consolas, monospace; white-space:pre-wrap; word-break:break-all; max-height:260px; overflow:auto; margin:0; }
+  #status { font-size:13px; color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>물건·도구 맞춤 사운드 데모</h1>
+  <p class="note">규칙 기반 선택·조합(학습 모델 아님). 프로젝트 루트에서 <code>npm run demo</code> 실행 후 <code>http://localhost:8000/demo/</code>로 엽니다.</p>
+
+  <div class="grid">
+    <label>물건
+      <select id="object">
+        <option value="book">책</option>
+        <option value="aluminum_can">알루미늄 캔</option>
+        <option value="laptop">노트북</option>
+      </select>
+    </label>
+    <label>도구
+      <select id="tool">
+        <option value="hydraulic_press">유압 프레스</option>
+        <option value="hammer">망치</option>
+        <option value="aluminum_bat">알루미늄 배트</option>
+        <option value="laser">레이저</option>
+        <option value="bomb">폭탄</option>
+      </select>
+    </label>
+    <label>조작
+      <select id="interaction">
+        <option value="tap">탭</option>
+        <option value="press">누르기(유지)</option>
+        <option value="swipe">쓸기</option>
+      </select>
+    </label>
+    <label>강도 <span id="intensityVal">0.60</span>
+      <input id="intensity" type="range" min="0" max="1" step="0.01" value="0.6">
+    </label>
+    <label>음량 <span id="volumeVal">0.80</span>
+      <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+    </label>
+    <label>효과 강도 <span id="effectVal">1.00</span>
+      <input id="effect" type="range" min="0.2" max="1.5" step="0.01" value="1">
+    </label>
+  </div>
+
+  <div id="pad">여기를 탭 / 누르고 있기 / 문지르기</div>
+  <div class="card">
+    <div id="status">파손 진행도 0%</div>
+    <div class="bar"><div id="progressBar"></div></div>
+    <div class="row">
+      <label style="flex-direction:row;align-items:center;gap:6px"><input id="enabled" type="checkbox" checked> 효과음 켜기</label>
+      <button id="reset">새 물건으로 초기화</button>
+    </div>
+  </div>
+  <div class="card">
+    <strong style="font-size:13px">개발 로그 (선택 음원·이유)</strong>
+    <pre id="log"></pre>
+  </div>
+</main>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

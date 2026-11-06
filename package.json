@@ -1,0 +1,10 @@
+{
+  "name": "kucithon-sound",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "validate": "node scripts/validate_catalog.mjs",
+    "demo": "python -m http.server 8000"
+  }
+}
