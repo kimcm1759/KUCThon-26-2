@@ -40,8 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# pipeline job data (photos, masks, models)
-/.data/
+# pipeline job data (photos, masks, models) is shared in git for the collection
+# (도감) work, minus the high-quality 3D models (15–60MB each; GitHub caps files at 100MB)
+/.data/jobs/*/model-*-hq.glb
+/.data/jobs/*/model-hunyuan3d.glb
 
 # local tool configs
 /.claude/

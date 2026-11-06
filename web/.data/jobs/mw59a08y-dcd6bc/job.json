@@ -1,0 +1,72 @@
+{
+  "id": "mw59a08y-dcd6bc",
+  "createdAt": "2026-11-06T17:35:59.171Z",
+  "status": "done",
+  "photo": {
+    "url": "/api/files/mw59a08y-dcd6bc/photo.jpg",
+    "width": 1152,
+    "height": 1536
+  },
+  "verify": {
+    "status": "done",
+    "result": {
+      "ok": true,
+      "reason": "흰색 몬스터 에너지 울트라 캔이 화면 중앙에 선명하게 찍혀 있어 주 피사체가 명확합니다. 배경에 사람과 다른 물건이 있지만 흐릿하고 주 물체를 가리지 않습니다.",
+      "retake_tip": "",
+      "label_en": "white Monster Energy Ultra can",
+      "label_ko": "몬스터 에너지 울트라 캔",
+      "surface_en": "light wood table",
+      "material": "metal",
+      "fragility": "dents",
+      "est_size_cm": {
+        "w": 6.6,
+        "h": 15.7,
+        "d": 6.6
+      },
+      "bbox": {
+        "x0": 0.375,
+        "y0": 0.135,
+        "x1": 0.605,
+        "y1": 0.59
+      },
+      "camera_elevation_deg": 30,
+      "difficulty_notes": "알루미늄 캔 표면의 금속 반사와 물방울 맺힘이 있으며, 열린 탭이 얇은 부분입니다."
+    },
+    "ms": 3982
+  },
+  "mask": {
+    "status": "done",
+    "url": "/api/files/mw59a08y-dcd6bc/mask.png",
+    "cutoutUrl": "/api/files/mw59a08y-dcd6bc/cutout.png",
+    "bbox": {
+      "x0": 0.3732638888888889,
+      "y0": 0.13606770833333334,
+      "x1": 0.6197916666666666,
+      "y1": 0.587890625
+    },
+    "source": "SAM 3",
+    "ms": 9687
+  },
+  "backgrounds": [
+    {
+      "id": "bria-eraser",
+      "label": "Bria Eraser · $0.04",
+      "status": "done",
+      "url": "/api/files/mw59a08y-dcd6bc/bg-bria-eraser.png",
+      "ms": 20555
+    }
+  ],
+  "models": [
+    {
+      "id": "trellis2",
+      "label": "TRELLIS.2 · $0.30",
+      "status": "done",
+      "url": "/api/files/mw59a08y-dcd6bc/model-trellis2.glb",
+      "ms": 32758
+    }
+  ],
+  "selection": {
+    "background": "bria-eraser",
+    "model": "trellis2"
+  }
+}

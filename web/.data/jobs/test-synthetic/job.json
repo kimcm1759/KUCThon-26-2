@@ -1,0 +1,72 @@
+{
+  "id": "test-synthetic",
+  "createdAt": "2026-11-06T13:22:10.625Z",
+  "status": "done",
+  "photo": {
+    "url": "/api/files/test-synthetic/photo.jpg",
+    "width": 1024,
+    "height": 1365
+  },
+  "verify": {
+    "status": "done",
+    "ms": 0,
+    "result": {
+      "ok": true,
+      "reason": "합성 테스트 데이터",
+      "retake_tip": "",
+      "label_en": "orange mug",
+      "label_ko": "주황 머그컵 (테스트)",
+      "surface_en": "wooden desk",
+      "material": "ceramic",
+      "fragility": "shatters",
+      "est_size_cm": {
+        "w": 12,
+        "h": 10,
+        "d": 9
+      },
+      "bbox": {
+        "x0": 0.400390625,
+        "y0": 0.42857142857142855,
+        "x1": 0.763671875,
+        "y1": 0.7362637362637363
+      },
+      "camera_elevation_deg": 35,
+      "difficulty_notes": ""
+    }
+  },
+  "mask": {
+    "status": "done",
+    "url": "/api/files/test-synthetic/mask.png",
+    "cutoutUrl": "/api/files/test-synthetic/cutout.png",
+    "bbox": {
+      "x0": 0.400390625,
+      "y0": 0.42857142857142855,
+      "x1": 0.763671875,
+      "y1": 0.7362637362637363
+    },
+    "source": "synthetic",
+    "ms": 0
+  },
+  "backgrounds": [
+    {
+      "id": "synthetic",
+      "label": "합성 테스트",
+      "status": "done",
+      "url": "/api/files/test-synthetic/bg-synthetic.png",
+      "ms": 0
+    }
+  ],
+  "models": [
+    {
+      "id": "synthetic",
+      "label": "테스트 머그",
+      "status": "done",
+      "url": "/api/files/test-synthetic/model-synthetic.glb",
+      "ms": 0
+    }
+  ],
+  "selection": {
+    "background": "synthetic",
+    "model": "synthetic"
+  }
+}
