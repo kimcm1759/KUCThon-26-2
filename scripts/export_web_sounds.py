@@ -370,8 +370,9 @@ def build_book():
         "book/laser/burn.wav": peak_to(seamless(cut(l_burn, 40, 1240)), -4),
         # 잘림: 종이 두드림 + 찢김 앞 200 ms + 지짐 앞 250 ms
         "book/laser/cut.wav": peak_to(mix((ptap, 0, 0), (part(tear, 0, 200, 80), -4, 0), (part(l_burn, 40, 290, 80), -6, 0)), -1),
-        # 폭탄: 폭발이 주, 찢김(0.7 s, 1.0 s에서 0.3 s 줄임 — 사용자 피드백)·구김이 그 안에서
-        "book/bomb/explode.wav": peak_to(mix((boom, 0, 0), (part(tear, 0, 700, 250), -6, 0), (part(crumple, 0, 600, 200), -6, 0)), -1),
+        # 폭탄: 폭발이 주, 찢김·구김은 짧고 작게 (사용자 피드백 2026-11-07: 찢김 0.7 s/-6 dB → 0.3 s/-14 dB,
+        # 구김 0.6 s/-6 dB → 0.3 s/-12 dB)
+        "book/bomb/explode.wav": peak_to(mix((boom, 0, 0), (part(tear, 0, 300, 150), -14, 0), (part(crumple, 0, 300, 150), -12, 0)), -1),
         # 조각: 종이 조각은 가볍고 조용하게 / 큰 덩어리는 판지 '툭'
         "book/debris/small.wav": peak_to(fade(pitch(cut(ptap, 0, 100), 1.2), 0, 30), -12),
         "book/debris/small_2.wav": peak_to(fade(pitch(cut(crumple, 0, 100), 1.1), 0, 30), -13),
