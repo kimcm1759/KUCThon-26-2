@@ -1,0 +1,561 @@
+{
+  "schema_version": 1,
+  "sounds": [
+    {
+      "sound_id": "paper_tear_001",
+      "file_path": "assets/audio/provided/paper_tear_001.mp3",
+      "original_filename": "860179__frontmusic__paper-tearing-and-rustling-sounds_[cut_3sec].mp3",
+      "source_type": "provided_audio",
+      "tool_code": null,
+      "sound_role": null,
+      "target_objects": [],
+      "material_codes": [
+        "paper"
+      ],
+      "action": "other",
+      "secondary_actions": [],
+      "intensity": "unknown",
+      "texture_tags": [
+        "unknown"
+      ],
+      "description": "종이 찢는소리",
+      "duration_seconds": 2.616,
+      "sample_rate_hz": 48000,
+      "channels": 2,
+      "created_at": "2026-11-06",
+      "notes": "사용자 제공 음원. 실제 청취·파형 분석은 수행하지 않음. 새 지침의 action 어휘에 '찢기(tear)'가 없어 other로 기록. 어느 도구·역할에 쓸지 미정이라 tool_code/sound_role은 null(needs_review). 원본 파일명에 'rustling'도 있으나 설명에 없어 태그하지 않음. 이전 물건 기준 체계에서는 책(book) 후보였음. MP3 320kbps, 길이는 프레임 헤더로 계산. 원본은 Downloads에 보존."
+    },
+    {
+      "sound_id": "paper_other_001",
+      "file_path": "assets/audio/provided/paper_other_001.mp3",
+      "original_filename": "860179__frontmusic__paper-tearing-and-rustling-sounds_[cut_2sec].mp3",
+      "source_type": "provided_audio",
+      "tool_code": null,
+      "sound_role": null,
+      "target_objects": [],
+      "material_codes": [
+        "paper"
+      ],
+      "action": "other",
+      "secondary_actions": [],
+      "intensity": "light",
+      "texture_tags": [
+        "unknown"
+      ],
+      "description": "종이 가볍게 팔랑거리는 소리",
+      "duration_seconds": 2.376,
+      "sample_rate_hz": 48000,
+      "channels": 2,
+      "created_at": "2026-11-06",
+      "notes": "사용자 제공 음원. 실제 청취·파형 분석은 수행하지 않음. '팔랑거림'에 맞는 action 코드가 없어 other로 기록. 어느 도구·역할에 쓸지 미정이라 tool_code/sound_role은 null(needs_review). paper_tear_001과 같은 원본 음원(860179)의 다른 구간으로 보이며 파일 내용은 다름. 이전 물건 기준 체계에서는 책(book) 후보였음. 원본은 Downloads에 보존."
+    },
+    {
+      "sound_id": "hydraulic_press_activation_001",
+      "file_path": "assets/audio/tools/hydraulic_press/activation_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "hydraulic_press",
+      "sound_role": "activation",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "other",
+      "secondary_actions": [],
+      "intensity": "medium",
+      "texture_tags": [
+        "low",
+        "metallic"
+      ],
+      "description": "모터·유압이 작동하며 저음 모터음이 점점 커지고 높아지는 소리 + 상승하는 유압 쉭 소리.",
+      "duration_seconds": 2.0,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "hydraulic_press_main_action_001",
+      "file_path": "assets/audio/tools/hydraulic_press/main_action_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "hydraulic_press",
+      "sound_role": "main_action",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "press",
+      "secondary_actions": [],
+      "intensity": "strong",
+      "texture_tags": [
+        "low",
+        "dull"
+      ],
+      "description": "프레스가 내려오며 누르는 깊은 저음 럼블과 신음 같은 압축음.",
+      "duration_seconds": 1.8,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "hydraulic_press_impact_detail_001",
+      "file_path": "assets/audio/tools/hydraulic_press/impact_detail_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "hydraulic_press",
+      "sound_role": "impact_detail",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "crack",
+      "secondary_actions": [
+        "rattle"
+      ],
+      "intensity": "medium",
+      "texture_tags": [
+        "metallic",
+        "crunchy"
+      ],
+      "description": "눌리며 생기는 불규칙한 찌그러짐·균열 조각음, 짧은 금속 울림, 삐걱임.",
+      "duration_seconds": 1.3,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "hydraulic_press_finish_001",
+      "file_path": "assets/audio/tools/hydraulic_press/finish_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "hydraulic_press",
+      "sound_role": "finish",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "decay",
+      "secondary_actions": [],
+      "intensity": "medium",
+      "texture_tags": [
+        "airy",
+        "low"
+      ],
+      "description": "기계가 멈추는 쿵 + 압력 해제 쉭 + 모터가 느려지며 꺼지는 소리, 짧은 잔향.",
+      "duration_seconds": 1.6,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "hammer_activation_001",
+      "file_path": "assets/audio/tools/hammer/activation_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "hammer",
+      "sound_role": "activation",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "swing",
+      "secondary_actions": [],
+      "intensity": "light",
+      "texture_tags": [
+        "airy"
+      ],
+      "description": "망치를 휘두르는 짧은 공기음(휙).",
+      "duration_seconds": 0.35,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "hammer_main_action_001",
+      "file_path": "assets/audio/tools/hammer/main_action_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "hammer",
+      "sound_role": "main_action",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "impact",
+      "secondary_actions": [],
+      "intensity": "strong",
+      "texture_tags": [
+        "sharp",
+        "dull"
+      ],
+      "description": "날카로운 어택 뒤 짧은 저음 쿵과 몸체 울림이 있는 강한 타격음.",
+      "duration_seconds": 0.7,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "hammer_impact_detail_001",
+      "file_path": "assets/audio/tools/hammer/impact_detail_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "hammer",
+      "sound_role": "impact_detail",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "crack",
+      "secondary_actions": [
+        "debris"
+      ],
+      "intensity": "medium",
+      "texture_tags": [
+        "crunchy",
+        "sharp"
+      ],
+      "description": "타격 직후의 균열음과 작은 조각이 튀는 틱틱 소리.",
+      "duration_seconds": 0.9,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "hammer_finish_001",
+      "file_path": "assets/audio/tools/hammer/finish_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "hammer",
+      "sound_role": "finish",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "debris",
+      "secondary_actions": [
+        "decay"
+      ],
+      "intensity": "light",
+      "texture_tags": [
+        "rattly",
+        "crunchy"
+      ],
+      "description": "파편이 흩어져 떨어지며 점점 잦아드는 소리와 잔향.",
+      "duration_seconds": 1.6,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "aluminum_bat_activation_001",
+      "file_path": "assets/audio/tools/aluminum_bat/activation_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "aluminum_bat",
+      "sound_role": "activation",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "swing",
+      "secondary_actions": [],
+      "intensity": "medium",
+      "texture_tags": [
+        "airy"
+      ],
+      "description": "배트를 크게 휘둘러 공기를 가르는 휙 소리.",
+      "duration_seconds": 0.5,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "aluminum_bat_main_action_001",
+      "file_path": "assets/audio/tools/aluminum_bat/main_action_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "aluminum_bat",
+      "sound_role": "main_action",
+      "target_objects": [],
+      "material_codes": [
+        "aluminum"
+      ],
+      "action": "impact",
+      "secondary_actions": [],
+      "intensity": "strong",
+      "texture_tags": [
+        "metallic",
+        "resonant",
+        "sharp"
+      ],
+      "description": "속 빈 금속 배트의 깡 하는 타격음과 둔탁한 충격.",
+      "duration_seconds": 1.3,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "aluminum_bat_impact_detail_001",
+      "file_path": "assets/audio/tools/aluminum_bat/impact_detail_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "aluminum_bat",
+      "sound_role": "impact_detail",
+      "target_objects": [],
+      "material_codes": [
+        "aluminum"
+      ],
+      "action": "rattle",
+      "secondary_actions": [],
+      "intensity": "medium",
+      "texture_tags": [
+        "metallic",
+        "rattly"
+      ],
+      "description": "타격 후 금속이 떨리는 트레몰로 울림과 작은 파편 소리.",
+      "duration_seconds": 1.2,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "aluminum_bat_finish_001",
+      "file_path": "assets/audio/tools/aluminum_bat/finish_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "aluminum_bat",
+      "sound_role": "finish",
+      "target_objects": [],
+      "material_codes": [
+        "aluminum"
+      ],
+      "action": "decay",
+      "secondary_actions": [],
+      "intensity": "light",
+      "texture_tags": [
+        "metallic",
+        "resonant"
+      ],
+      "description": "금속 떨림이 맥놀이를 내며 천천히 감쇠하는 잔향.",
+      "duration_seconds": 2.6,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "laser_activation_001",
+      "file_path": "assets/audio/tools/laser/activation_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "laser",
+      "sound_role": "activation",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "charge",
+      "secondary_actions": [],
+      "intensity": "medium",
+      "texture_tags": [
+        "electronic",
+        "bright"
+      ],
+      "description": "음높이가 빠르게 올라가는 충전·조준음.",
+      "duration_seconds": 1.2,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "laser_main_action_001",
+      "file_path": "assets/audio/tools/laser/main_action_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "laser",
+      "sound_role": "main_action",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "beam",
+      "secondary_actions": [
+        "fire"
+      ],
+      "intensity": "strong",
+      "texture_tags": [
+        "electronic",
+        "bright"
+      ],
+      "description": "발사 순간의 지직 소리 후 이어지는 굵은 지속 빔 웅웅 소리와 고음 윙.",
+      "duration_seconds": 1.6,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "laser_impact_detail_001",
+      "file_path": "assets/audio/tools/laser/impact_detail_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "laser",
+      "sound_role": "impact_detail",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "other",
+      "secondary_actions": [],
+      "intensity": "medium",
+      "texture_tags": [
+        "crunchy",
+        "bright"
+      ],
+      "description": "표면을 지지는 치이익 소리와 작은 튀는 소리(지짐·절단).",
+      "duration_seconds": 1.3,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "laser_finish_001",
+      "file_path": "assets/audio/tools/laser/finish_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "laser",
+      "sound_role": "finish",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "decay",
+      "secondary_actions": [],
+      "intensity": "light",
+      "texture_tags": [
+        "electronic"
+      ],
+      "description": "빔이 꺼지며 음높이가 떨어지는 전원 감쇠음.",
+      "duration_seconds": 0.9,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "bomb_activation_001",
+      "file_path": "assets/audio/tools/bomb/activation_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "bomb",
+      "sound_role": "activation",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "other",
+      "secondary_actions": [],
+      "intensity": "light",
+      "texture_tags": [
+        "crunchy",
+        "airy"
+      ],
+      "description": "퓨즈가 타들어가는 치지직 소리와 불꽃 튀는 소리, 아래로 깔리는 긴장음.",
+      "duration_seconds": 2.0,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "bomb_main_action_001",
+      "file_path": "assets/audio/tools/bomb/main_action_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "bomb",
+      "sound_role": "main_action",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "explosion",
+      "secondary_actions": [],
+      "intensity": "strong",
+      "texture_tags": [
+        "low",
+        "crunchy"
+      ],
+      "description": "날카로운 폭발 어택과 묵직한 저음 충격파, 긴 잔향.",
+      "duration_seconds": 2.6,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "bomb_impact_detail_001",
+      "file_path": "assets/audio/tools/bomb/impact_detail_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "bomb",
+      "sound_role": "impact_detail",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "debris",
+      "secondary_actions": [],
+      "intensity": "medium",
+      "texture_tags": [
+        "airy",
+        "rattly"
+      ],
+      "description": "폭발 직후 공기가 휩쓸리는 소리와 흩어지는 잔해.",
+      "duration_seconds": 1.6,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    },
+    {
+      "sound_id": "bomb_finish_001",
+      "file_path": "assets/audio/tools/bomb/finish_001.wav",
+      "original_filename": null,
+      "source_type": "generated_in_project",
+      "tool_code": "bomb",
+      "sound_role": "finish",
+      "target_objects": [],
+      "material_codes": [
+        "unknown"
+      ],
+      "action": "decay",
+      "secondary_actions": [
+        "debris"
+      ],
+      "intensity": "light",
+      "texture_tags": [
+        "low",
+        "rattly"
+      ],
+      "description": "멀어지는 저음 럼블과 잔해가 간간이 떨어지는 소리.",
+      "duration_seconds": 3.2,
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "created_at": "2026-11-07",
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+    }
+  ]
+}
