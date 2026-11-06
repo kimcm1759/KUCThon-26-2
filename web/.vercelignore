@@ -1,0 +1,4 @@
+# vercel deploy (CLI) does not read .gitignore: keep local-only files off the deployment
+/.data
+/.claude
+.env*
