@@ -3,7 +3,7 @@
   "sounds": [
     {
       "sound_id": "paper_tear_001",
-      "file_path": "assets/audio/provided/paper_tear_001.mp3",
+      "file_path": "assets/audio/provided/paper_tear_001.wav",
       "original_filename": "860179__frontmusic__paper-tearing-and-rustling-sounds_[cut_3sec].mp3",
       "source_type": "provided_audio",
       "tool_code": null,
@@ -19,15 +19,47 @@
         "unknown"
       ],
       "description": "종이 찢는소리",
-      "duration_seconds": 2.616,
+      "duration_seconds": 2.165,
       "sample_rate_hz": 48000,
       "channels": 2,
       "created_at": "2026-11-06",
-      "notes": "사용자 제공 음원. 실제 청취·파형 분석은 수행하지 않음. 새 지침의 action 어휘에 '찢기(tear)'가 없어 other로 기록. 어느 도구·역할에 쓸지 미정이라 tool_code/sound_role은 null(needs_review). 원본 파일명에 'rustling'도 있으나 설명에 없어 태그하지 않음. 이전 물건 기준 체계에서는 책(book) 후보였음. MP3 320kbps, 길이는 프레임 헤더로 계산. 원본은 Downloads에 보존."
+      "notes": "사용자 제공 음원. 실제 청취·파형 분석은 수행하지 않음. 새 지침의 action 어휘에 '찢기(tear)'가 없어 other로 기록. 어느 도구·역할에 쓸지 미정이라 tool_code/sound_role은 null(needs_review). 원본 파일명에 'rustling'도 있으나 설명에 없어 태그하지 않음. 이전 물건 기준 체계에서는 책(book) 후보였음. MP3 320kbps, 길이는 프레임 헤더로 계산. 원본은 Downloads에 보존.",
+      "derived_from": "assets/audio/provided/source/paper_tear_001.mp3",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 40 ms·뒤 무음 411 ms 제거"
+      ],
+      "level_db": -21.2,
+      "peak_db": -1.9,
+      "source_loudness": {
+        "integrated_lufs": -23.6,
+        "max_loudness_100ms_lufs": -16.2,
+        "playback_max_loudness_100ms_lufs": -16.2,
+        "true_peak_dbtp": -1.1,
+        "peak_dbfs": -1.9,
+        "rms_dbfs": -29.4,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 8000,
+        "centroid_hz": 6430,
+        "octave_share_pct": {
+          "63": 0.5,
+          "125": 0.8,
+          "250": 2.9,
+          "500": 2.9,
+          "1000": 7.0,
+          "2000": 13.0,
+          "4000": 19.8,
+          "8000": 37.0,
+          "16000": 15.5
+        }
+      }
     },
     {
       "sound_id": "paper_other_001",
-      "file_path": "assets/audio/provided/paper_other_001.mp3",
+      "file_path": "assets/audio/provided/paper_other_001.wav",
       "original_filename": "860179__frontmusic__paper-tearing-and-rustling-sounds_[cut_2sec].mp3",
       "source_type": "provided_audio",
       "tool_code": null,
@@ -43,11 +75,43 @@
         "unknown"
       ],
       "description": "종이 가볍게 팔랑거리는 소리",
-      "duration_seconds": 2.376,
+      "duration_seconds": 2.331,
       "sample_rate_hz": 48000,
       "channels": 2,
       "created_at": "2026-11-06",
-      "notes": "사용자 제공 음원. 실제 청취·파형 분석은 수행하지 않음. '팔랑거림'에 맞는 action 코드가 없어 other로 기록. 어느 도구·역할에 쓸지 미정이라 tool_code/sound_role은 null(needs_review). paper_tear_001과 같은 원본 음원(860179)의 다른 구간으로 보이며 파일 내용은 다름. 이전 물건 기준 체계에서는 책(book) 후보였음. 원본은 Downloads에 보존."
+      "notes": "사용자 제공 음원. 실제 청취·파형 분석은 수행하지 않음. '팔랑거림'에 맞는 action 코드가 없어 other로 기록. 어느 도구·역할에 쓸지 미정이라 tool_code/sound_role은 null(needs_review). paper_tear_001과 같은 원본 음원(860179)의 다른 구간으로 보이며 파일 내용은 다름. 이전 물건 기준 체계에서는 책(book) 후보였음. 원본은 Downloads에 보존.",
+      "derived_from": "assets/audio/provided/source/paper_other_001.mp3",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 45 ms·뒤 무음 0 ms 제거"
+      ],
+      "level_db": -22.5,
+      "peak_db": -0.1,
+      "source_loudness": {
+        "integrated_lufs": -29.6,
+        "max_loudness_100ms_lufs": -22.1,
+        "playback_max_loudness_100ms_lufs": -22.1,
+        "true_peak_dbtp": -0.0,
+        "peak_dbfs": -0.1,
+        "rms_dbfs": -34.5,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 2000,
+        "centroid_hz": 2594,
+        "octave_share_pct": {
+          "63": 1.8,
+          "125": 2.2,
+          "250": 4.1,
+          "500": 12.3,
+          "1000": 15.3,
+          "2000": 25.4,
+          "4000": 24.7,
+          "8000": 10.2,
+          "16000": 0.9
+        }
+      }
     },
     {
       "sound_id": "hydraulic_press_activation_001",
@@ -72,7 +136,43 @@
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
+      ],
+      "level_db": -6.0,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -11.1,
+        "max_loudness_100ms_lufs": -8.6,
+        "playback_max_loudness_100ms_lufs": -5.6,
+        "true_peak_dbtp": -1.0,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -9.2,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -2.1,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 hydraulic_press_main_action_001 playback_max_loudness_100ms_lufs -9.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 63,
+        "centroid_hz": 113,
+        "octave_share_pct": {
+          "63": 70.8,
+          "125": 14.4,
+          "250": 11.3,
+          "500": 3.0,
+          "1000": 0.1,
+          "2000": 0.1,
+          "4000": 0.2,
+          "8000": 0.0,
+          "16000": 0.0
+        }
+      }
     },
     {
       "sound_id": "hydraulic_press_main_action_001",
@@ -97,7 +197,43 @@
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
+      ],
+      "level_db": -7.4,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -15.0,
+        "max_loudness_100ms_lufs": -12.9,
+        "playback_max_loudness_100ms_lufs": -9.9,
+        "true_peak_dbtp": -1.0,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -10.4,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -2.1,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 hydraulic_press_main_action_001 playback_max_loudness_100ms_lufs -9.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 250,
+        "centroid_hz": 76,
+        "octave_share_pct": {
+          "63": 1.2,
+          "125": 1.4,
+          "250": 12.0,
+          "500": 0.7,
+          "1000": 0.2,
+          "2000": 0.1,
+          "4000": 0.0,
+          "8000": 0.0,
+          "16000": 0.0
+        }
+      }
     },
     {
       "sound_id": "hydraulic_press_finish_001",
@@ -122,7 +258,43 @@
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
+      ],
+      "level_db": -11.2,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -18.2,
+        "max_loudness_100ms_lufs": -10.1,
+        "playback_max_loudness_100ms_lufs": -7.1,
+        "true_peak_dbtp": -0.5,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -19.6,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -2.1,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 hydraulic_press_main_action_001 playback_max_loudness_100ms_lufs -9.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 63,
+        "centroid_hz": 2388,
+        "octave_share_pct": {
+          "63": 28.2,
+          "125": 13.3,
+          "250": 6.1,
+          "500": 1.0,
+          "1000": 0.0,
+          "2000": 2.0,
+          "4000": 14.3,
+          "8000": 15.3,
+          "16000": 3.4
+        }
+      }
     },
     {
       "sound_id": "hammer_activation_001",
@@ -142,11 +314,51 @@
         "airy"
       ],
       "description": "망치를 휘두르는 짧은 공기음(휙).",
-      "duration_seconds": 0.35,
+      "duration_seconds": 0.274,
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 60 ms·뒤 무음 16 ms 제거"
+      ],
+      "level_db": -13.1,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": null,
+        "max_loudness_100ms_lufs": -12.1,
+        "playback_max_loudness_100ms_lufs": -9.1,
+        "true_peak_dbtp": -0.9,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -18.6,
+        "measurement_status": "partial",
+        "unmeasured": [
+          "integrated_lufs: 0.4초보다 짧아 400 ms 게이팅 블록 없음"
+        ],
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -4.1,
+        "priority": "tool_action",
+        "ducking_group": "tool_action",
+        "notes": "도구 기준 hammer_main_action_002 playback_max_loudness_100ms_lufs -7.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 2000,
+        "centroid_hz": 4126,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 0.0,
+          "250": 0.1,
+          "500": 1.1,
+          "1000": 12.0,
+          "2000": 44.9,
+          "4000": 22.6,
+          "8000": 11.3,
+          "16000": 8.0
+        }
+      }
     },
     {
       "sound_id": "hammer_main_action_002",
@@ -170,7 +382,44 @@
       "sample_rate_hz": 48000,
       "channels": 2,
       "created_at": "2026-11-07",
-      "notes": "사용자 제공 음원(592112__pablodavilla__hammer_1.wav, 8.4초·타격 반복)에서 사용자가 고른 '세 번째' 타격만 잘라낸 파생 파일. 원본 1.121~1.559초 구간(세 번째 타격 시작 5ms 전 ~ 네 번째 타격 3ms 전), 끝 30ms 페이드아웃. 끝부분은 다음 타격 때문에 잔향이 -27dB에서 잘림. 타격 위치는 음량 측정으로 찾았고 청취는 하지 않음. 원본은 assets/audio/provided/source/와 Downloads에 그대로 보존. 합성음 hammer_main_action_001을 대체."
+      "notes": "사용자 제공 음원(592112__pablodavilla__hammer_1.wav, 8.4초·타격 반복)에서 사용자가 고른 '세 번째' 타격만 잘라낸 파생 파일. 원본 1.121~1.559초 구간(세 번째 타격 시작 5ms 전 ~ 네 번째 타격 3ms 전), 끝 30ms 페이드아웃. 끝부분은 다음 타격 때문에 잔향이 -27dB에서 잘림. 타격 위치는 음량 측정으로 찾았고 청취는 하지 않음. 원본은 assets/audio/provided/source/와 Downloads에 그대로 보존. 합성음 hammer_main_action_001을 대체.",
+      "derived_from": "assets/audio/provided/source/hammer_main_action_002.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
+      ],
+      "level_db": -14.3,
+      "peak_db": -3.3,
+      "source_loudness": {
+        "integrated_lufs": -12.0,
+        "max_loudness_100ms_lufs": -7.9,
+        "playback_max_loudness_100ms_lufs": -7.9,
+        "true_peak_dbtp": -0.9,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -16.6,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -4.1,
+        "priority": "tool_action",
+        "ducking_group": "tool_action",
+        "notes": "도구 기준 hammer_main_action_002 playback_max_loudness_100ms_lufs -7.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 1000,
+        "centroid_hz": 1215,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 7.8,
+          "250": 6.4,
+          "500": 11.4,
+          "1000": 42.2,
+          "2000": 30.1,
+          "4000": 1.8,
+          "8000": 0.2,
+          "16000": 0.0
+        }
+      }
     },
     {
       "sound_id": "hammer_finish_002",
@@ -190,11 +439,52 @@
         "unknown"
       ],
       "description": "망치 종료음",
-      "duration_seconds": 0.304,
+      "duration_seconds": 0.18,
       "sample_rate_hz": 48000,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "사용자 제공 음원. 합성음 hammer_finish_001을 대체(사용자 요청). 실제 청취는 하지 않음. 24bit 모노 WAV, 측정상 단일 타격(0.1초 안에 -55dB까지 감쇠). 원본은 Downloads에 보존."
+      "notes": "사용자 제공 음원. 합성음 hammer_finish_001을 대체(사용자 요청). 실제 청취는 하지 않음. 24bit 모노 WAV, 측정상 단일 타격(0.1초 안에 -55dB까지 감쇠). 원본은 Downloads에 보존.",
+      "derived_from": "assets/audio/provided/source/hammer_finish_002.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 10 ms·뒤 무음 114 ms 제거"
+      ],
+      "level_db": -16.8,
+      "peak_db": -1.6,
+      "source_loudness": {
+        "integrated_lufs": null,
+        "max_loudness_100ms_lufs": -24.8,
+        "playback_max_loudness_100ms_lufs": -21.8,
+        "true_peak_dbtp": -1.5,
+        "peak_dbfs": -1.6,
+        "rms_dbfs": -25.5,
+        "measurement_status": "partial",
+        "unmeasured": [
+          "integrated_lufs: 0.4초보다 짧아 400 ms 게이팅 블록 없음"
+        ],
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -4.1,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 hammer_main_action_002 playback_max_loudness_100ms_lufs -7.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 63,
+        "centroid_hz": 509,
+        "octave_share_pct": {
+          "63": 59.0,
+          "125": 14.4,
+          "250": 4.2,
+          "500": 3.6,
+          "1000": 0.4,
+          "2000": 1.5,
+          "4000": 1.7,
+          "8000": 3.4,
+          "16000": 0.3
+        }
+      }
     },
     {
       "sound_id": "aluminum_bat_activation_001",
@@ -214,11 +504,51 @@
         "airy"
       ],
       "description": "배트를 크게 휘둘러 공기를 가르는 휙 소리.",
-      "duration_seconds": 0.5,
+      "duration_seconds": 0.389,
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 70 ms·뒤 무음 41 ms 제거"
+      ],
+      "level_db": -11.1,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": null,
+        "max_loudness_100ms_lufs": -10.1,
+        "playback_max_loudness_100ms_lufs": -7.1,
+        "true_peak_dbtp": -0.7,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -16.7,
+        "measurement_status": "partial",
+        "unmeasured": [
+          "integrated_lufs: 0.4초보다 짧아 400 ms 게이팅 블록 없음"
+        ],
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -11.5,
+        "priority": "tool_action",
+        "ducking_group": "tool_action",
+        "notes": "도구 기준 aluminum_bat_main_action_003 playback_max_loudness_100ms_lufs -0.5 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 2000,
+        "centroid_hz": 2855,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 0.0,
+          "250": 0.1,
+          "500": 1.3,
+          "1000": 26.4,
+          "2000": 43.8,
+          "4000": 19.5,
+          "8000": 5.4,
+          "16000": 3.5
+        }
+      }
     },
     {
       "sound_id": "aluminum_bat_main_action_003",
@@ -238,11 +568,49 @@
         "unknown"
       ],
       "description": "배트소리 — 원본보다 길고 크게 변형",
-      "duration_seconds": 2.09,
+      "duration_seconds": 2.04,
       "sample_rate_hz": 48000,
       "channels": 2,
       "created_at": "2026-11-07",
-      "notes": "제공 음원(assets/audio/provided/source/851452__hashtagsmcgee__bat_hit2.mp3, 0.64초)의 파생 파일. scripts/derive_bat_main.py로 생성: 원본의 금속 공명(약 2.0~2.5kHz)을 공명 필터로 늘리고 짧은 잔향을 더해 2.09초로 연장, 타격 부분은 포화(tanh)로 체감 음량을 올림. 측정값: 타격 RMS -8.7→-6.0dB, 0.2~0.6초 구간 -43→-22dB. 청취는 하지 않음. 이전 aluminum_bat_main_action_002(원본 그대로)를 대체."
+      "notes": "제공 음원(assets/audio/provided/source/851452__hashtagsmcgee__bat_hit2.mp3, 0.64초)의 파생 파일. scripts/derive_bat_main.py로 생성: 원본의 금속 공명(약 2.0~2.5kHz)을 공명 필터로 늘리고 짧은 잔향을 더해 2.09초로 연장, 타격 부분은 포화(tanh)로 체감 음량을 올림. 측정값: 타격 RMS -8.7→-6.0dB, 0.2~0.6초 구간 -43→-22dB. 청취는 하지 않음. 이전 aluminum_bat_main_action_002(원본 그대로)를 대체.",
+      "derived_from": "assets/audio/provided/source/aluminum_bat_main_action_003.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 0 ms·뒤 무음 50 ms 제거"
+      ],
+      "level_db": -3.5,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -14.2,
+        "max_loudness_100ms_lufs": -0.5,
+        "playback_max_loudness_100ms_lufs": -0.5,
+        "true_peak_dbtp": -1.0,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -18.3,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -11.5,
+        "priority": "tool_action",
+        "ducking_group": "tool_action",
+        "notes": "도구 기준 aluminum_bat_main_action_003 playback_max_loudness_100ms_lufs -0.5 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 2000,
+        "centroid_hz": 1990,
+        "octave_share_pct": {
+          "63": 0.1,
+          "125": 0.0,
+          "250": 0.0,
+          "500": 0.1,
+          "1000": 0.1,
+          "2000": 99.4,
+          "4000": 0.1,
+          "8000": 0.0,
+          "16000": 0.0
+        }
+      }
     },
     {
       "sound_id": "aluminum_bat_finish_001",
@@ -267,7 +635,43 @@
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
+      ],
+      "level_db": -7.3,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -15.1,
+        "max_loudness_100ms_lufs": -7.5,
+        "playback_max_loudness_100ms_lufs": -4.5,
+        "true_peak_dbtp": -1.0,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -16.6,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -11.5,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 aluminum_bat_main_action_003 playback_max_loudness_100ms_lufs -0.5 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 500,
+        "centroid_hz": 826,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 0.0,
+          "250": 0.0,
+          "500": 78.6,
+          "1000": 0.0,
+          "2000": 20.2,
+          "4000": 1.1,
+          "8000": 0.0,
+          "16000": 0.0
+        }
+      }
     },
     {
       "sound_id": "laser_activation_001",
@@ -288,11 +692,48 @@
         "bright"
       ],
       "description": "음높이가 빠르게 올라가는 충전·조준음.",
-      "duration_seconds": 1.2,
+      "duration_seconds": 1.195,
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 5 ms·뒤 무음 0 ms 제거"
+      ],
+      "level_db": -6.5,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -10.9,
+        "max_loudness_100ms_lufs": -5.1,
+        "playback_max_loudness_100ms_lufs": -2.1,
+        "true_peak_dbtp": -1.0,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -10.7,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -9.9,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 laser_activation_001 playback_max_loudness_100ms_lufs -2.1 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 1000,
+        "centroid_hz": 778,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 0.0,
+          "250": 3.0,
+          "500": 39.2,
+          "1000": 55.2,
+          "2000": 2.5,
+          "4000": 0.0,
+          "8000": 0.0,
+          "16000": 0.0
+        }
+      }
     },
     {
       "sound_id": "laser_impact_detail_001",
@@ -313,11 +754,48 @@
         "bright"
       ],
       "description": "표면을 지지는 치이익 소리와 작은 튀는 소리(지짐·절단).",
-      "duration_seconds": 1.3,
+      "duration_seconds": 1.297,
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 0 ms·뒤 무음 3 ms 제거"
+      ],
+      "level_db": -18.8,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -18.2,
+        "max_loudness_100ms_lufs": -16.7,
+        "playback_max_loudness_100ms_lufs": -13.7,
+        "true_peak_dbtp": -1.0,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -22.2,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -9.9,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 laser_activation_001 playback_max_loudness_100ms_lufs -2.1 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 8000,
+        "centroid_hz": 8399,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 0.0,
+          "250": 0.0,
+          "500": 0.0,
+          "1000": 0.1,
+          "2000": 1.4,
+          "4000": 25.8,
+          "8000": 52.5,
+          "16000": 20.2
+        }
+      }
     },
     {
       "sound_id": "laser_finish_001",
@@ -341,7 +819,43 @@
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
+      ],
+      "level_db": -5.7,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -13.4,
+        "max_loudness_100ms_lufs": -5.4,
+        "playback_max_loudness_100ms_lufs": -2.4,
+        "true_peak_dbtp": -1.0,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -12.0,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -9.9,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 laser_activation_001 playback_max_loudness_100ms_lufs -2.1 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 500,
+        "centroid_hz": 512,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 1.5,
+          "250": 24.3,
+          "500": 59.3,
+          "1000": 14.6,
+          "2000": 0.2,
+          "4000": 0.1,
+          "8000": 0.1,
+          "16000": 0.0
+        }
+      }
     },
     {
       "sound_id": "bomb_activation_001",
@@ -366,7 +880,43 @@
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
+      ],
+      "level_db": -18.1,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -20.4,
+        "max_loudness_100ms_lufs": -18.0,
+        "playback_max_loudness_100ms_lufs": -15.0,
+        "true_peak_dbtp": -0.4,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -22.7,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -3.7,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 bomb_main_action_001 playback_max_loudness_100ms_lufs -8.3 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 8000,
+        "centroid_hz": 5564,
+        "octave_share_pct": {
+          "63": 13.5,
+          "125": 4.7,
+          "250": 0.0,
+          "500": 0.0,
+          "1000": 0.1,
+          "2000": 3.1,
+          "4000": 32.3,
+          "8000": 40.6,
+          "16000": 6.9
+        }
+      }
     },
     {
       "sound_id": "bomb_main_action_001",
@@ -387,11 +937,48 @@
         "crunchy"
       ],
       "description": "날카로운 폭발 어택과 묵직한 저음 충격파, 긴 잔향.",
-      "duration_seconds": 2.6,
+      "duration_seconds": 2.34,
       "sample_rate_hz": 44100,
       "channels": 1,
       "created_at": "2026-11-07",
-      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함."
+      "notes": "scripts/synth_sfx.py로 오프라인 합성(numpy). 참고 페이지 오디오·코드 미사용. 태그는 합성 구성 기준이며 사람 청취 검수는 아직 안 함.",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 0 ms·뒤 무음 260 ms 제거"
+      ],
+      "level_db": -7.9,
+      "peak_db": -1.0,
+      "source_loudness": {
+        "integrated_lufs": -19.0,
+        "max_loudness_100ms_lufs": -11.3,
+        "playback_max_loudness_100ms_lufs": -8.3,
+        "true_peak_dbtp": -1.0,
+        "peak_dbfs": -1.0,
+        "rms_dbfs": -15.0,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -3.7,
+        "priority": "tool_support",
+        "ducking_group": null,
+        "notes": "도구 기준 bomb_main_action_001 playback_max_loudness_100ms_lufs -8.3 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 2000,
+        "centroid_hz": 117,
+        "octave_share_pct": {
+          "63": 0.3,
+          "125": 0.1,
+          "250": 0.3,
+          "500": 0.7,
+          "1000": 2.2,
+          "2000": 2.2,
+          "4000": 0.5,
+          "8000": 0.0,
+          "16000": 0.0
+        }
+      }
     }
   ],
   "material_sounds": [
@@ -409,18 +996,58 @@
       "texture_tags": [
         "unknown"
       ],
-      "duration_seconds": 0.515,
+      "duration_seconds": 0.19,
       "sample_rate_hz": 44100,
       "channels": 2,
       "format": "wav",
       "status": "ready",
       "derived_from": "assets/audio/materials/cardboard/source/364932__newagesoup__hit-tap-strike-cardboard-box-13-times.wav",
       "edits": [
-        "원본(13회 이상 연속 탭)에서 3.39초 타격 1회만 잘라냄: 3.385~3.900초, 시작 3ms·끝 25ms 페이드. 음량은 바꾸지 않음."
+        "원본(13회 이상 연속 탭)에서 3.39초 타격 1회만 잘라냄: 3.385~3.900초, 시작 3ms·끝 25ms 페이드. 음량은 바꾸지 않음.",
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 0 ms·뒤 무음 325 ms 제거"
       ],
       "original_filename": "364932__newagesoup__hit-tap-strike-cardboard-box-13-times.wav",
       "notes": "원본에서 앞뒤 타격과 간격이 가장 넓은(0.19초 전·0.9초 후) 타격을 고름. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -9.4,
+      "peak_db": -0.0,
+      "onset_ms": 0,
+      "pre_trim_file": "assets/audio/materials/cardboard/source/cardboard_box_tap_single_001.wav",
+      "source_loudness": {
+        "integrated_lufs": null,
+        "max_loudness_100ms_lufs": -12.3,
+        "playback_max_loudness_100ms_lufs": -12.3,
+        "true_peak_dbtp": 0.1,
+        "peak_dbfs": -0.0,
+        "rms_dbfs": -16.9,
+        "measurement_status": "partial",
+        "unmeasured": [
+          "integrated_lufs: 0.4초보다 짧아 400 ms 게이팅 블록 없음"
+        ],
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 0.3,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -12.3 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 63,
+        "centroid_hz": 217,
+        "octave_share_pct": {
+          "63": 40.6,
+          "125": 12.0,
+          "250": 20.3,
+          "500": 15.6,
+          "1000": 2.3,
+          "2000": 0.4,
+          "4000": 0.1,
+          "8000": 0.1,
+          "16000": 0.1
+        }
+      }
     },
     {
       "sound_id": "cardboard_box_rub_001",
@@ -436,16 +1063,53 @@
       "texture_tags": [
         "unknown"
       ],
-      "duration_seconds": 1.833,
+      "duration_seconds": 0.8,
       "sample_rate_hz": 48000,
       "channels": 2,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/cardboard/source/cardboard_box_rub_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 260 ms·뒤 무음 773 ms 제거"
+      ],
       "original_filename": "364737__newagesoup__rub-handle-cardboard-box.wav",
       "notes": "이번 지시에서 판지 긁힘·마찰은 제거 대상으로 지정되지 않아 유지. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -13.5,
+      "peak_db": -1.6,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": -16.2,
+        "max_loudness_100ms_lufs": -12.9,
+        "playback_max_loudness_100ms_lufs": -12.9,
+        "true_peak_dbtp": -1.6,
+        "peak_dbfs": -1.6,
+        "rms_dbfs": -18.8,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 0.9,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -12.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 500,
+        "centroid_hz": 509,
+        "octave_share_pct": {
+          "63": 22.9,
+          "125": 15.7,
+          "250": 10.0,
+          "500": 35.9,
+          "1000": 6.2,
+          "2000": 2.2,
+          "4000": 1.6,
+          "8000": 0.7,
+          "16000": 0.4
+        }
+      }
     },
     {
       "sound_id": "paper_sheet_tap_single_001",
@@ -468,11 +1132,50 @@
       "status": "ready",
       "derived_from": "assets/audio/materials/paper/source/819595__deqsterslab__tapping-paper-light-ambient-reverb.mp3",
       "edits": [
-        "원본(여러 번 탭 + 인위적 공간 잔향)에서 1.12초 탭 1회만 잘라냄: 1.105~1.250초, 시작 3ms·끝 25ms 페이드. 잔향 꼬리는 잘라냈으나(끝 지점이 타격 대비 약 -29dB) 타격 직후 0.13초 안의 초기 잔향은 분리할 수 없어 남아 있음. 음량은 바꾸지 않음."
+        "원본(여러 번 탭 + 인위적 공간 잔향)에서 1.12초 탭 1회만 잘라냄: 1.105~1.250초, 시작 3ms·끝 25ms 페이드. 잔향 꼬리는 잘라냈으나(끝 지점이 타격 대비 약 -29dB) 타격 직후 0.13초 안의 초기 잔향은 분리할 수 없어 남아 있음. 음량은 바꾸지 않음.",
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
       ],
       "original_filename": "819595__deqsterslab__tapping-paper-light-ambient-reverb.mp3",
       "notes": "원본 다음 탭까지 1.7초 비어 있는 구간의 탭을 고름. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -19.0,
+      "peak_db": -0.0,
+      "onset_ms": 0,
+      "pre_trim_file": "assets/audio/materials/paper/source/paper_sheet_tap_single_001.wav",
+      "source_loudness": {
+        "integrated_lufs": null,
+        "max_loudness_100ms_lufs": -18.9,
+        "playback_max_loudness_100ms_lufs": -18.9,
+        "true_peak_dbtp": 0.2,
+        "peak_dbfs": -0.0,
+        "rms_dbfs": -24.0,
+        "measurement_status": "partial",
+        "unmeasured": [
+          "integrated_lufs: 0.4초보다 짧아 400 ms 게이팅 블록 없음"
+        ],
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 6.9,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -18.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 63,
+        "centroid_hz": 293,
+        "octave_share_pct": {
+          "63": 15.0,
+          "125": 8.6,
+          "250": 2.1,
+          "500": 3.0,
+          "1000": 1.2,
+          "2000": 3.2,
+          "4000": 3.2,
+          "8000": 0.6,
+          "16000": 0.0
+        }
+      }
     },
     {
       "sound_id": "paper_sheet_rub_single_001",
@@ -495,16 +1198,52 @@
       "status": "ready",
       "derived_from": "assets/audio/materials/paper/source/446609__nicolas4677__sheet-rub.wav",
       "edits": [
-        "음량만 +34.9dB 올림. 소리가 나는 구간의 평균 음량을 판지 문지르기·유리 긁기와 같은 -18dB로 맞춤(최대 음량 -42.6 → -7.7dBFS). 길이·내용은 그대로. 원본 잡음 바닥(약 -62dB)도 같이 커져 약 -27dB가 됨."
+        "음량만 +34.9dB 올림. 소리가 나는 구간의 평균 음량을 판지 문지르기·유리 긁기와 같은 -18dB로 맞춤(최대 음량 -42.6 → -7.7dBFS). 길이·내용은 그대로. 원본 잡음 바닥(약 -62dB)도 같이 커져 약 -27dB가 됨.",
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
       ],
       "original_filename": "446609__nicolas4677__sheet-rub.wav",
       "notes": "태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -12.6,
+      "peak_db": -7.7,
+      "onset_ms": 0,
+      "pre_trim_file": "assets/audio/materials/paper/source/paper_sheet_rub_single_001.wav",
+      "source_loudness": {
+        "integrated_lufs": -21.5,
+        "max_loudness_100ms_lufs": -17.1,
+        "playback_max_loudness_100ms_lufs": -17.1,
+        "true_peak_dbtp": -6.9,
+        "peak_dbfs": -7.7,
+        "rms_dbfs": -18.2,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 5.1,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -17.1 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 8000,
+        "centroid_hz": 468,
+        "octave_share_pct": {
+          "63": 2.6,
+          "125": 2.9,
+          "250": 0.3,
+          "500": 0.3,
+          "1000": 0.0,
+          "2000": 0.2,
+          "4000": 2.1,
+          "8000": 3.4,
+          "16000": 0.7
+        }
+      }
     },
     {
       "sound_id": "paper_tear_001",
       "label": "paper_tear",
-      "file_path": "assets/audio/provided/paper_tear_001.mp3",
+      "file_path": "assets/audio/provided/paper_tear_001.wav",
       "material_code": "paper",
       "action": "tear",
       "secondary_actions": [],
@@ -515,16 +1254,53 @@
       "texture_tags": [
         "unknown"
       ],
-      "duration_seconds": 2.616,
+      "duration_seconds": 2.165,
       "sample_rate_hz": 48000,
       "channels": 2,
-      "format": "mp3",
+      "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/provided/source/paper_tear_001.mp3",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 40 ms·뒤 무음 411 ms 제거"
+      ],
       "original_filename": "860179__frontmusic__paper-tearing-and-rustling-sounds_[cut_3sec].mp3",
       "notes": "사용자 제공 음원(기존 sounds의 paper_tear_001과 같은 파일, 중복 저장 안 함). 원본 파일명에 'rustling'도 있으나 사용자 설명에는 없어 보조 동작으로 넣지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -21.2,
+      "peak_db": -1.9,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": -23.6,
+        "max_loudness_100ms_lufs": -16.2,
+        "playback_max_loudness_100ms_lufs": -16.2,
+        "true_peak_dbtp": -1.1,
+        "peak_dbfs": -1.9,
+        "rms_dbfs": -29.4,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 4.2,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -16.2 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 8000,
+        "centroid_hz": 6430,
+        "octave_share_pct": {
+          "63": 0.5,
+          "125": 0.8,
+          "250": 2.9,
+          "500": 2.9,
+          "1000": 7.0,
+          "2000": 13.0,
+          "4000": 19.8,
+          "8000": 37.0,
+          "16000": 15.5
+        }
+      }
     },
     {
       "sound_id": "paper_crumple_001",
@@ -540,41 +1316,119 @@
       "texture_tags": [
         "unknown"
       ],
-      "duration_seconds": 2.189,
+      "duration_seconds": 1.966,
       "sample_rate_hz": 44100,
       "channels": 2,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/paper/source/paper_crumple_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 45 ms·뒤 무음 178 ms 제거"
+      ],
       "original_filename": "151231__owlstorm__crumpling-paper.wav",
       "notes": "이번 지시에서 종이 구기기는 제거 대상으로 지정되지 않아 유지. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -32.4,
+      "peak_db": -13.7,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": -36.0,
+        "max_loudness_100ms_lufs": -32.4,
+        "playback_max_loudness_100ms_lufs": -32.4,
+        "true_peak_dbtp": -13.2,
+        "peak_dbfs": -13.7,
+        "rms_dbfs": -41.1,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 20.4,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -32.4 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 4000,
+        "centroid_hz": 3976,
+        "octave_share_pct": {
+          "63": 1.0,
+          "125": 0.8,
+          "250": 0.3,
+          "500": 1.0,
+          "1000": 22.8,
+          "2000": 18.5,
+          "4000": 30.6,
+          "8000": 16.0,
+          "16000": 5.3
+        }
+      }
     },
     {
-      "sound_id": "aluminum_can_tap_x5_001",
-      "label": "aluminum_can_tap_x5",
-      "file_path": "assets/audio/materials/aluminum/aluminum_can_tap_x5_001.wav",
+      "sound_id": "aluminum_can_tap_single_001",
+      "label": "aluminum_can_tap_single",
+      "file_path": "assets/audio/materials/aluminum/aluminum_can_tap_single_001.wav",
       "material_code": "aluminum",
       "action": "tap",
       "secondary_actions": [],
-      "repeat_count": 5,
+      "repeat_count": 1,
       "quantity": "single_object",
       "recorded_source": "맥주 캔을 두드림",
-      "description": "알루미늄 맥주 캔을 약 0.2초 간격으로 5번 두드리는 소리",
+      "description": "알루미늄 맥주 캔을 한 번 두드리는 소리",
       "texture_tags": [
         "metallic"
       ],
-      "duration_seconds": 1.044,
+      "duration_seconds": 0.262,
       "sample_rate_hz": 44100,
       "channels": 2,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/aluminum/source/aluminum_can_tap_x5_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "맥주 캔 두드림 5회 중 첫 번째만 남김",
+        "앞 무음 5 ms·뒤 무음 0 ms 제거"
+      ],
       "original_filename": "210083__soundscape_leuphana__20131119_tapping-beer-can_zoomh6xy.wav",
-      "notes": "반복 횟수는 음량 측정 기준(0.10·0.31·0.51·0.73·0.93초). 오디오는 편집하지 않음. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "notes": "원본(source/aluminum_can_tap_x5_001.wav)은 두드림 5회(0.10·0.31·0.51·0.73·0.93초, 음량 측정 기준). trim_audio.py로 첫 번째 두드림만 남김. 반복은 앱 조작(탭)마다 엔진이 재생. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
+      "created_at": "2026-11-07",
+      "level_db": -24.4,
+      "peak_db": -4.3,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": null,
+        "max_loudness_100ms_lufs": -22.3,
+        "playback_max_loudness_100ms_lufs": -22.3,
+        "true_peak_dbtp": -0.6,
+        "peak_dbfs": -1.1,
+        "rms_dbfs": -32.7,
+        "measurement_status": "partial",
+        "unmeasured": [
+          "integrated_lufs: 0.4초보다 짧아 400 ms 게이팅 블록 없음"
+        ],
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 10.3,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -22.3 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 8000,
+        "centroid_hz": 6202,
+        "octave_share_pct": {
+          "63": 0.2,
+          "125": 0.7,
+          "250": 0.3,
+          "500": 0.2,
+          "1000": 0.3,
+          "2000": 5.9,
+          "4000": 16.0,
+          "8000": 75.6,
+          "16000": 0.8
+        }
+      }
     },
     {
       "sound_id": "aluminum_can_crush_001",
@@ -593,16 +1447,54 @@
         "metallic",
         "crunchy"
       ],
-      "duration_seconds": 2.0,
+      "duration_seconds": 0.535,
       "sample_rate_hz": 96000,
       "channels": 2,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/aluminum/source/aluminum_can_crush_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "찌그러짐 뒤 약 0.9초 후 따로 난 작은 소리 제거",
+        "앞 무음 515 ms·뒤 무음 270 ms 제거"
+      ],
       "original_filename": "689774__mutilatorbcb__crush-can-soda-beer-pop.wav",
       "notes": "태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -17.1,
+      "peak_db": -2.0,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": -18.9,
+        "max_loudness_100ms_lufs": -13.9,
+        "playback_max_loudness_100ms_lufs": -13.9,
+        "true_peak_dbtp": -0.8,
+        "peak_dbfs": -2.0,
+        "rms_dbfs": -24.4,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 1.9,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -13.9 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 2000,
+        "centroid_hz": 4312,
+        "octave_share_pct": {
+          "63": 1.1,
+          "125": 1.1,
+          "250": 1.8,
+          "500": 2.6,
+          "1000": 9.9,
+          "2000": 27.7,
+          "4000": 21.7,
+          "8000": 18.0,
+          "16000": 8.0
+        }
+      }
     },
     {
       "sound_id": "plastic_key_press_single_001",
@@ -623,11 +1515,47 @@
       "channels": 6,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/plastic/source/plastic_key_press_single_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)"
+      ],
       "original_filename": "119134__esperri__keyboard-key.wav",
       "notes": "측정상 큰 소리 1번 뒤 0.18초 후 작은 소리 1번이 있음(키가 돌아오는 소리일 수 있으나 확인 못함). 6채널(5.1) WAV. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -19.2,
+      "peak_db": -9.5,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": -12.9,
+        "max_loudness_100ms_lufs": -7.5,
+        "playback_max_loudness_100ms_lufs": -7.5,
+        "true_peak_dbtp": 0.3,
+        "peak_dbfs": -0.0,
+        "rms_dbfs": -22.2,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -4.5,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -7.5 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 250,
+        "centroid_hz": 654,
+        "octave_share_pct": {
+          "63": 13.1,
+          "125": 23.6,
+          "250": 35.9,
+          "500": 0.6,
+          "1000": 5.8,
+          "2000": 10.2,
+          "4000": 4.8,
+          "8000": 0.7,
+          "16000": 0.1
+        }
+      }
     },
     {
       "sound_id": "glass_tap_single_001",
@@ -643,16 +1571,56 @@
       "texture_tags": [
         "unknown"
       ],
-      "duration_seconds": 0.302,
+      "duration_seconds": 0.215,
       "sample_rate_hz": 44100,
       "channels": 2,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/glass/source/glass_tap_single_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 50 ms·뒤 무음 37 ms 제거"
+      ],
       "original_filename": "668384__cjspellsfish__glass-tap.wav",
       "notes": "반복 횟수는 음량 측정 기준. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -15.2,
+      "peak_db": -3.0,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": null,
+        "max_loudness_100ms_lufs": -14.4,
+        "playback_max_loudness_100ms_lufs": -14.4,
+        "true_peak_dbtp": -3.0,
+        "peak_dbfs": -3.0,
+        "rms_dbfs": -23.4,
+        "measurement_status": "partial",
+        "unmeasured": [
+          "integrated_lufs: 0.4초보다 짧아 400 ms 게이팅 블록 없음"
+        ],
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": 2.4,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -14.4 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 2000,
+        "centroid_hz": 2585,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 0.0,
+          "250": 0.0,
+          "500": 0.0,
+          "1000": 0.1,
+          "2000": 91.1,
+          "4000": 3.0,
+          "8000": 5.7,
+          "16000": 0.1
+        }
+      }
     },
     {
       "sound_id": "ceramic_plate_hit_crack_001",
@@ -670,16 +1638,53 @@
       "texture_tags": [
         "crunchy"
       ],
-      "duration_seconds": 0.652,
+      "duration_seconds": 0.57,
       "sample_rate_hz": 96000,
       "channels": 2,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/ceramic/source/ceramic_plate_hit_crack_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 0 ms·뒤 무음 82 ms 제거"
+      ],
       "original_filename": "418194__deleted_user_3656686__hard-glass-impact.wav",
       "notes": "음원 설명상 실제 녹음은 도자기 접시라 재질을 ceramic으로 기록. 제작 의도는 유리 충격 효과음. 태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -4.1,
+      "peak_db": -0.0,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": -11.0,
+        "max_loudness_100ms_lufs": -2.5,
+        "playback_max_loudness_100ms_lufs": -2.5,
+        "true_peak_dbtp": 0.6,
+        "peak_dbfs": -0.0,
+        "rms_dbfs": -13.9,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -9.5,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -2.5 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 8000,
+        "centroid_hz": 4414,
+        "octave_share_pct": {
+          "63": 11.2,
+          "125": 4.4,
+          "250": 2.0,
+          "500": 1.1,
+          "1000": 1.4,
+          "2000": 6.8,
+          "4000": 9.9,
+          "8000": 37.7,
+          "16000": 7.6
+        }
+      }
     },
     {
       "sound_id": "glass_scrape_001",
@@ -695,16 +1700,54 @@
       "texture_tags": [
         "unknown"
       ],
-      "duration_seconds": 2.52,
+      "duration_seconds": 0.81,
       "sample_rate_hz": 48000,
       "channels": 1,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/glass/source/glass_scrape_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "긁기 3회 중 첫 번째만 남김",
+        "앞 무음 105 ms·뒤 무음 0 ms 제거"
+      ],
       "original_filename": "377826__13gpanska_cihala_vilem__skrabnuti-o-sklo.wav",
       "notes": "태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -12.9,
+      "peak_db": -1.3,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": -16.5,
+        "max_loudness_100ms_lufs": -12.5,
+        "playback_max_loudness_100ms_lufs": -9.5,
+        "true_peak_dbtp": -1.2,
+        "peak_dbfs": -1.3,
+        "rms_dbfs": -19.4,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -2.5,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs -9.5 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 2000,
+        "centroid_hz": 2002,
+        "octave_share_pct": {
+          "63": 0.0,
+          "125": 0.7,
+          "250": 3.0,
+          "500": 3.1,
+          "1000": 18.1,
+          "2000": 56.1,
+          "4000": 17.5,
+          "8000": 1.4,
+          "16000": 0.1
+        }
+      }
     },
     {
       "sound_id": "glass_shatter_fall_001",
@@ -722,16 +1765,53 @@
       "texture_tags": [
         "crunchy"
       ],
-      "duration_seconds": 3.692,
+      "duration_seconds": 3.512,
       "sample_rate_hz": 44100,
       "channels": 2,
       "format": "wav",
       "status": "ready",
-      "derived_from": null,
-      "edits": [],
+      "derived_from": "assets/audio/materials/glass/source/glass_shatter_fall_001.wav",
+      "edits": [
+        "앞뒤 무음·반복 잘라냄(trim_audio.py)",
+        "앞 무음 0 ms·뒤 무음 180 ms 제거"
+      ],
       "original_filename": "336425__221beimesche__glass-shattering-and-falling.wav",
       "notes": "태그는 음원 페이지 제목·설명과 음량 측정 기준이며 청취는 하지 않음.",
-      "created_at": "2026-11-07"
+      "created_at": "2026-11-07",
+      "level_db": -2.6,
+      "peak_db": -0.0,
+      "onset_ms": 0,
+      "source_loudness": {
+        "integrated_lufs": -14.3,
+        "max_loudness_100ms_lufs": 1.7,
+        "playback_max_loudness_100ms_lufs": 1.7,
+        "true_peak_dbtp": 3.0,
+        "peak_dbfs": -0.0,
+        "rms_dbfs": -18.0,
+        "measurement_status": "measured",
+        "method": "measure_levels.py: BS.1770-4 K-weighting·게이팅, true peak 4x FFT 보간(근사)"
+      },
+      "mix": {
+        "base_gain_db": -12,
+        "priority": "object_identity",
+        "ducking_group": "object_identity",
+        "notes": "playback_max_loudness_100ms_lufs 1.7 → 목표 -12 LUFS"
+      },
+      "spectrum": {
+        "dominant_octave_hz": 16000,
+        "centroid_hz": 8860,
+        "octave_share_pct": {
+          "63": 2.3,
+          "125": 2.3,
+          "250": 0.9,
+          "500": 1.5,
+          "1000": 2.9,
+          "2000": 8.2,
+          "4000": 15.7,
+          "8000": 26.1,
+          "16000": 36.9
+        }
+      }
     }
   ],
   "material_sounds_excluded": [

@@ -11,7 +11,7 @@ export function validateCatalog(data) {
   const issues = [];
   if (!data || typeof data !== 'object' || !Array.isArray(data.sounds)) {
     issues.push({ sound_id: null, code: 'invalid_catalog', message: 'catalog.sounds 배열이 없음' });
-    return { sounds: [], playable: [], issues };
+    return { sounds: [], playable: [], issues, materials: [] };
   }
 
   const seen = new Set();
@@ -34,7 +34,22 @@ export function validateCatalog(data) {
       playable.push(normalizeEntry(s));
     }
   }
-  return { sounds: data.sounds, playable, issues };
+  return { sounds: data.sounds, playable, issues, materials: validateMaterialSounds(data.material_sounds) };
+}
+
+/**
+ * material_sounds(재질·동작 라벨) 중 재생 가능한 항목. material_sounds_excluded는 읽지 않는다.
+ * 필수: sound_id, file_path, material_code, action, status === 'ready'
+ */
+export function validateMaterialSounds(list) {
+  if (!Array.isArray(list)) return [];
+  const seen = new Set();
+  return list.filter((m) => {
+    if (!m?.sound_id || !m.file_path || !m.material_code || !m.action || m.status !== 'ready') return false;
+    if (seen.has(m.sound_id)) return false;
+    seen.add(m.sound_id);
+    return true;
+  });
 }
 
 /** 빠진 선택 필드에 기본값을 채운다. 원본 객체는 바꾸지 않는다. */
@@ -63,11 +78,11 @@ export async function loadCatalog(url, { fetchImpl = globalThis.fetch, log = () 
     const data = await res.json();
     const result = validateCatalog(data);
     for (const issue of result.issues) log('warn', `[catalog] ${issue.code}: ${issue.sound_id ?? '-'} — ${issue.message}`);
-    log('info', `[catalog] 자동 재생 후보 ${result.playable.length}개 / 제외 ${result.sounds.length - result.playable.length}개`);
+    log('info', `[catalog] 자동 재생 후보 ${result.playable.length}개 / 제외 ${result.sounds.length - result.playable.length}개 / 재질 ${result.materials.length}개`);
     return result;
   } catch (err) {
     log('error', `[catalog] 로드 실패, 합성 폴백만 사용: ${err.message}`);
-    return { sounds: [], playable: [], issues: [{ sound_id: null, code: 'load_failed', message: err.message }] };
+    return { sounds: [], playable: [], materials: [], issues: [{ sound_id: null, code: 'load_failed', message: err.message }] };
   }
 }
 

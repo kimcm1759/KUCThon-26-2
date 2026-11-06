@@ -14,13 +14,16 @@ export class SoundEngine {
    * @param {AudioContext} [opts.audioContext]
    * @param {boolean} [opts.debug=false] 개발 로그(선택 음원·이유) 출력
    * @param {(entry: object) => void} [opts.onDecision] 결정마다 호출 (디버그 패널용)
+   * @param {(ev: object) => void} [opts.onLayerEvent] 레이어 실제 재생 시작·건너뜀 (시각화 화면용)
+   * @param {boolean} [opts.meters=false] 레이어별 음량 측정 노드 (시각화 화면용)
    */
-  static async create({ catalogUrl, catalogData, baseUrl = '', resolveUrl, audioContext, debug = false, onDecision } = {}) {
+  static async create({ catalogUrl, catalogData, baseUrl = '', resolveUrl, audioContext, debug = false, onDecision,
+    onLayerEvent, meters = false } = {}) {
     const log = debug
       ? (level, msg) => (console[level] ?? console.log)(msg)
       : (level, msg) => { if (level === 'error') console.error(msg); };
     const catalog = catalogData ? validateCatalog(catalogData) : await loadCatalog(catalogUrl, { log });
-    const player = new AudioPlayer({ audioContext, baseUrl, resolveUrl, log });
+    const player = new AudioPlayer({ audioContext, baseUrl, resolveUrl, log, onLayerEvent, meters });
     return new SoundEngine(catalog, player, { log, onDecision });
   }
 
@@ -35,7 +38,7 @@ export class SoundEngine {
 
   /** 카탈로그의 재생 후보 파일을 미리 디코딩 (첫 탭 지연 감소) */
   preloadAll() {
-    return this.player.preload(this.catalog.playable.map((s) => s.file_path));
+    return this.player.preload([...this.catalog.playable, ...(this.catalog.materials ?? [])].map((s) => s.file_path));
   }
 
   /** @param {{ volume?: number, sound_enabled?: boolean, effect_strength?: number }} p */
@@ -72,7 +75,7 @@ export class SoundEngine {
       previous_progress: this.state.progress,
       finish_played: this.state.finishPlayed,
       sound_enabled: this.prefs.sound_enabled && input.sound_enabled !== false,
-    }, this.catalog.playable);
+    }, this.catalog.playable, { materialSounds: this.catalog.materials ?? [] });
 
     const k = this.prefs.effect_strength ?? 1;
     if (k !== 1) for (const s of plan.selected_sounds) s.gain = Math.min(1, s.gain * k);

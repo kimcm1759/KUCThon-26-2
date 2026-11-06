@@ -50,12 +50,16 @@ export const TOOL_PRESETS = {
       finish: ['debris', 'decay'],
     },
     tap: {
-      activation: { delay_ms: 0, gain: 0.35 },
-      main_action: { delay_ms: 90, gain: 0.8, transient: true },
+      // 휘두름: 앞 40 ms(거의 무음으로 커지는 부분)는 건너뛰고, 가장 큰 부분(원본 110~150 ms)이 타격 직전에 오게 한 뒤
+      // 타격 순간에 30 ms로 끝낸다 → 휘두름 → 타격 → 물건 순서로 겹치지 않고 들린다
+      activation: { delay_ms: 0, gain: 0.45, offset_ms: 40, max_duration_ms: 110, fade_out_ms: 30 },
+      // keep_lows: 물건별 하이패스 안 함 (망치 '퍽' 몸통 유지) / attack: 시작 순간 +6 dB → 70ms 동안 원래 크기로
+      main_action: { delay_ms: 110, gain: 0.8, transient: true, keep_lows: true, attack_boost_db: 6, attack_ms: 70 },
       impact_detail: { delay_ms: 140, gain: 0.5 },
     },
     detail: { gain: 0.5 },
-    finish: { gain: 0.6, delay_ms: 250 },
+    // 380 ms: 물건 타격음(책 판지 탭 등 저음, ~365 ms에 끝남)과 같은 저역에서 겹치지 않게 그 뒤에 파편 소리
+    finish: { gain: 0.6, delay_ms: 380 },
   },
 
   aluminum_bat: {

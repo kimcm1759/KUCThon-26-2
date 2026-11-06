@@ -1,0 +1,13 @@
+{
+  "_doc": "재생 기준 gain 규칙. scripts/measure_levels.py가 측정값(source_loudness)과 이 규칙으로 catalog.json의 mix.base_gain_db를 계산한다. 원본 파일은 바꾸지 않는다.",
+  "reference": "playback_max_loudness_100ms_lufs",
+  "object": { "target_lufs": -12, "max_boost_db": 24, "max_cut_db": 12 },
+  "tool": { "target_lufs": -12, "max_boost_db": 9, "max_cut_db": 12 },
+  "tool_priority": {
+    "hammer.activation": "tool_action",
+    "hammer.main_action": "tool_action",
+    "aluminum_bat.activation": "tool_action",
+    "aluminum_bat.main_action": "tool_action"
+  },
+  "trim_db": {}
+}

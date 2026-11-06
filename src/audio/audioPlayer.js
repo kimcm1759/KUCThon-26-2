@@ -13,8 +13,14 @@ export class AudioPlayer {
    * @param {(level: string, msg: string) => void} [opts.log]
    * @param {number} [opts.maxVoicesPerRole=3]   역할별 동시 재생 수 제한
    * @param {number} [opts.minRetriggerMs=45]    같은 역할 재트리거 최소 간격
+   * @param {(ev: object) => void} [opts.onLayerEvent] 개발용: 레이어 재생 시작·건너뜀을 알린다 (시각화 화면용)
+   *   { type: 'start', layer, when, duration, analyser } / { type: 'skip', layer, reason }
+   * @param {boolean} [opts.meters=false] 개발용: 레이어마다 AnalyserNode를 끼워 실제 음량을 볼 수 있게 한다
    */
-  constructor({ audioContext, baseUrl = '', resolveUrl, log = () => {}, maxVoicesPerRole = 3, minRetriggerMs = 45 } = {}) {
+  constructor({ audioContext, baseUrl = '', resolveUrl, log = () => {}, maxVoicesPerRole = 3, minRetriggerMs = 45,
+    onLayerEvent, meters = false } = {}) {
+    this.onLayerEvent = onLayerEvent;
+    this.meters = meters;
     this.ac = audioContext ?? new AudioContext();
     this.resolveUrl = resolveUrl ?? ((fp) => baseUrl + fp);
     this.log = log;
@@ -71,7 +77,10 @@ export class AudioPlayer {
 
   /** soundComposer.compose() 결과를 재생한다. */
   async playPlan(plan) {
-    if (plan.muted || !this.enabled) return; // 음소거: 선택 결과는 유지하되 재생하지 않음
+    if (plan.muted || !this.enabled) { // 음소거: 선택 결과는 유지하되 재생하지 않음
+      for (const layer of plan.selected_sounds) this.onLayerEvent?.({ type: 'skip', layer, reason: '음소거' });
+      return;
+    }
     if (plan.stop_sustain) this.stopSustain(plan.stop_sustain.fade_ms);
     for (const u of plan.sustain_updates ?? []) this.updateSustain(u);
 
@@ -84,7 +93,10 @@ export class AudioPlayer {
     // 빠른 연속 입력: 같은 역할이 너무 촘촘하면 새 레이어를 건너뛴다 (지속 루프 제외)
     if (!layer.loop) {
       const last = this.lastTrigger.get(layer.role) ?? -Infinity;
-      if (now - last < this.minRetriggerMs) return;
+      if (now - last < this.minRetriggerMs) {
+        this.onLayerEvent?.({ type: 'skip', layer, reason: `같은 역할 ${this.minRetriggerMs}ms 안 재입력` });
+        return;
+      }
       this.lastTrigger.set(layer.role, now);
     }
 
@@ -99,7 +111,26 @@ export class AudioPlayer {
       hp.connect(out);
       head = hp;
     }
-    out.connect(this.master);
+    // 겹침 대역 ducking: 지정 대역만 잠깐 낮췄다가 원래대로 (피킹 EQ, 다른 대역은 그대로)
+    let duck = null;
+    if (layer.band_duck) {
+      duck = this.ac.createBiquadFilter();
+      duck.type = 'peaking';
+      duck.frequency.value = layer.band_duck.hz;
+      duck.Q.value = layer.band_duck.q ?? 1.4;
+      duck.gain.value = 0;
+      duck.connect(head);
+      head = duck;
+    }
+    let analyser = null;
+    if (this.meters) {
+      analyser = this.ac.createAnalyser();
+      analyser.fftSize = 512;
+      out.connect(analyser);
+      analyser.connect(this.master);
+    } else {
+      out.connect(this.master);
+    }
 
     let when = t0 + (layer.delay_ms ?? 0) / 1000;
 
@@ -107,7 +138,12 @@ export class AudioPlayer {
       when = Math.max(when, this.ac.currentTime + 0.005);
       out.gain.setValueAtTime(layer.gain, when);
       const dur = playSynthFallback(this.ac, head, spec, when);
-      if (!dur) { out.disconnect(); return; } // 합성 레시피도 없으면 레이어 생략
+      if (!dur) { // 합성 레시피도 없으면 레이어 생략
+        out.disconnect();
+        this.onLayerEvent?.({ type: 'skip', layer, reason: '합성 레시피 없음' });
+        return;
+      }
+      this.onLayerEvent?.({ type: 'start', layer, when, duration: dur, analyser, synth: true });
       this.#register(layer.role, { stop: (f) => fadeStop(this.ac, out, null, f) });
       setTimeout(() => out.disconnect(), (when - this.ac.currentTime + dur + 0.5) * 1000);
     };
@@ -120,6 +156,7 @@ export class AudioPlayer {
       // 로드 실패: 같은 도구·역할의 합성 폴백 → 없으면 이 레이어만 생략. 다른 레이어는 계속 재생
       if (layer.on_load_fail && !layer.loop) {
         this.log('warn', `[player] ${layer.sound_id} 대신 합성 폴백 synth:${layer.on_load_fail.tool_code}_${layer.role}`);
+        this.onLayerEvent?.({ type: 'skip', layer, reason: '파일 로드 실패 → 합성 폴백' });
         playSynth(layer.on_load_fail);
       } else {
         out.disconnect();
@@ -135,8 +172,24 @@ export class AudioPlayer {
     src.connect(head);
 
     const fadeIn = Math.max(MIN_RAMP, (layer.fade_in_ms ?? 0) / 1000);
+    // 재질 음원은 녹음마다 원본 음량이 달라 loudness_comp를 곱한다 (최종 클리핑은 리미터)
+    const g = layer.gain * (layer.loudness_comp ?? 1);
+    if (duck) {
+      duck.gain.setValueAtTime(layer.band_duck.db, when);
+      duck.gain.linearRampToValueAtTime(0, when + (layer.band_duck.ms ?? 120) / 1000);
+    }
     out.gain.setValueAtTime(0, when);
-    out.gain.linearRampToValueAtTime(layer.gain, when + fadeIn);
+    if (layer.attack?.boost_db && !layer.loop) {
+      // 어택 강조: 시작 순간만 키웠다가 attack.ms 동안 원래 크기로 돌아온다 (파일은 그대로)
+      out.gain.linearRampToValueAtTime(g * 10 ** (layer.attack.boost_db / 20), when + fadeIn);
+      out.gain.linearRampToValueAtTime(g, when + fadeIn + (layer.attack.ms ?? 60) / 1000);
+    } else {
+      out.gain.linearRampToValueAtTime(g, when + fadeIn);
+    }
+
+    // 앞부분 무음(offset_ms)은 건너뛰고 재생한다. 원본 파일은 그대로, 재생 시작 위치만 옮긴다.
+    const offset = layer.loop ? 0
+      : Math.min(Math.max(0, (layer.offset_ms ?? 0) / 1000), Math.max(0, buffer.duration - 0.01));
 
     if (layer.loop) {
       // 비루프 원본을 지속시키기 위해 어택 이후 구간만 반복
@@ -145,16 +198,29 @@ export class AudioPlayer {
       src.loopEnd = buffer.duration * 0.9;
       this.stopSustain(60);
       this.sustain = { src, out, hp };
-    } else if (layer.max_duration_ms) {
-      const fade = (layer.fade_out_ms ?? 150) / 1000;
-      const end = when + layer.max_duration_ms / 1000;
-      out.gain.setValueAtTime(layer.gain, Math.max(when + fadeIn, end - fade));
-      out.gain.linearRampToValueAtTime(0, end);
-      src.stop(end + 0.02);
     }
 
-    src.start(when);
-    src.onended = () => { out.disconnect(); };
+    // start()를 반드시 stop()보다 먼저 호출한다 (반대 순서면 InvalidStateError로 레이어 전체가 재생되지 않음)
+    src.start(when, offset);
+
+    if (!layer.loop && layer.max_duration_ms) {
+      // 길이 제한은 소리 시작점(offset_ms 이후)부터 센다. 파일이 제한보다 짧으면 자연스럽게 끝나게 둔다.
+      const remaining = (buffer.duration - offset) / (layer.playback_rate || 1);
+      const limit = layer.max_duration_ms / 1000;
+      if (limit < remaining) {
+        const fade = Math.min((layer.fade_out_ms ?? 150) / 1000, limit / 2);
+        const end = when + limit;
+        out.gain.setValueAtTime(g, Math.max(when + fadeIn, end - fade));
+        out.gain.linearRampToValueAtTime(0, end);
+        src.stop(end + 0.02);
+      }
+    }
+    if (this.onLayerEvent) {
+      const remaining = (buffer.duration - offset) / (layer.playback_rate || 1);
+      const duration = layer.loop ? null : Math.min(remaining, (layer.max_duration_ms ?? Infinity) / 1000);
+      this.onLayerEvent({ type: 'start', layer, when, duration, analyser });
+    }
+    src.onended = () => { out.disconnect(); analyser?.disconnect(); };
     if (!layer.loop) this.#register(layer.role, { stop: (f) => fadeStop(this.ac, out, src, f) });
   }
 

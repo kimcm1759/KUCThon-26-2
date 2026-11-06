@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>부수기 사운드 화면</title>
+<style>
+  :root {
+    --bg:#f4f2ee; --card:#fff; --text:#1d1d1f; --muted:#6b6b70; --line:#e2dfd8;
+    --obj:#e8590c; --obj-soft:#ffe8d9; --tool:#5c7cfa; --tool-soft:#e3e9ff; --bad:#e03131; --ok:#2f9e44;
+    --stage:#ece8e1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#141416; --card:#1e1e21; --text:#f1f1f3; --muted:#9a9aa2; --line:#2f2f35;
+      --obj:#ff8a3d; --obj-soft:#3a2516; --tool:#8ea2ff; --tool-soft:#1f2640; --bad:#ff6b6b; --ok:#51cf66; --stage:#232327; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.5 system-ui,"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
+  main { max-width:1120px; margin:0 auto; padding:20px 16px 48px; }
+  h1 { font-size:19px; margin:0 0 2px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 14px; }
+  .controls { display:flex; flex-wrap:wrap; gap:14px 22px; align-items:flex-end; margin-bottom:14px; }
+  .group > .lbl { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+  .seg { display:flex; flex-wrap:wrap; gap:6px; }
+  .seg button { font:inherit; cursor:pointer; border:1px solid var(--line); background:var(--card); color:var(--text);
+    border-radius:9px; padding:6px 11px; }
+  .seg button[aria-pressed="true"] { border-color:var(--obj); box-shadow:inset 0 0 0 1px var(--obj); font-weight:600; }
+  input[type=range] { width:150px; }
+  .grid { display:grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap:14px; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; }
+  .card h2 { font-size:14px; margin:0 0 10px; }
+  #stage { position:relative; height:330px; border-radius:12px; background:var(--stage); overflow:hidden;
+    user-select:none; touch-action:none; cursor:pointer; }
+  #stage svg { width:100%; height:100%; display:block; }
+  #hint { position:absolute; left:0; right:0; bottom:10px; text-align:center; color:var(--muted); font-size:13px; pointer-events:none; }
+  #flash { position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .25s; }
+  .state { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:10px; font-size:13px; }
+  .state b { font-weight:600; }
+  .bar { height:8px; background:var(--line); border-radius:4px; overflow:hidden; margin-top:8px; }
+  .bar > div { height:100%; width:0; background:var(--obj); transition:width .12s; }
+  .badge { display:inline-block; padding:1px 8px; border-radius:99px; font-size:12px; font-weight:600; }
+  .badge.ok { background:color-mix(in srgb, var(--ok) 18%, transparent); color:var(--ok); }
+  .badge.bad { background:color-mix(in srgb, var(--bad) 18%, transparent); color:var(--bad); }
+  #now { display:flex; flex-direction:column; gap:6px; min-height:120px; }
+  .voice { display:grid; grid-template-columns: 64px minmax(0,1fr) 92px; gap:8px; align-items:center; font-size:13px; }
+  .voice .kind { font-size:11px; font-weight:700; text-align:center; border-radius:6px; padding:2px 0; }
+  .voice.obj .kind { background:var(--obj-soft); color:var(--obj); }
+  .voice.tool .kind { background:var(--tool-soft); color:var(--tool); }
+  .voice .name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .voice .meter { height:10px; background:var(--line); border-radius:5px; overflow:hidden; }
+  .voice .meter > div { height:100%; width:0; }
+  .voice.obj .meter > div { background:var(--obj); }
+  .voice.tool .meter > div { background:var(--tool); }
+  .voice.skip { color:var(--bad); }
+  .empty { color:var(--muted); font-size:13px; }
+  #timeline { width:100%; height:230px; display:block; }
+  .legend { display:flex; gap:14px; font-size:12px; color:var(--muted); margin:6px 0 0; flex-wrap:wrap; }
+  .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:4px; vertical-align:-1px; }
+  #log { font:12px/1.55 ui-monospace,Consolas,monospace; white-space:pre-wrap; margin:0; max-height:220px; overflow:auto; }
+  .row2 { margin-top:14px; display:grid; grid-template-columns: minmax(0,1fr); gap:14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>부수기 사운드 화면 (시제품)</h1>
+  <p class="sub">물건 그림을 탭하거나 누르고 있으면 소리가 납니다. 오른쪽과 아래에서 <b>어떤 소리가 언제, 얼마나 크게</b> 실제로 재생되는지 보여 줍니다. 주황 = 물건 고유 소리(주), 파랑 = 도구 소리(보조).</p>
+
+  <div class="controls">
+    <div class="group"><span class="lbl">물건</span><div class="seg" id="objects"></div></div>
+    <div class="group"><span class="lbl">도구</span><div class="seg" id="tools"></div></div>
+    <div class="group"><span class="lbl">조작</span><div class="seg" id="modes"></div></div>
+    <div class="group"><span class="lbl">강도 <span id="intVal">0.60</span></span><input id="intensity" type="range" min="0" max="1" step="0.01" value="0.6"></div>
+    <div class="group"><span class="lbl">음량 <span id="volVal">0.80</span></span><input id="volume" type="range" min="0" max="1" step="0.01" value="0.8"></div>
+    <div class="group"><span class="lbl">&nbsp;</span><div class="seg"><button id="reset">새 물건</button></div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div id="stage">
+        <svg id="scene" viewBox="0 0 400 330" aria-label="물건과 도구"></svg>
+        <div id="flash"></div>
+        <div id="hint">여기를 탭하세요</div>
+      </div>
+      <div class="bar"><div id="progressBar"></div></div>
+      <div class="state">
+        <span>상태 <b id="stState">대기</b></span>
+        <span>진행도 <b id="stProg">0%</b></span>
+        <span>입력 <b id="stCount">0회</b></span>
+        <span>물건 소리 <span id="stObj" class="badge ok">-</span></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>지금 나는 소리 (실제 재생 음량)</h2>
+      <div id="now"><div class="empty">아직 재생한 소리가 없습니다.</div></div>
+      <h2 style="margin-top:14px">이번 입력에서 고른 소리</h2>
+      <div id="planBox" class="empty">-</div>
+    </div>
+  </div>
+
+  <div class="row2">
+    <div class="card">
+      <h2>타임라인 (최근 3초 + 예정 1.5초, 막대 안쪽 = 실제 음량)</h2>
+      <canvas id="timeline"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--obj)"></i>물건 고유 소리</span>
+        <span><i style="background:var(--tool)"></i>도구 소리</span>
+        <span><i style="background:var(--bad)"></i>건너뜀(이유 표시)</span>
+        <span>세로선 = 지금</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>기록</h2>
+      <pre id="log"></pre>
+    </div>
+  </div>
+</main>
+<script type="module" src="stage.js"></script>
+</body>
+</html>

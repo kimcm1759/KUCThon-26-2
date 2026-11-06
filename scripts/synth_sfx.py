@@ -16,6 +16,8 @@ from datetime import date
 
 import numpy as np
 
+from trim_audio import trim_silence  # 앞·뒤 무음 제거 (반복은 앱 조작에 맞춰 엔진이 재생)
+
 SR = 44100
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 rng = np.random.default_rng(20261107)
@@ -453,7 +455,7 @@ def main():
             continue
         rel = f"assets/audio/tools/{tool}/{role}_001.wav"
         rng = np.random.default_rng(zlib.crc32(sid.encode()))
-        x = finalize(fn())
+        x, _, _ = trim_silence(finalize(fn()), SR)
         save(os.path.join(ROOT, rel), x)
         entry = {
             "sound_id": sid,

@@ -5,6 +5,6 @@
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "validate": "node scripts/validate_catalog.mjs",
-    "demo": "python -m http.server 8000"
+    "demo": "python scripts/dev_server.py 8000"
   }
 }

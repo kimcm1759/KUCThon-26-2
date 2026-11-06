@@ -40,32 +40,33 @@
 | `hammer_main_action_002` | `assets/audio/provided/hammer_main_action_002.wav` (0.44초, 48kHz 스테레오) | hammer | main_action | unknown | impact | unknown | 망치소리 — 원본(`provided/source/592112__pablodavilla__hammer_1.wav`)의 세 번째 타격만 잘라냄. 합성음 `hammer_main_action_001` 대체 |
 | `aluminum_bat_main_action_003` | `assets/audio/provided/aluminum_bat_main_action_003.wav` (2.1초, 48kHz 스테레오) | aluminum_bat | main_action | unknown | impact | unknown | 배트소리 — 원본(`provided/source/851452__hashtagsmcgee__bat_hit2.mp3`)을 길고 크게 변형(`scripts/derive_bat_main.py`) |
 | `hammer_finish_002` | `assets/audio/provided/hammer_finish_002.wav` (0.3초, 48kHz 24bit 모노) | hammer | finish | unknown | other | unknown | 망치 종료음 — 합성음 `hammer_finish_001` 대체 |
-| `paper_tear_001` | `assets/audio/provided/paper_tear_001.mp3` (2.6초, 48kHz 스테레오) | 미정 | 미정 | paper | other | unknown | 종이 찢는소리 |
-| `paper_other_001` | `assets/audio/provided/paper_other_001.mp3` (2.4초, 48kHz 스테레오) | 미정 | 미정 | paper | other | light | 종이 가볍게 팔랑거리는 소리 |
+| `paper_tear_001` | `assets/audio/provided/paper_tear_001.wav` (2.2초, 48kHz 스테레오, 앞뒤 무음 제거 · 원본 `provided/source/paper_tear_001.mp3`) | 미정 | 미정 | paper | other | unknown | 종이 찢는소리 |
+| `paper_other_001` | `assets/audio/provided/paper_other_001.wav` (2.3초, 48kHz 스테레오, 앞 무음 제거 · 원본 `provided/source/paper_other_001.mp3`) | 미정 | 미정 | paper | other | light | 종이 가볍게 팔랑거리는 소리 |
 
 도구·역할이 미정인 제공 음원은 `needs_review`이며 준비 현황에는 반영하지 않는다.
 
 ## 재질 효과음 (실제 재질·동작 라벨)
 
-`catalog.json`의 `material_sounds`. 라벨은 용도(마무리 등)가 아니라 실제로 들리는 재질·동작이다. 어떤 물건·도구·상황에 쓸지는 앱에서 나중에 고른다. 엔진(`src/audio/`)은 아직 이 목록을 읽지 않는다.
-필드: `label`(재질_대상_동작[_횟수]) · `material_code` · `action` · `secondary_actions` · `repeat_count` · `quantity` · `recorded_source`(실제 녹음 대상) · `derived_from`/`edits`(잘라내기·음량 조정 내역).
+`catalog.json`의 `material_sounds`. 라벨은 용도(마무리 등)가 아니라 실제로 들리는 재질·동작이다. 엔진(`src/audio/`)은 이 목록의 `ready` 항목을 물건 고유 소리(주 레이어)로 쓴다(`src/audio/presets/materialPresets.js`). 제외 목록은 읽지 않는다.
+필드: `label`(재질_대상_동작[_횟수]) · `material_code` · `action` · `secondary_actions` · `repeat_count` · `quantity` · `recorded_source`(실제 녹음 대상) · `derived_from`/`pre_trim_file`/`edits`(잘라내기·음량 조정 내역) · `level_db`/`peak_db`(재생 음량 보정용 측정값).
+모든 파일은 `scripts/trim_audio.py`로 앞·뒤 무음과 반복 구간을 잘라 저장했다(한 파일 = 한 번). 반복은 앱 조작(탭할 때마다, 누르는 동안 진행 단계마다)에 맞춰 엔진이 재생한다. 자르기 전 파일은 각 폴더 `source/`에 있다.
 태그는 음원 페이지 설명·사용자 설명·음량 측정 기준이며 청취 검수는 하지 않았다.
 
 | 재질 | label | 동작 | 횟수 | 수량 | 파일 | 길이 | 편집 |
 |---|---|---|---|---|---|---|---|
-| cardboard | `cardboard_box_tap_single` | tap | 1 | single_object | `assets/audio/materials/cardboard/cardboard_box_tap_single_001.wav` | 0.515s | 원본(13회 이상 연속 탭)에서 3.39초 타격 1회만 잘라냄: 3.385~3.900초, 시작 3ms·끝 25ms 페이드. 음량은 바꾸지 않음. |
-| cardboard | `cardboard_box_rub` | rub | - | - | `assets/audio/materials/cardboard/cardboard_box_rub_001.wav` | 1.833s | 없음 |
+| cardboard | `cardboard_box_tap_single` | tap | 1 | single_object | `assets/audio/materials/cardboard/cardboard_box_tap_single_001.wav` | 0.19s | 원본(13회 이상 연속 탭)에서 3.39초 타격 1회만 잘라냄: 3.385~3.900초, 시작 3ms·끝 25ms 페이드. 음량은 바꾸지 않음.; 앞 무음 0 ms·뒤 무음 325 ms 제거 |
+| cardboard | `cardboard_box_rub` | rub | - | - | `assets/audio/materials/cardboard/cardboard_box_rub_001.wav` | 0.8s | 앞 무음 260 ms·뒤 무음 773 ms 제거 |
 | paper | `paper_sheet_tap_single` | tap | 1 | single_sheet | `assets/audio/materials/paper/paper_sheet_tap_single_001.wav` | 0.145s | 원본(여러 번 탭 + 인위적 공간 잔향)에서 1.12초 탭 1회만 잘라냄: 1.105~1.250초, 시작 3ms·끝 25ms 페이드. 잔향 꼬리는 잘라냈으나(끝 지점이 타격 대비 약 -29dB) 타격 직후 0.13초 안의 초기 잔향은 분리할 수 없어 남아 있음. 음량은 바꾸지 않음. |
 | paper | `paper_sheet_rub_single` | rub | 1 | single_sheet | `assets/audio/materials/paper/paper_sheet_rub_single_001.wav` | 1.0s | 음량만 +34.9dB 올림. 소리가 나는 구간의 평균 음량을 판지 문지르기·유리 긁기와 같은 -18dB로 맞춤(최대 음량 -42.6 → -7.7dBFS). 길이·내용은 그대로. 원본 잡음 바닥(약 -62dB)도 같이 커져 약 -27dB가 됨. |
-| paper | `paper_tear` | tear | - | - | `assets/audio/provided/paper_tear_001.mp3` | 2.616s | 없음 |
-| paper | `paper_crumple` | crumple | - | single_sheet | `assets/audio/materials/paper/paper_crumple_001.wav` | 2.189s | 없음 |
-| aluminum | `aluminum_can_tap_x5` | tap | 5 | single_object | `assets/audio/materials/aluminum/aluminum_can_tap_x5_001.wav` | 1.044s | 없음 |
-| aluminum | `aluminum_can_crush` | crush+squeeze | - | single_object | `assets/audio/materials/aluminum/aluminum_can_crush_001.wav` | 2.0s | 없음 |
+| paper | `paper_tear` | tear | - | - | `assets/audio/provided/paper_tear_001.wav` | 2.165s | 앞 무음 40 ms·뒤 무음 411 ms 제거 |
+| paper | `paper_crumple` | crumple | - | single_sheet | `assets/audio/materials/paper/paper_crumple_001.wav` | 1.966s | 앞 무음 45 ms·뒤 무음 178 ms 제거 |
+| aluminum | `aluminum_can_tap_single` | tap | 1 | single_object | `assets/audio/materials/aluminum/aluminum_can_tap_single_001.wav` | 0.262s | 맥주 캔 두드림 5회 중 첫 번째만 남김; 앞 무음 5 ms·뒤 무음 0 ms 제거 |
+| aluminum | `aluminum_can_crush` | crush+squeeze | - | single_object | `assets/audio/materials/aluminum/aluminum_can_crush_001.wav` | 0.535s | 찌그러짐 뒤 약 0.9초 후 따로 난 작은 소리 제거; 앞 무음 515 ms·뒤 무음 270 ms 제거 |
 | plastic | `plastic_keyboard_key_press_single` | key_press | 1 | single_key | `assets/audio/materials/plastic/plastic_key_press_single_001.wav` | 0.566s | 없음 |
-| glass | `glass_tap_single` | tap | 1 | - | `assets/audio/materials/glass/glass_tap_single_001.wav` | 0.302s | 없음 |
-| ceramic | `ceramic_plate_hit_crack` | impact+crack | - | single_object | `assets/audio/materials/ceramic/ceramic_plate_hit_crack_001.wav` | 0.652s | 없음 |
-| glass | `glass_scrape` | scrape | - | - | `assets/audio/materials/glass/glass_scrape_001.wav` | 2.52s | 없음 |
-| glass | `glass_shatter_fall` | shatter+debris_fall | - | - | `assets/audio/materials/glass/glass_shatter_fall_001.wav` | 3.692s | 없음 |
+| glass | `glass_tap_single` | tap | 1 | - | `assets/audio/materials/glass/glass_tap_single_001.wav` | 0.215s | 앞 무음 50 ms·뒤 무음 37 ms 제거 |
+| ceramic | `ceramic_plate_hit_crack` | impact+crack | - | single_object | `assets/audio/materials/ceramic/ceramic_plate_hit_crack_001.wav` | 0.57s | 앞 무음 0 ms·뒤 무음 82 ms 제거 |
+| glass | `glass_scrape` | scrape | - | - | `assets/audio/materials/glass/glass_scrape_001.wav` | 0.81s | 긁기 3회 중 첫 번째만 남김; 앞 무음 105 ms·뒤 무음 0 ms 제거 |
+| glass | `glass_shatter_fall` | shatter+debris_fall | - | - | `assets/audio/materials/glass/glass_shatter_fall_001.wav` | 3.512s | 앞 무음 0 ms·뒤 무음 180 ms 제거 |
 
 ### 제외한 음원 (`material_sounds_excluded`)
 
