@@ -9,6 +9,7 @@ import { rememberTool } from "@/lib/client";
 import { sound, SOUND_OBJECTS, soundObjectFor, type SoundObject } from "@/lib/sound/engine";
 import { TOOLS, type ToolId } from "@/lib/tools";
 import type { Job, StepStatus } from "@/lib/types";
+import SoundSync, { useSoundSync } from "./SoundSync";
 
 const Composite = dynamic(() => import("@/components/Composite"), { ssr: false });
 
@@ -31,6 +32,8 @@ export default function PlayView({ id }: { id: string }) {
   const [soundChoice, setSoundChoice] = useState<SoundObject | "auto">(
     (params.get("sound") as SoundObject | null) ?? "auto",
   );
+  // ?sync: sound timing panel for whoever is making the sound files.
+  const sync = useSoundSync(params.has("sync"));
 
   // Load, and keep polling while the pipeline is still running.
   useEffect(() => {
@@ -128,6 +131,7 @@ export default function PlayView({ id }: { id: string }) {
       </div>
 
       <div className="relative flex min-h-0 flex-1 items-center justify-center px-4" style={{ containerType: "size" }}>
+        {params.has("sync") && <SoundSync log={sync.log} clear={sync.clear} object={soundObject} />}
         <Composite
           fit
           backgroundUrl={background?.url ?? job.photo.url}
@@ -150,6 +154,7 @@ export default function PlayView({ id }: { id: string }) {
               setBroken(true);
               rememberTool(id, tool);
             },
+            onEvent: params.has("sync") ? sync.add : undefined,
             onHit: (remaining, total) => {
               setDurability({ remaining, total });
               rememberTool(id, tool);

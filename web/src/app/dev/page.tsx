@@ -14,8 +14,8 @@ export default function Dev() {
       <h1 className="text-[24px] font-semibold tracking-[1.2px]">파이프라인 결과</h1>
       <ul className="flex flex-col gap-2">
         {jobs?.map((j) => (
-          <li key={j.id}>
-            <Link href={`/jobs/${j.id}`} className="flex items-center gap-3 rounded-[16px] bg-surface p-3">
+          <li key={j.id} className="flex items-center gap-2">
+            <Link href={`/jobs/${j.id}`} className="flex min-w-0 flex-1 items-center gap-3 rounded-[16px] bg-surface p-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={j.photo.url} alt="" className="size-12 rounded-[10px] object-cover" />
               <span className="min-w-0 flex-1">
@@ -25,6 +25,11 @@ export default function Dev() {
                 </span>
               </span>
             </Link>
+            {j.status === "done" && (
+              <Link href={`/jobs/${j.id}/play?sync`} className="shrink-0 rounded-[16px] bg-surface p-3 text-[12px] text-primary">
+                소리 맞추기
+              </Link>
+            )}
           </li>
         ))}
       </ul>

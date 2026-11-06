@@ -39,9 +39,11 @@ class SoundEngine {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
   private buffers = new Map<string, Promise<AudioBuffer | null>>();
-  private loops = new Map<string, { source: AudioBufferSourceNode; gain: GainNode }>();
+  private loops = new Map<string, { source: AudioScheduledSourceNode; gain: GainNode }>();
   private rate = 1;
   muted = false;
+  /** Sound sync mode: a beep (or hum, for loops) wherever a file is missing. */
+  placeholder = false;
 
   private context() {
     if (!this.ctx) {
@@ -66,7 +68,9 @@ class SoundEngine {
   /** Slow motion: everything plays slower and lower. */
   setTimeScale(scale: number) {
     this.rate = scale;
-    for (const { source } of this.loops.values()) source.playbackRate.value = scale;
+    for (const { source } of this.loops.values()) {
+      if (source instanceof AudioBufferSourceNode) source.playbackRate.value = scale;
+    }
   }
 
   /** Files for an event: the object's own, else the shared ones. */
@@ -100,7 +104,7 @@ class SoundEngine {
   /** One-shot. Picks a random variant and nudges pitch so repeats don't sound copied. */
   async play(event: string, o: PlayOptions) {
     const paths = this.files(event, o);
-    if (!paths.length) return;
+    if (!paths.length) return this.beep(o.tool, event, o.volume);
     const buffer = await this.load(paths[Math.floor(Math.random() * paths.length)]);
     const ctx = this.ctx;
     if (!buffer || !ctx || !this.master) return;
@@ -117,7 +121,7 @@ class SoundEngine {
   async loop(id: string, event: string, o: PlayOptions) {
     if (this.loops.has(id)) return;
     const paths = this.files(event, o);
-    if (!paths.length) return;
+    if (!paths.length) return this.hum(id, o.tool, event, o.volume);
     const buffer = await this.load(paths[0]);
     const ctx = this.ctx;
     if (!buffer || !ctx || !this.master || this.loops.has(id)) return;
@@ -150,12 +154,50 @@ class SoundEngine {
     l.source.stop(t + 0.13);
   }
 
+  /** Placeholder one-shot: a short blip, its pitch fixed per event so they can be told apart. */
+  private beep(tool: string, event: string, volume = 1) {
+    const ctx = this.ctx;
+    if (!this.placeholder || !ctx || !this.master) return;
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = "triangle";
+    osc.frequency.value = pitch(tool, event) * this.rate;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.4 * Math.max(0.3, volume), t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+    osc.connect(gain).connect(this.master);
+    osc.start(t);
+    osc.stop(t + 0.13);
+  }
+
+  /** Placeholder loop: a quiet buzz under `id` until stop(id). */
+  private hum(id: string, tool: string, event: string, volume = 1) {
+    const ctx = this.ctx;
+    if (!this.placeholder || !ctx || !this.master) return;
+    const osc = ctx.createOscillator();
+    osc.type = "sawtooth";
+    osc.frequency.value = pitch(tool, event) / 2;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.08 * volume, ctx.currentTime + 0.08);
+    osc.connect(gain).connect(this.master);
+    osc.start();
+    this.loops.set(id, { source: osc, gain });
+  }
+
   stopAll() {
     for (const id of [...this.loops.keys()]) this.stop(id);
   }
 }
 
 export const sound = new SoundEngine();
+
+/** 300-1200 Hz, the same for the same event every time. */
+function pitch(tool: string, event: string) {
+  let h = 0;
+  for (const c of `${tool}/${event}`) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return 300 * 2 ** ((h % 1000) / 500);
+}
 
 /**
  * Which demo object's sound set to use, from Claude's labels. "notebook" in
