@@ -113,6 +113,59 @@ const ALL_MODELS: CandidateDef[] = [
     input: (c) => ({ image_url: c.cutoutUrl, texture: true, pbr: true, face_limit: 150000 }),
     output: (d) => d.model_urls?.pbr_model?.url ?? d.model_urls?.glb?.url ?? d.model_mesh?.url,
   },
+  // High-quality variants: max settings, heavier files (300k+ faces, 4K textures).
+  // Not run by default; the job page's "고품질 3D" button runs them on demand.
+  {
+    id: "trellis2-hq",
+    label: "TRELLIS.2 고품질 · ~$0.35",
+    endpoint: "fal-ai/trellis-2",
+    input: (c) => ({
+      image_url: c.cutoutUrl,
+      resolution: 1536,
+      texture_size: 4096,
+      decimation_target: 300000,
+      ss_sampling_steps: 25,
+      shape_slat_sampling_steps: 25,
+      tex_slat_sampling_steps: 25,
+      tex_slat_guidance_strength: 2,
+    }),
+    output: (d) => d.model_glb?.url,
+  },
+  {
+    id: "rodin2-hq",
+    label: "Rodin Gen-2 HighPack · ~$1.20",
+    endpoint: "fal-ai/hyper3d/rodin/v2",
+    input: (c) => ({
+      input_image_urls: [c.cutoutUrl],
+      geometry_file_format: "glb",
+      material: "PBR",
+      quality_mesh_option: "500K Triangle",
+      addons: "HighPack",
+      use_original_alpha: true,
+    }),
+    output: (d) => d.model_mesh?.url,
+  },
+  {
+    id: "tripo-hq",
+    label: "Tripo H3.1 detailed · ~$0.40",
+    endpoint: "tripo3d/h3.1/image-to-3d",
+    input: (c) => ({
+      image_url: c.cutoutUrl,
+      texture: true,
+      pbr: true,
+      geometry_quality: "detailed",
+      texture_quality: "detailed",
+      face_limit: 300000,
+    }),
+    output: (d) => d.model_urls?.pbr_model?.url ?? d.model_urls?.glb?.url ?? d.model_mesh?.url,
+  },
+  {
+    id: "hunyuan3d",
+    label: "Hunyuan3D v3 · ~$0.40",
+    endpoint: "fal-ai/hunyuan3d-v3/image-to-3d",
+    input: (c) => ({ input_image_url: c.cutoutUrl, enable_pbr: true, face_count: 300000 }),
+    output: (d) => d.model_glb?.url ?? d.model_urls?.glb?.url,
+  },
   {
     id: "sam3d",
     label: "SAM 3D Objects · $0.02",
@@ -124,3 +177,4 @@ const ALL_MODELS: CandidateDef[] = [
 
 export const BACKGROUNDS = active(ALL_BACKGROUNDS);
 export const MODELS = active(ALL_MODELS);
+export const modelDefs = (ids: string[]) => ALL_MODELS.filter((d) => ids.includes(d.id));

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { defaultAlignment } from "@/lib/alignment";
 import { soundObjectFor } from "@/lib/sound/engine";
 import { TOOLS, type ToolId } from "@/lib/tools";
-import type { Alignment, Candidate, Job, StepStatus } from "@/lib/types";
+import { HQ_MODEL_IDS, type Alignment, type Candidate, type Job, type StepStatus } from "@/lib/types";
 
 const Composite = dynamic(() => import("@/components/Composite"), {
   ssr: false,
@@ -93,11 +93,11 @@ export default function JobView({ id }: { id: string }) {
     if (res.ok) setJob(await res.json());
   }
 
-  async function rerun(force: boolean) {
+  async function rerun(force: boolean, models?: string[]) {
     await fetch(`/api/jobs/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ force }),
+      body: JSON.stringify({ force, models }),
     });
     setJob((j) => (j ? { ...j, status: "running" } : j));
     setReloadKey((k) => k + 1);
@@ -240,6 +240,14 @@ export default function JobView({ id }: { id: string }) {
             selected={job.selection.model}
             onSelect={(m) => patch({ selection: { model: m } })}
           />
+          {job.status !== "running" && !job.sample && (
+            <button
+              onClick={() => rerun(false, HQ_MODEL_IDS)}
+              className="self-start rounded-lg border border-neutral-600 px-3 py-1.5 text-xs text-neutral-300"
+            >
+              고품질 3D 4종 더 만들기 (~$2.4 · 3~6분)
+            </button>
+          )}
 
           <details className="rounded-xl border border-neutral-800 p-3">
             <summary className="cursor-pointer text-sm font-semibold">위치 맞추기</summary>

@@ -2,7 +2,7 @@ import "server-only";
 import { readFile } from "node:fs/promises";
 import { fal } from "@fal-ai/client";
 import sharp from "sharp";
-import { BACKGROUNDS, MODELS, type CandidateContext, type CandidateDef } from "./candidates";
+import { BACKGROUNDS, MODELS, modelDefs, type CandidateContext, type CandidateDef } from "./candidates";
 import { compositeInside, makeCutout, maskStats, normalizeMask, shadowMask } from "./imaging";
 import { filePath, getJob, saveFile, updateJob } from "./store";
 import type { Box, Candidate, Job, Verification } from "./types";
@@ -84,18 +84,11 @@ export async function runPipeline(id: string, opts: { force?: boolean } = {}) {
       j.models = MODELS.map((d) => ({ id: d.id, label: d.label, status: "pending" }));
     });
     await Promise.all([
+      ...MODELS.map((d) => runModel(id, d, ctx)),
       ...BACKGROUNDS.map((d) =>
         runCandidate(id, "backgrounds", d, ctx, async (file) =>
           saveFile(id, `bg-${d.id}.png`, await compositeInside(photo, file, eraseMask)),
         ),
-      ),
-      ...MODELS.map((d) =>
-        runCandidate(id, "models", d, ctx, async (file) => {
-          if (file.subarray(0, 4).toString("latin1") !== "glTF") {
-            throw new Error("GLB가 아닌 파일이 왔어요");
-          }
-          return saveFile(id, `model-${d.id}.glb`, file);
-        }),
       ),
     ]);
 
@@ -112,6 +105,59 @@ export async function runPipeline(id: string, opts: { force?: boolean } = {}) {
       if (j.mask.status === "running") j.mask = { status: "error", error: j.error };
     }).catch(() => {});
   }
+}
+
+/**
+ * Make more 3D models for a finished job (e.g. the high-quality variants)
+ * from its saved cutout, keeping the models it already has.
+ */
+export async function runModels(id: string, ids: string[]) {
+  try {
+    if (!process.env.FAL_KEY) throw new Error("FAL_KEY가 설정되지 않았어요 (web/.env.local)");
+    const job = await getJob(id);
+    if (!job?.verify.result || job.mask.status !== "done") throw new Error("마스크까지 끝난 작업만 돼요");
+    const defs = modelDefs(ids);
+    const read = (name: string) => readFile(filePath(id, name));
+    const [photoUrl, maskUrl, cutoutUrl] = await Promise.all([
+      read("photo.jpg").then((b) => upload(b, "image/jpeg")),
+      read("mask.png").then((b) => upload(b, "image/png")),
+      read("cutout.png").then((b) => upload(b, "image/png")),
+    ]);
+    const ctx: CandidateContext = {
+      photoUrl,
+      maskUrl,
+      eraseMaskUrl: maskUrl,
+      cutoutUrl,
+      label: job.verify.result.label_en,
+      surface: job.verify.result.surface_en || "surface",
+    };
+    await updateJob(id, (j) => {
+      j.models = [
+        ...j.models.filter((c) => !ids.includes(c.id)),
+        ...defs.map((d) => ({ id: d.id, label: d.label, status: "pending" as const })),
+      ];
+    });
+    await Promise.all(defs.map((d) => runModel(id, d, ctx)));
+    await updateJob(id, (j) => {
+      j.status = "done";
+      j.selection.model ??= j.models.find((c) => c.status === "done")?.id;
+    });
+  } catch (e) {
+    console.error(`[models ${id}]`, e);
+    await updateJob(id, (j) => {
+      j.status = "done";
+      j.error = errorMessage(e);
+    }).catch(() => {});
+  }
+}
+
+function runModel(id: string, d: CandidateDef, ctx: CandidateContext) {
+  return runCandidate(id, "models", d, ctx, async (file) => {
+    if (file.subarray(0, 4).toString("latin1") !== "glTF") {
+      throw new Error("GLB가 아닌 파일이 왔어요");
+    }
+    return saveFile(id, `model-${d.id}.glb`, file);
+  });
 }
 
 async function runCandidate(

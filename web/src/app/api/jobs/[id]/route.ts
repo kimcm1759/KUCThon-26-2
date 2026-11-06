@@ -1,5 +1,5 @@
 import { after, type NextRequest } from "next/server";
-import { runPipeline } from "@/lib/pipeline";
+import { runModels, runPipeline } from "@/lib/pipeline";
 import { getJob, getLocalJob, READ_ONLY, updateJob } from "@/lib/store";
 import type { Alignment, Job } from "@/lib/types";
 
@@ -29,18 +29,21 @@ export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/jobs/[id]"
   return Response.json(job);
 }
 
-/** Re-run the pipeline; `force` skips a failed verification. */
+/**
+ * Re-run the pipeline; `force` skips a failed verification.
+ * With `models`, only make those 3D candidates from the saved cutout.
+ */
 export async function POST(req: NextRequest, ctx: RouteContext<"/api/jobs/[id]">) {
   const { id } = await ctx.params;
   const job = await getLocalJob(id);
   if (READ_ONLY || !job) return readOnly(id);
   if (job.status === "running") return Response.json({ error: "이미 실행 중" }, { status: 409 });
-  const { force } = (await req.json().catch(() => ({}))) as { force?: boolean };
+  const { force, models } = (await req.json().catch(() => ({}))) as { force?: boolean; models?: string[] };
   await updateJob(id, (j) => {
     j.status = "running";
     j.error = undefined;
   });
-  after(() => runPipeline(id, { force: !!force }));
+  after(() => (models?.length ? runModels(id, models) : runPipeline(id, { force: !!force })));
   return Response.json({ ok: true });
 }
 
